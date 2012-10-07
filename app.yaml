@@ -17,6 +17,7 @@ handlers:
 
 - url: .*
   script: main.app
+  #login: required #umich.edu domain reqired
 
 libraries:
 - name: webapp2
