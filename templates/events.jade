@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+.well.well-small
+  h4.boxTitle.well Events
+
+  - if(events.length == 0)
+    .alert.alert-warning You don't have any events!
+      a.close(data-dismiss='alert', href='#') &times;
+
+  for event in events
+    .well.well-small=event
+
+{% endautoescape %}

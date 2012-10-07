@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+.well.well-small
+  h4.boxTitle.well Assignments
+
+  if(assignments.length == 0)
+    .alert.alert-warning You don't have any assignments!
+      a.close(data-dismiss='alert', href='#') &times;
+
+  for assign in assignments
+    .well.well-small=assign
+
+{% endautoescape %}

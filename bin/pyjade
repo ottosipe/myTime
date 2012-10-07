@@ -1,0 +1,9 @@
+#!/Users/ottosipe/Developer/mytime-umich/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'pyjade==1.6','console_scripts','pyjade'
+__requires__ = 'pyjade==1.6'
+import sys
+from pkg_resources import load_entry_point
+
+sys.exit(
+   load_entry_point('pyjade==1.6', 'console_scripts', 'pyjade')()
+)

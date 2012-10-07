@@ -1,0 +1,20 @@
+{% autoescape off %}
+
+
+.row-fluid
+  .span2 Achievement:
+  if (achievement > 60)
+    .progress.progress-success.progress-striped.active
+      .bar(style='width: #{achievement}%;')
+  else
+    .progress.progress-danger.progress-striped.active
+      .bar(style='width: #{achievement}%;')
+      
+.row-fluid
+  .span7: include classes
+  .span5.row
+    include assignments
+    include exams
+    include events
+
+{% endautoescape %}
