@@ -15,25 +15,28 @@ body
   div(style='height: 100%;')
     .upperBodyColor
     .container-fluid
-      img.mainHeader(src='img/LSAHeader.png', style='display: block;')
+      //img(src='img/LSAHeader.png', style='display: block;')
       
       .content
-        .navbar
-          .navbar-inner
-            .container#mainNav
-              button.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
-                span.icon-bar
-                span.icon-bar
-                span.icon-bar
-              a.brand(href='#home') myTime
-              .nav-collapse
-                ul.nav
-                  li: a(href='#classes') Classes
-                  li: a(href='#assignments') Assignments
-                  li: a(href='#exams') Exams
-                ul.nav.pull-right(style="float:right;")
-                  a.btn-success.btn(href='#account', role='button', data-toggle='modal')=user
-        
+        .row-fluid.header
+          .span4.logo: a(href="/"): img(src='img/logo.png')
+          .navbar.span8
+            .navbar-inner
+              .container#mainNav
+                button.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+                  span.icon-bar
+                  span.icon-bar
+                  span.icon-bar
+                a.brand(href='#home') myTime
+                .nav-collapse
+                  ul.nav
+                    li: a(href='#one') One
+                    li: a(href='#two') Two
+                    li: a(href='#three') Three
+                  ul.nav.pull-right
+                      a.btn-primary.btn(href='#account', role='button', data-toggle='modal')=user
+                  
+                
         .alert.alert-info Welcome to myTime!
           a.btn.btn-success.btn-small(style="margin-left:10px;", href="#addClass", role='button', data-toggle='modal') Add Your Classes!
           a.close(data-dismiss='alert', href='#') &times;
@@ -41,12 +44,9 @@ body
         .tab-content
           #home.tab-pane.active
             include home
-          #classes.tab-pane 
-            include classes
-          #assignments.tab-pane 
-            include assignments
-          #exams.tab-pane 
-            include exams
+          #one.tab-pane one
+          #two.tab-pane two
+          #three.tab-pane three
 
         
 

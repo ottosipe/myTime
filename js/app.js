@@ -1,13 +1,8 @@
 $(document).ready(function(){
-	$('#mainNav a').click(function (e) {
+	$('a').click(function (e) { // not a good solution!
 	  e.preventDefault();
 	  window.location.hash = $(this).attr("href");
 	  $(this).tab('show');
 	})
 
-	$("#accountNav a").click(function(e) {
-		e.preventDefault();
-		window.location.hash = $(this).attr("href");
-	  	
-	})
 });

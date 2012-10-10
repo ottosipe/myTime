@@ -10,3 +10,8 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+- kind: Person
+  properties:
+  - name: last_name
+  - name: height
+    direction: desc

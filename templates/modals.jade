@@ -1,8 +1,9 @@
 {% autoescape off %}
+
 #account.modal.hide.fade
   form.form-horizontal
     .modal-header
-        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
         h3=user
       .modal-body
         .control-group
@@ -15,22 +16,22 @@
             input#inputPassword(type='password', placeholder='Password')
 
     .modal-footer
-      button.btn(data-dismiss='modal') Close
-      button.btn.btn-primary(type='submit') Save changes
+      button.btn(data-dismiss='modal') Cancel
+      button.btn.btn-success(type='submit') Save Changes
 
 #addClass.modal.hide.fade
-  form.form-horizontal(action="/")
+  form.form-horizontal
     .modal-header
-        button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
-        h3 Add a New Class
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h3 New Class
       .modal-body
         .control-group
-            label.control-label Class Name
-            .controls
-              input(type='text', name="class", placeholder='EECS 280')
+          label.control-label Class Name
+          .controls
+            input(type='text', name="class", placeholder='EECS 280')
 
     .modal-footer
-      button.btn(data-dismiss='modal') Close
-      button.btn.btn-primary(type='submit') Save changes
+      button.btn(data-dismiss='modal') Cancel
+      button.btn.btn-success(type='submit') Add Class
 
 {% endautoescape %}
