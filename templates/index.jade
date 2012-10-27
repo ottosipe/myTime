@@ -2,63 +2,85 @@
 
 !!! 5
 html
-head
-  meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
-  meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
-  title=title
-  link(rel='stylesheet', type='text/css', href='css/bootstrap.min.css')
-  link(rel='stylesheet', type='text/css', href='css/bootstrap-responsive.min.css')
-  link(rel='stylesheet', type='text/css', href='css/style.css')
 
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
+    title=title
+    link(rel='stylesheet', type='text/css', href='css/bootstrap.min.css')
+    link(rel='stylesheet', type='text/css', href='css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', type='text/css', href='css/style.css')
+    link(rel='stylesheet', type='text/css', href='css/datepicker.css')
+    script(src="js/jquery.min.js", type="text/javascript")
+    script(src="js/bootstrap.min.js", type="text/javascript")
+    script(src="js/bootstrap-datepicker.js", type="text/javascript")  
+    script(src="js/app.js", type="text/javascript")
   
-body
-  div(style='height: 100%;')
-    .upperBodyColor
-    .container-fluid
-      //img(src='img/LSAHeader.png', style='display: block;')
-      
-      .content
-        .row-fluid.header
-          .span4.logo: a(href="/"): img(src='img/logo.png')
-          .navbar.span8
-            .navbar-inner
-              .container#mainNav
-                button.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
-                  span.icon-bar
-                  span.icon-bar
-                  span.icon-bar
-                a.brand(href='#home') myTime
-                .nav-collapse
-                  ul.nav
-                    li: a(href='#one') One
-                    li: a(href='#two') Two
-                    li: a(href='#three') Three
-                  ul.nav.pull-right
-                      a.btn-primary.btn(href='#account', role='button', data-toggle='modal')=user
+  body
+    div(style='height: 100%;')
+      .upperBodyColor
+      .container-fluid
+        
+        .content
+          .row-fluid.header
+            .span4.logo: a(href="/"): img(src='img/logo.png')
+            .navbar.span8
+              .navbar-inner
+                .container#mainNav
+                  button.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                  a.brand(href='#home') myTime
+                  .nav-collapse
+                    ul.nav
+                      li: a(href='#one') One
+                      li: a(href='#two') Two
+                      li: a(href='#three') Three
+                    ul.nav.pull-right
+                        .btn-group
+                          a.btn.btn-primary(href='#account', role='button', data-toggle='modal')
+                              | #{user} 
+                              //i.icon-user.icon-white
+
+                            a.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', href='#')
+                              span.caret
+                            ul.dropdown-menu
+                              li
+                                a(href='#')
+                                  i.icon-pencil
+                                  | Edit
+                              li.divider
+                              li
+                                a(href='#')
+                                  i.icon-ban-circle
+                                  | Log Out
+                    
                   
-                
-        .alert.alert-info Welcome to myTime!
-          a.btn.btn-success.btn-small(style="margin-left:10px;", href="#addClass", role='button', data-toggle='modal') Add Your Classes!
-          a.close(data-dismiss='alert', href='#') &times;
+          .alert.alert-info 
+            a.close(data-dismiss='alert', href='#') &times;
+            | Welcome to myTime!
+            a.btn.btn-success.btn-small(style="margin-left:10px;", href="#getStarted", role='button', data-toggle='modal') Import Your Schedule 
+            a.btn.btn-warning.btn-small(style="margin-left:10px;", href="#addClass", role='button', data-toggle='modal') Or Add Manually
+            
+            
 
-        .tab-content
-          #home.tab-pane.active
-            include home
-          #one.tab-pane one
-          #two.tab-pane two
-          #three.tab-pane three
+          .tab-content
+            #home.tab-pane.active
+              include home
+            #one.tab-pane one
+            #two.tab-pane two
+            #three.tab-pane three
 
+          
+
+        .row-fluid.copyright(style='text-align: center;')
+          .span4 College of Literature, Science, and the Arts
+          .span4 435 S. State Street, Ann Arbor, MI 48109
+          .span4 © 2012 Regents of the University of Michigan
+
+        include modals
         
 
-      .row-fluid.copyright(style='text-align: center;')
-        .span4 College of Literature, Science, and the Arts
-        .span4 435 S. State Street, Ann Arbor, MI 48109
-        .span4 © 2012 Regents of the University of Michigan
-
-      include modals
-      
-  script(src="js/jquery.min.js", type="text/javascript")
-  script(src="js/bootstrap.min.js", type="text/javascript") 
-  script(src="js/app.js", type="text/javascript")
 
 {% endautoescape %}

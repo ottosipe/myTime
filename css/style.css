@@ -30,7 +30,6 @@ body {
     border-style: solid;
     border-width: 0px 1px;
     color: #112B56;
-    min-height: 100%;
     overflow-y: visible;
     -moz-box-shadow: 0 0 30px 5px #999;
     -webkit-box-shadow: 0 0 30px 5px #999;
@@ -65,3 +64,5 @@ body {
     color: #3e3b2a;
     font-size: 7pt;
 }
+
+/*Modals*/

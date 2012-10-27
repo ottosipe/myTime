@@ -1,13 +1,14 @@
 {% autoescape off %}
 
 .well.well-small
-  h4.boxTitle.well Events
+  h4.boxTitle.well Extracurricular
+    a.btn.btn-small.addBtn.btn-primary.pull-right(href="#addClass", data-toggle='modal') &plus;
+     
+  
+  .alert.alert-warning You don't have any activites!
+    a.close(data-dismiss='alert', href='#') &times;
 
-  - if(events.length == 0)
-    .alert.alert-warning You don't have any events!
-      a.close(data-dismiss='alert', href='#') &times;
-
-  for event in events
+  //for event in events
     .well.well-small=event
 
 {% endautoescape %}

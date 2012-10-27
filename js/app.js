@@ -5,4 +5,6 @@ $(document).ready(function(){
 	  $(this).tab('show');
 	})
 
+	$("#exam1").datepicker({todayHighlight: true, autoclose:true}); //set date range
+
 });

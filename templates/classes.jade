@@ -9,7 +9,26 @@
     .alert.alert-warning You don't have any classes!
       a.close(data-dismiss='alert', href='#') &times;
 
-  for class in classes
+  .well.well-small EECS 281
+    .pull-right 
+        span.label.label-success Assignment Due
+        | 
+        span.label.label-warning Exam Soon
+  
+  .well.well-small EECS 370
+    .pull-right 
+        span.label.label-success Assignment Due
+
+  .well.well-small STATS 412
+    .pull-right 
+        span.label none
+  
+  .well.well-small TC 300
+    .pull-right 
+        span.label none
+
+
+  //for class in classes
     .well.well-small=class
 
 
