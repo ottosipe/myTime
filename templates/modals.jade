@@ -57,49 +57,10 @@ form#addClass.modal.hide.fade.form-horizontal
         h3 New Class
       .modal-body
         .control-group
-          label.control-label Class:
+          label.control-label School:
           .controls.form-inline.halfsize
-            input.input-mini.classDept(type='text', name="classDept", placeholder='EECS')
-            input.input-mini.classNumber(type='text', name="classNum", placeholder='280')
+            input.input-mini.schoolInput(type='text', name="school")
                 
-        .control-group
-          label.control-label Location:
-          .controls.form-inline.halfsize
-            input.input-mini.classDept(type='text', name="bldng", placeholder='BBB')
-            input.input-mini.classNumber(type='text', name="bldNumber", placeholder='1670')
-        
-        
-        .control-group
-          label.control-label Day:
-          .controls.fullsize
-            label.checkbox.inline
-              input(type='checkbox', value='monday') 
-              | M
-            label.checkbox.inline
-              input(type='checkbox', value='tuesday') 
-              | T
-            label.checkbox.inline
-              input(type='checkbox', value='wednesday') 
-              | W
-            label.checkbox.inline
-              input(type='checkbox', value='thursday') 
-              | T
-            label.checkbox.inline
-              input(type='checkbox', value='friday') 
-              | F
-        
-        .control-group
-          label.control-label Instructor:
-          .controls.fullsize
-            input.classInstructor(type='text', name="instructor", placeholder='John Doe')
-        
-        .control-group
-          label.control-label Email:
-          .controls.fullsize
-            .input-append
-              input.span2(name="email", type='text', placeholder="johndoe",style="width:118px; text-align:right;")
-              span.add-on @umich.edu
-
     .modal-footer
       button.btn(data-dismiss='modal') Cancel
       button.btn.btn-success(type='submit') Add Class
