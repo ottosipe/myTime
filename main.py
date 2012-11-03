@@ -24,18 +24,20 @@ from google.appengine.ext import ndb
 
 
 
-class Timeset(ndb.Model):
+class Meeting(ndb.Model):
   days = ndb.StringProperty()
   begin = ndb.TimeProperty()
   end = ndb.TimeProperty()
+  location = ndb.StringProperty()
+  instructor = ndb.StringProperty()
 
 class Course(ndb.Model):
   id = ndb.IntegerProperty()
-  title = ndb.StringProperty()
-  instructor = ndb.StringProperty()
-  times = ndb.StructuredProperty(Timeset)
-  location = ndb.StringProperty()
-  description = db.TextProperty()
+  
+  dept = ndb.StringProperty()
+  num = ndb.IntegerProperty()
+  sect = ndb.IntegerProperty()
+  meetings = ndb.LocalStructuredProperty(Meeting)#, repeated=True)
 
 class Assignment(ndb.Model):
   due = ndb.DateTimeProperty()
@@ -59,12 +61,16 @@ class MainPage(jade.jadeHandler):
   def get(self):
     #handles get requests, context is object sent to jade
 
-    user = users.get_current_user()
-    if user:
+    User = users.get_current_user()
+    if User:
+
+      student = Student.query(Student.user == User)
+      logging.warning(student)
+
       context = {
           'title': 'MyTime',
-          'user': user.nickname(),
-          'email': user.email(),
+          'user': User.nickname(),
+          'email': User.email(),
           'logoutUrl': users.create_logout_url("/"),
           'achievement': 58,
           'classes': ['EECS 281','EECS 370','STATS 412', 'ENGN 455'],
@@ -105,12 +111,42 @@ class CoursesAPI(webapp2.RequestHandler):
 
 class SectionAPI(webapp2.RequestHandler):
   def get(self):
-    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/courses"
+    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/sections"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)
     else:
       self.response.out.write("[]")
+
+class InfoAPI(webapp2.RequestHandler):
+  def get(self):
+    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/"+self.request.get('sect')+"/times"
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+      self.response.out.write(result.content)
+    else:
+      self.response.out.write("[]")
+
+class addClass(webapp2.RequestHandler):
+  def post(self):
+    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/"+self.request.get('sect')+"/times"
+    result = urlfetch.fetch(url)
+    classInfo = json.loads(result.content)
+
+    new_class = Course(
+      id = 99,
+      dept = self.request.get('dept'),
+      num = self.request.get('num'),
+      sect = self.request.get('sect'),
+      meetings = Meetings( 
+        days = classInfo.days,
+        begin = classInfo.times,
+        end =classInfo.times,
+        location = classInfo.location,
+        instructor = classInfo.instructorname
+      )
+    )
+    #new_class.put()
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -118,6 +154,7 @@ app = webapp2.WSGIApplication([
     ('/departments', DeptAPI),
     ('/courses', CoursesAPI),
     ('/section', SectionAPI),
+    ('/info', InfoAPI),
     #('/assignments', AssignmentsAPI),
     #('/exams', ExamsAPI)
 ], debug=True)

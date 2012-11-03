@@ -53,7 +53,7 @@ form#addClass.modal.hide.fade.form-horizontal
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
         h3 New Class
       .modal-body
-        .control-group
+        .control-group  
           label.control-label School:
           .controls.form-inline.halfsize
             select.schoolSelector(disabled="true")
@@ -72,10 +72,10 @@ form#addClass.modal.hide.fade.form-horizontal
         .control-group
           label.control-label Info:
           .controls.form-inline.halfsize
-            input(type="text", disabled="true", value="person") 
+            .infoBox(type="text", disabled="true", value="person") 
 
     .modal-footer
-      button.btn(data-dismiss='modal') Cancel
-      button.btn.btn-success(type='submit') Add Class
+      button.btn.btn-info(data-dismiss='modal') Done Adding
+      button.btn.btn-success(type='submit') Add
 
 {% endautoescape %}
