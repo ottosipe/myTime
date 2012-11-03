@@ -34,9 +34,9 @@ html
                   a.brand(href='#home') myTime
                   .nav-collapse
                     ul.nav
-                      li: a(href='#one') One
-                      li: a(href='#two') Two
-                      li: a(href='#three') Three
+                      li: a(href='#one',class="tabNav") One
+                      li: a(href='#two',class="tabNav") Two
+                      li: a(href='#three',class="tabNav") Three
                     ul.nav.pull-right
                         .btn-group
                           a.btn.btn-primary(href='#account', role='button', data-toggle='modal')
@@ -47,12 +47,12 @@ html
                               span.caret
                             ul.dropdown-menu
                               li
-                                a(href='#')
+                                a(href='#settings',)
                                   i.icon-pencil
                                   | Edit
                               li.divider
                               li
-                                a(href='#')
+                                a(href='#{logoutUrl}')
                                   i.icon-ban-circle
                                   | Log Out
                     

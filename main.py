@@ -7,6 +7,7 @@ import json
 from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
+from google.appengine.ext import ndb
 
 # url = "http://umich.io/academics/v0/1920/schools"
 # result = urlfetch.fetch(url)
@@ -21,34 +22,104 @@ from google.appengine.api import urlfetch
 #       #logging.warning(dept['subjectcode'])
 #       allDepts.append(dept['subjectcode'])
 
-class Class(db.Model):
-  name = db.StringProperty()
-  instructor = db.StringProperty()
-  time = db.DateTimeProperty()
+
+
+class Timeset(ndb.Model):
+  days = ndb.StringProperty()
+  begin = ndb.TimeProperty()
+  end = ndb.TimeProperty()
+
+class Course(ndb.Model):
+  id = ndb.IntegerProperty()
+  title = ndb.StringProperty()
+  instructor = ndb.StringProperty()
+  times = ndb.StructuredProperty(Timeset)
+  location = ndb.StringProperty()
+  description = db.TextProperty()
+
+class Assignment(ndb.Model):
+  due = ndb.DateTimeProperty()
+  course = ndb.StructuredProperty(Course)
+
+class Exam(ndb.Model):
+  time = ndb.DateTimeProperty()
+  course = ndb.StructuredProperty(Course)
+
+class Student(ndb.Model):
+  user = ndb.UserProperty()
+  year = ndb.StringProperty(choices=set(["Freshman", "Sophomore", "Junior","Senior","Grad Or Above"]))
+  courses = ndb.StructuredProperty(Course, repeated=True)
+  assignments = ndb.StructuredProperty(Assignment, repeated=True)
+  exams = ndb.StructuredProperty(Exam, repeated=True)
+
+
+#####
 
 class MainPage(jade.jadeHandler):
   def get(self):
     #handles get requests, context is object sent to jade
 
-    q = Class.all()
+    user = users.get_current_user()
+    if user:
+      context = {
+          'title': 'MyTime',
+          'user': user.nickname(),
+          'email': user.email(),
+          'logoutUrl': users.create_logout_url("/"),
+          'achievement': 58,
+          'classes': ['EECS 281','EECS 370','STATS 412', 'ENGN 455'],
+          'assignments': ['one', 'two'],  
+          'exams': ['one', 'two'],
+          'events': ['one', 'two']
+      }
+      self.render_response('index.jade', **context)
+    else: 
+      self.redirect(users.create_login_url(self.request.uri))
 
-    for p in q.run(limit=5):
-        print "%s %s %s" % (p.name, p.instructor, p.time)
+class SchoolAPI(webapp2.RequestHandler):
+  def get(self):
+    url = "http://umich.io/academics/v0/1920/schools"
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+      self.response.out.write(result.content)
+    else:
+      self.response.out.write("[]")
 
-    context = {
-        'title': 'MyTime',
-        'user': 'Otto Sipe',
-        'achievement': 35,
-        'classes': ['EECS 281','EECS 370','STATS 412', 'ENGN 455'],
-        'assignments': ['one', 'two'],  
-        'exams': ['one', 'two'],
-        'events': ['one', 'two']
-    }
-    self.render_response('index.jade', **context)
+class DeptAPI(webapp2.RequestHandler):
+  def get(self):
+    url = "http://umich.io/academics/v0/1920/"+self.request.get('school')+"/departments"
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+      self.response.out.write(result.content)
+    else:
+      self.response.out.write("[]")
+
+class CoursesAPI(webapp2.RequestHandler):
+  def get(self):
+    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/courses"
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+      self.response.out.write(result.content)
+    else:
+      self.response.out.write("[]")
+
+class SectionAPI(webapp2.RequestHandler):
+  def get(self):
+    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/courses"
+    result = urlfetch.fetch(url)
+    if result.status_code == 200:
+      self.response.out.write(result.content)
+    else:
+      self.response.out.write("[]")
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/api', MainPage)
+    ('/schools', SchoolAPI),
+    ('/departments', DeptAPI),
+    ('/courses', CoursesAPI),
+    ('/section', SectionAPI),
+    #('/assignments', AssignmentsAPI),
+    #('/exams', ExamsAPI)
 ], debug=True)
 
 
