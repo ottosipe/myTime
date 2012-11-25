@@ -82,36 +82,36 @@ class MainPage(jade.jadeHandler):
     else: 
       self.redirect(users.create_login_url(self.request.uri))
 
-class SchoolAPI(webapp2.RequestHandler):
+# class SchoolAPI(webapp2.RequestHandler):
+#   def get(self):
+#     url = "http://umich.io/academics/v0/1920/schools"
+#     result = urlfetch.fetch(url)
+#     if result.status_code == 200:
+#       self.response.out.write(result.content)
+#     else:
+#       self.response.out.write("[]")
+
+class CodeAPI(webapp2.RequestHandler):
   def get(self):
-    url = "http://umich.io/academics/v0/1920/schools"
+    url = "http://umich.io/academics/v0/subjects"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)
     else:
       self.response.out.write("[]")
 
-class DeptAPI(webapp2.RequestHandler):
+class NumbersAPI(webapp2.RequestHandler):
   def get(self):
-    url = "http://umich.io/academics/v0/1920/"+self.request.get('school')+"/departments"
+    url = "http://umich.io/academics/v0/"+self.request.get('subj')+"/courses"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)
     else:
       self.response.out.write("[]")
 
-class CoursesAPI(webapp2.RequestHandler):
+class SectionsAPI(webapp2.RequestHandler):
   def get(self):
-    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/courses"
-    result = urlfetch.fetch(url)
-    if result.status_code == 200:
-      self.response.out.write(result.content)
-    else:
-      self.response.out.write("[]")
-
-class SectionAPI(webapp2.RequestHandler):
-  def get(self):
-    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/sections"
+    url = "http://umich.io/academics/v0/"+self.request.get('subj')+"/"+self.request.get('num')+"/sections"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)
@@ -120,7 +120,7 @@ class SectionAPI(webapp2.RequestHandler):
 
 class InfoAPI(webapp2.RequestHandler):
   def get(self):
-    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/"+self.request.get('sect')+"/times"
+    url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)
@@ -129,7 +129,7 @@ class InfoAPI(webapp2.RequestHandler):
 
 class addClass(webapp2.RequestHandler):
   def post(self):
-    url = "http://umich.io/academics/v0/1920/"+self.request.get('dept')+"/"+self.request.get('num')+"/"+self.request.get('sect')+"/times"
+    url = "http://umich.io/academics/v0/1920/"+self.request.get('subj')+"/"+self.request.get('num')+"/"+self.request.get('sect')+"/times"
     result = urlfetch.fetch(url)
     classInfo = json.loads(result.content)
 
@@ -150,10 +150,10 @@ class addClass(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/schools', SchoolAPI),
-    ('/departments', DeptAPI),
-    ('/courses', CoursesAPI),
-    ('/section', SectionAPI),
+    #('/schools', SchoolAPI),
+    ('/codes', CodeAPI),
+    ('/numbers', NumbersAPI),
+    ('/sections', SectionsAPI),
     ('/info', InfoAPI),
     #('/assignments', AssignmentsAPI),
     #('/exams', ExamsAPI)

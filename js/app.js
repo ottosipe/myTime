@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 	$("#exam1").datepicker({todayHighlight: true, autoclose:true}); //set date range
 
-	buildSchools();
+	buildDepartments();
 
 });
 
@@ -19,7 +19,7 @@ function optionAdder(arr, cb){
 	for (i in arr) cb(i,arr);
 }
 
-function buildSchools() {
+/*function buildSchools() {
 	$.get("/schools", function(data) {
 		var schools = $.parseJSON(data);
 		var selected = "";
@@ -34,18 +34,18 @@ function buildSchools() {
 			buildDepartments();
 		});
 	});
-}
+}*/
 
 function buildDepartments() {
-	$.get("/departments", { school: $(".schoolSelector").val() }, function(data) {
+	$.get("/codes", {}, function(data) {
 		var depts = $.parseJSON(data);
-
+		
 		var selected = "";
 		$(".deptSelector").empty();
 		optionAdder(depts, function(x,depts) {
-			if(depts[x].subjectcode == "CHEM" || depts[x].subjectcode == "EECS") selected = 'selected="selected"';
+			if(depts[x].code == "EECS") selected = 'selected="selected"';
 			else selected = "";
-			$(".deptSelector").append('<option '+selected+' value="'+depts[x].subjectcode+'">'+depts[x].subjectdescr+'</option>');
+			$(".deptSelector").append('<option '+selected+' value="'+depts[x].code+'">'+depts[x].subject+'</option>');
 		});
 		buildNumbers();
 		$(".deptSelector").removeAttr("disabled").change(function(){
@@ -55,33 +55,37 @@ function buildDepartments() {
 }
 
 function buildNumbers() {
-	$.get("/courses", { dept: $(".deptSelector").val() }, function(data) {
+	$.get("/numbers", { subj: $(".deptSelector").val() }, function(data) {
 		var nums = $.parseJSON(data);
+
 		var selected = "";
 		$(".numSelector").empty();
-		
 		optionAdder(nums, function(x,nums) {
-			if(nums[x].catalognumber == 210 || nums[x].catalognumber == 281) selected = 'selected="selected"';
+			if(nums[x].number == 210 || nums[x].number == 281) selected = 'selected="selected"';
 			else selected = "";
-			$(".numSelector").append('<option '+selected+' value="'+nums[x].catalognumber+'">('+nums[x].catalognumber+') '+nums[x].coursedescr +'</option>');
+			$(".numSelector").append('<option '+selected+' value="'+nums[x].number+'">('+nums[x].number+') '+nums[x].title +'</option>');
 		});
-		buildSection();
+		buildSections();
 		$(".numSelector").removeAttr("disabled").change(function(){
-			buildSection();
+			buildSections();
 		});
 	});
 }
 
-function buildSection() {
-	$.get("/section", { dept: $(".deptSelector").val(), num: $(".numSelector").val() }, function(data) {
+function buildSections() {
+	$.get("/sections", { subj: $(".deptSelector").val(), num: $(".numSelector").val() }, function(data) {
 		
 		var sects = $.parseJSON(data);
 		var selected = "";
+
 		$(".sectSelector").empty();
 		optionAdder(sects, function(x,sects) {
-			if(sects[x].catalognumber == 1) selected = 'selected="selected"';
+			if(sects[x].number == 1) selected = 'selected="selected"';
 			else selected = "";
-			$(".sectSelector").append('<option '+selected+' value="'+sects[x].sectionnumber+'">Sect. '+sects[x].sectionnumber+': '+sects[x].sectiontypedescr +'</option>');
+			var html = '<option '+selected+' value="'+sects[x].id+'">'+sects[x].type +' - '+sects[x].section+' ';
+			html += (sects[x].instructor)? "("+sects[x].instructor+")" : "(staff)";
+			html += ' </option>';
+			$(".sectSelector").append(html);
 		});
 		buildInfo();
 		$(".sectSelector").removeAttr("disabled").change(function(){
@@ -91,14 +95,17 @@ function buildSection() {
 }
 
 function buildInfo() {
-	$.get("/info", { dept: $(".deptSelector").val(), num: $(".numSelector").val(), sect: $(".sectSelector").val(),}, function(data) {
+	$.get("/info", { id: $(".sectSelector").val(),}, function(data) {
 		
-		var sects = $.parseJSON(data);
+		var sect = $.parseJSON(data);
 		var selected = "";
-		$(".infoBox").empty();
-		optionAdder(sects, function(x,info) {
+		console.log(sect);
 
-			$(".infoBox").append('<p>'+info[x].days+' '+info[x].times+'</br>'+info[x].instructorname+'</br>'+info[x].location+'</p>');
+		optionAdder(sect, function(x,info) {
+			var html = '<p>'+info[x].days+' '+info[x].time+'</br>';
+			html += (info[x].instructor)? info[x].instructor+"</br>" : "(staff)</br>";
+			html += info[x].location+'</p>';
+			$(".infoBox").html(html);
 		});
 		$(".infoBox").show();
 	});
