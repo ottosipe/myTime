@@ -9,51 +9,37 @@ from google.appengine.ext import db
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
-# url = "http://umich.io/academics/v0/1920/schools"
-# result = urlfetch.fetch(url)
-# allDepts = []
-# if result.status_code == 200:
-#   schools = json.loads(result.content)
-#   for school in schools:
-#     url = "http://umich.io/academics/v0/1920/"+school['schoolcode']+"/departments"
-#     result = urlfetch.fetch(url)
-#     depts = json.loads(result.content)
-#     for dept in depts:
-#       #logging.warning(dept['subjectcode'])
-#       allDepts.append(dept['subjectcode'])
-
-
-
-class Meeting(ndb.Model):
-  days = ndb.StringProperty()
-  begin = ndb.TimeProperty()
-  end = ndb.TimeProperty()
-  location = ndb.StringProperty()
-  instructor = ndb.StringProperty()
+# class Meeting(ndb.Model):
+#   days = ndb.StringProperty()
+#   begin = ndb.TimeProperty()
+#   end = ndb.TimeProperty()
+#   location = ndb.StringProperty()
+#   instructor = ndb.StringProperty()
 
 class Course(ndb.Model):
-  id = ndb.IntegerProperty()
-  
-  dept = ndb.StringProperty()
-  num = ndb.IntegerProperty()
-  sect = ndb.IntegerProperty()
-  meetings = ndb.LocalStructuredProperty(Meeting)#, repeated=True)
+  id = ndb.IntegerProperty()  
+  code = ndb.StringProperty()
+  number = ndb.IntegerProperty()
+  section = ndb.IntegerProperty()
+  title = ndb.StringProperty()
+  type = ndb.StringProperty()
+  #meetings = ndb.LocalStructuredProperty(Meeting)#, repeated=True)
 
 class Assignment(ndb.Model):
+  title = ndb.StringProperty()
   due = ndb.DateTimeProperty()
-  course = ndb.StructuredProperty(Course)
+
 
 class Exam(ndb.Model):
+  title = ndb.StringProperty()
   time = ndb.DateTimeProperty()
-  course = ndb.StructuredProperty(Course)
 
 class Student(ndb.Model):
   user = ndb.UserProperty()
-  year = ndb.StringProperty(choices=set(["Freshman", "Sophomore", "Junior","Senior","Grad Or Above"]))
   courses = ndb.StructuredProperty(Course, repeated=True)
   assignments = ndb.StructuredProperty(Assignment, repeated=True)
   exams = ndb.StructuredProperty(Exam, repeated=True)
-
+  #noob = ndb.Boolean
 
 #####
 
@@ -63,8 +49,19 @@ class MainPage(jade.jadeHandler):
 
     User = users.get_current_user()
     if User:
-
-      student = Student.query(Student.user == User)
+      isNoob = 0;
+      std_query = Student.query(Student.user == User).fetch(1)
+      if(std_query == []): 
+        Student(user=User,
+          courses = [],
+          assignments = [],
+          exams = []
+          ).put();
+        isNoob = 1;
+        student = Student.query(Student.user == User).fetch(1)[0]
+      else:
+        student = std_query[0]
+      
       logging.warning(student)
 
       context = {
@@ -72,24 +69,25 @@ class MainPage(jade.jadeHandler):
           'user': User.nickname(),
           'email': User.email(),
           'logoutUrl': users.create_logout_url("/"),
-          'achievement': 58,
-          'classes': ['EECS 281','EECS 370','STATS 412', 'ENGN 455'],
-          'assignments': ['one', 'two'],  
-          'exams': ['one', 'two'],
-          'events': ['one', 'two']
+          'achievement': 89,
+          'courses': [],
+          'assignments': [],  
+          'exams': [],
+          #'events': [],
+          'noob': isNoob
       }
+
+      for x in student.courses:
+        context['courses'].append(x.to_dict());
+
+      for x in student.assignments:
+        context['assignments'].append(x.to_dict());
+
+      logging.warning(context)
+
       self.render_response('index.jade', **context)
     else: 
       self.redirect(users.create_login_url(self.request.uri))
-
-# class SchoolAPI(webapp2.RequestHandler):
-#   def get(self):
-#     url = "http://umich.io/academics/v0/1920/schools"
-#     result = urlfetch.fetch(url)
-#     if result.status_code == 200:
-#       self.response.out.write(result.content)
-#     else:
-#       self.response.out.write("[]")
 
 class CodeAPI(webapp2.RequestHandler):
   def get(self):
@@ -127,36 +125,47 @@ class InfoAPI(webapp2.RequestHandler):
     else:
       self.response.out.write("[]")
 
-class addClass(webapp2.RequestHandler):
+class courseAPI(webapp2.RequestHandler):
   def post(self):
-    url = "http://umich.io/academics/v0/1920/"+self.request.get('subj')+"/"+self.request.get('num')+"/"+self.request.get('sect')+"/times"
+    url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
     result = urlfetch.fetch(url)
-    classInfo = json.loads(result.content)
+    info = json.loads(result.content)[0]
+    
+    User = users.get_current_user()
+    student = Student.query(Student.user == User).fetch(1)[0]
+    student.courses += [Course(
+      id = info["id"],
+      code = info["code"],
+      number = info["number"],
+      section = info["section"],
+      type = info["type"],
+      title = info["title"]
+    )]
+    
+    student.put()
+    self.response.out.write(info["code"]+" "+str(info["number"]))
+  
+  def get(self):
+    User = users.get_current_user()
+    if User:
+    
+      student = Student.query(Student.user == User).fetch(1)[0]
 
-    new_class = Course(
-      id = 99,
-      dept = self.request.get('dept'),
-      num = self.request.get('num'),
-      sect = self.request.get('sect'),
-      meetings = Meetings( 
-        days = classInfo.days,
-        begin = classInfo.times,
-        end =classInfo.times,
-        location = classInfo.location,
-        instructor = classInfo.instructorname
-      )
-    )
-    #new_class.put()
+      output = []
+      for x in student.courses:
+        output.append(x.to_dict());
+
+      self.response.out.write(json.dumps(output))
+    else: 
+      self.response.out.write("['auth':'fail']");
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    #('/schools', SchoolAPI),
     ('/codes', CodeAPI),
     ('/numbers', NumbersAPI),
     ('/sections', SectionsAPI),
     ('/info', InfoAPI),
-    #('/assignments', AssignmentsAPI),
-    #('/exams', ExamsAPI)
+    ('/courses', courseAPI)
 ], debug=True)
 
 

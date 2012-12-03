@@ -4,18 +4,17 @@
   h4.boxTitle.well Assignments
     a.btn.btn-small.addBtn.btn-primary.pull-right(href="#addClass", data-toggle='modal') &plus;
      
-  if(assignments.length == 0)
-    .alert.alert-warning You don't have any assignments!
-      a.close(data-dismiss='alert', href='#') &times;
+  .alert.alert-warning You don't have any assignments!
+    a.close(data-dismiss='alert', href='#') &times;
 
   //for assign in assignments
     
-  .well.well-small
+  //.well.well-small
     input(type='checkbox', value='wednesday')
     |  Homework One
     .pull-right
         span.label EECS 281
-  .well.well-small
+  //.well.well-small
     input(type='checkbox', value='wednesday')
     |  Worksheet
     .pull-right

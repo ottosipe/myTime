@@ -1,13 +1,28 @@
+var idToAdd = 0;
+
 $(document).ready(function(){
 	$('.tabNav').click(function (e) { // not a good solution!
 	  e.preventDefault();
 	  window.location.hash = $(this).attr("href");
 	  $(this).tab('show');
 	})
-
+	$('#welcome').modal();
 	$("#exam1").datepicker({todayHighlight: true, autoclose:true}); //set date range
 
 	buildDepartments();
+
+	$(".entry").click(function(event){
+		$(this).children().last().toggle();
+	});
+
+	$("#addClass").submit(function(event){
+		event.preventDefault();
+
+		$.post('/courses', { "id": idToAdd }, function(data) {
+			console.log(data);
+		});
+
+	});
 
 });
 
@@ -18,23 +33,6 @@ function optionAdder(arr, cb){
 	}
 	for (i in arr) cb(i,arr);
 }
-
-/*function buildSchools() {
-	$.get("/schools", function(data) {
-		var schools = $.parseJSON(data);
-		var selected = "";
-		$(".schoolSelector").empty();
-		optionAdder(schools, function(x,schools) {
-			if(schools[x].schoolcode == "LSA") selected = 'selected="selected"';
-			else selected = "";
-			$(".schoolSelector").append('<option '+selected+' value="'+schools[x].schoolcode+'">'+schools[x].schooldescr+'</option>');
-		});
-		buildDepartments();
-		$(".schoolSelector").removeAttr("disabled").change(function(){
-			buildDepartments();
-		});
-	});
-}*/
 
 function buildDepartments() {
 	$.get("/codes", {}, function(data) {
@@ -106,6 +104,7 @@ function buildInfo() {
 			html += (info[x].instructor)? info[x].instructor+"</br>" : "(staff)</br>";
 			html += info[x].location+'</p>';
 			$(".infoBox").html(html);
+			idToAdd = info[x].id;
 		});
 		$(".infoBox").show();
 	});

@@ -40,31 +40,23 @@ html
                     ul.nav.pull-right
                         .btn-group
                           a.btn.btn-primary(href='#account', role='button', data-toggle='modal')
-                              | #{user} 
-                              //i.icon-user.icon-white
+                              i.icon-user.icon-white 
+                              |   #{user} 
 
                             a.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', href='#')
                               span.caret
                             ul.dropdown-menu
                               li
-                                a(href='#settings',)
+                                a(href='#settings')
                                   i.icon-pencil
-                                  | Edit
+                                  |   Edit
                               li.divider
                               li
                                 a(href='#{logoutUrl}')
                                   i.icon-ban-circle
-                                  | Log Out
+                                  |   Log Out
                     
-                  
-          .alert.alert-info 
-            a.close(data-dismiss='alert', href='#') &times;
-            | Welcome to myTime!
-            a.btn.btn-success.btn-small(style="margin-left:10px;", href="#getStarted", role='button', data-toggle='modal') Import Your Schedule 
-            a.btn.btn-warning.btn-small(style="margin-left:10px;", href="#addClass", role='button', data-toggle='modal') Or Add Manually
-            
-            
-
+           
           .tab-content
             #home.tab-pane.active
               include home

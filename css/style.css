@@ -12,6 +12,9 @@ body {
     height: 100%;
 }
 
+.btn {
+    margin-left: 3px;
+}
 .header {
     border-bottom: 1px solid #ddd;
     margin-bottom: 15px;
@@ -66,3 +69,8 @@ body {
 }
 
 /*Modals*/
+
+.entry:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 5px #888888;
+}

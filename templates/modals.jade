@@ -1,5 +1,26 @@
 {% autoescape off %}
+if noob
+  form#welcome.modal.fade.form-horizontal
+      .modal-header
+          button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+          h3 Welcome, #{user}.
 
+        .modal-body
+          //h3 myTime can help you stay organized!
+          h4 Get the grades you want, with myTime!
+          ul
+            li Sync your classes with Google calendar.
+            li Track important assignments, tests, and events.
+            li Reflect on how you are doing during the semester.
+            li Help make sure your priorities are on target. 
+      .modal-footer
+        //h4.pull-left get started:
+        //a.btn.btn-danger(href="http://www.google.com") Nope
+        // import not working yet :(
+        //- add data-dismiss='modal',  href="#importClasses"
+        a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
+        a.btn.btn-success(data-dismiss='modal', href="#addClass", role='button', data-toggle='modal') Add Manually  
+        
 form#account.modal.hide.fade.form-horizontal
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
@@ -18,45 +39,15 @@ form#account.modal.hide.fade.form-horizontal
       button.btn(data-dismiss='modal') Cancel
       button.btn.btn-success(type='submit') Save Changes
 
-
-form#getStarted.modal.hide.fade.form-horizontal
-  
-    .modal-header
-        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 Import Classes:
-      .modal-body
-        p Looks like you're in EECS 281, take a look at your syllabus.
-        .control-group
-          label.control-label Exam One:
-          .controls
-            #exam1.input-append.date(data-date='10/12/2012', data-date-format='mm/dd/yyyy')
-              input.span2(size='16', type='text', value='10/12/2012')
-              span.add-on: i.icon-calendar
-
-        .control-group
-          label.control-label Prof. Email:
-          .controls
-            .input-append
-              input.span2(name="email", type='text', placeholder="johndoe",style="width:94px; text-align:right;")
-              span.add-on @umich.edu
-              
-
-    .modal-footer
-      button.btn(data-dismiss='modal') Cancel
-      button.btn.btn-success(type='submit') Next
-
-
-
 form#addClass.modal.hide.fade.form-horizontal
   
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
         h3 New Class
+
       .modal-body
-        //.control-group  
-          label.control-label School:
-          .controls.form-inline.halfsize
-            select.schoolSelector(disabled="true")
+        .control-group  [class that you're in] x
+        hr
         .control-group
           label.control-label Department:
           .controls.form-inline.halfsize
@@ -72,10 +63,11 @@ form#addClass.modal.hide.fade.form-horizontal
         .control-group
           label.control-label Info:
           .controls.form-inline.halfsize
+            input#idToAdd(type="hidden", name="id")
             .infoBox(type="text", disabled="true", value="person") 
+            button.btn.btn-success(type='submit') Add
 
     .modal-footer
       button.btn.btn-info(data-dismiss='modal') Done Adding
-      button.btn.btn-success(type='submit') Add
-
+      
 {% endautoescape %}
