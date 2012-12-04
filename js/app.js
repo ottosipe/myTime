@@ -9,22 +9,67 @@ $(document).ready(function(){
 	$('#welcome').modal();
 	$("#exam1").datepicker({todayHighlight: true, autoclose:true}); //set date range
 
-	buildDepartments();
-
-	$(".entry").click(function(event){
-		$(this).children().last().toggle();
-	});
-
 	$("#addClass").submit(function(event){
 		event.preventDefault();
 
 		$.post('/courses', { "id": idToAdd }, function(data) {
 			console.log(data);
+			reLoadCourses();
 		});
 
 	});
 
+
+
+	buildDepartments();
+	reLoadCourses();
+
 });
+
+function reLoadCourses() {
+	$.getJSON('courses', function(data) {
+		$("#courseList").html("");
+		$("#courseListSmall").html("");
+		$.each(data, function(key, course) {
+			//console.log(course)
+			var html = '<div class="well well-small entry">';
+			html += '<div class="row-fluid"><div class="span6" data-id="'+course.id+'"><h4 class="courseTitle">'+course.code+' '+course.number+'</h4>'+course.title+' ('+course.type+')</div>';
+			html += '<div class="span6"><span class="pull-right"> '+course.time+" "+course.days+' </span></div></div>';
+
+				html += '<div class="row-fluid edit">';
+					html += '<div class="span9">'+course.instructor+'</br>'+course.location+'</div>';
+					html += '<div class="span3"><div class="pull-right"><a class="btn btn-danger btn-small deleteClass" data-id="'+course.id+'" role="button">';
+				      html += '<i class="icon-ban-circle"></i></a>';
+				    html += '<a class="btn btn-success btn-small" data-toggle="modal" href="#editClass" role="button">';
+				      html += '<i class="icon-pencil"></i></a></div></div>';
+			 	html += '</div></div>';
+			 
+			/*$(".entry").click(function(event){
+				$(this).find(".edit").toggle();
+			});*/
+
+			$("#courseList").append(html);
+			var html2 = '<div class="label smallCourse" data-id="'+course.id+'">';
+				html2 += course.code+' '+course.number;
+				html2 += '</div>';
+			$("#courseListSmall").append(html2);
+
+			$(".deleteClass").click(function(event){
+				$.post("/delete", {id:$(this).attr("data-id")},function(data){ 
+					console.log(data);
+					reLoadCourses();
+				})
+			})
+
+		});
+		if(data=="") {
+			$("#courseAlert").show();
+		} else {
+			$("#courseAlert").hide();
+		}
+	});
+
+};
 
 function optionAdder(arr, cb){
 	if(!(arr instanceof Array)) {
@@ -105,7 +150,9 @@ function buildInfo() {
 			html += info[x].location+'</p>';
 			$(".infoBox").html(html);
 			idToAdd = info[x].id;
+			$("#addClassBtn").html("Add "+info[x].code+" "+info[x].number);
 		});
+
 		$(".infoBox").show();
 	});
 }

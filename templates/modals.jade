@@ -46,28 +46,29 @@ form#addClass.modal.hide.fade.form-horizontal
         h3 New Class
 
       .modal-body
-        .control-group  [class that you're in] x
-        hr
+        .control-group
+          label.control-label Clases:
+          .controls.form-inline#courseListSmall
         .control-group
           label.control-label Department:
-          .controls.form-inline.halfsize
+          .controls.form-inline
             select.deptSelector(disabled="true")
         .control-group
           label.control-label Course:
-          .controls.form-inline.halfsize
+          .controls.form-inline
             select.numSelector(disabled="true")
         .control-group
           label.control-label Section:
-          .controls.form-inline.halfsize
+          .controls.form-inline
             select.sectSelector(disabled="true")
         .control-group
           label.control-label Info:
-          .controls.form-inline.halfsize
+          .controls.form-inline
             input#idToAdd(type="hidden", name="id")
             .infoBox(type="text", disabled="true", value="person") 
-            button.btn.btn-success(type='submit') Add
-
+        
     .modal-footer
-      button.btn.btn-info(data-dismiss='modal') Done Adding
+      button.btn.btn-info.pull-left(data-dismiss='modal') Done Adding
+      button.btn.btn-success(type='submit',id="addClassBtn") Add
       
 {% endautoescape %}

@@ -23,6 +23,10 @@ class Course(ndb.Model):
   section = ndb.IntegerProperty()
   title = ndb.StringProperty()
   type = ndb.StringProperty()
+  days = ndb.StringProperty()
+  time = ndb.StringProperty()
+  location = ndb.StringProperty()
+  instructor = ndb.StringProperty()
   #meetings = ndb.LocalStructuredProperty(Meeting)#, repeated=True)
 
 class Assignment(ndb.Model):
@@ -133,13 +137,23 @@ class courseAPI(webapp2.RequestHandler):
     
     User = users.get_current_user()
     student = Student.query(Student.user == User).fetch(1)[0]
+
+    for x in student.courses:
+      if x.id == int(self.request.get('id')):
+        self.response.write("already in this course")
+        return
+
     student.courses += [Course(
       id = info["id"],
       code = info["code"],
       number = info["number"],
       section = info["section"],
       type = info["type"],
-      title = info["title"]
+      title = info["title"],
+      days = info["days"],
+      time = info["time"],
+      location = info["location"],
+      instructor = info["instructor"]
     )]
     
     student.put()
@@ -159,13 +173,30 @@ class courseAPI(webapp2.RequestHandler):
     else: 
       self.response.out.write("['auth':'fail']");
 
+class deleteCourseAPI(webapp2.RequestHandler):
+  def post(self):
+    User = users.get_current_user()
+    newCourses = []
+    if User:
+      student = Student.query(Student.user == User).fetch(1)[0]
+      for x in student.courses:
+        if x.id != int(self.request.get('id')):
+          newCourses.append(x)
+      student.courses = newCourses
+      student.put()
+      self.response.out.write("deleted class")
+    else: 
+      self.response.out.write("['auth':'fail']");
+
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/codes', CodeAPI),
     ('/numbers', NumbersAPI),
     ('/sections', SectionsAPI),
     ('/info', InfoAPI),
-    ('/courses', courseAPI)
+    ('/courses', courseAPI),
+    ('/delete', deleteCourseAPI)
 ], debug=True)
 
 

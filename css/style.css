@@ -70,6 +70,19 @@ body {
 
 /*Modals*/
 
+.form-inline {
+    max-width: 260px;
+}
+
+.smallCourse {
+    margin:3px;
+    display: inline-block;
+}
+
+.courseTitle {
+    margin: 3px 0px;
+}
+
 .entry:hover {
     cursor: pointer;
     box-shadow: 1px 1px 5px #888888;
