@@ -1,4 +1,4 @@
-var idToAdd = 0;
+var idToAdd = 0; // global for adding a class, should be attached to the dom ***
 
 $(document).ready(function(){
 	$('.tabNav').click(function (e) { // not a good solution!
@@ -11,19 +11,62 @@ $(document).ready(function(){
 
 	$("#addClass").submit(function(event){
 		event.preventDefault();
-
+		$("#addClassBtn").button('loading');
 		$.post('/courses', { "id": idToAdd }, function(data) {
 			console.log(data);
 			reLoadCourses();
-		});
 
+			$("#addClassBtn").button('reset');
+		});
 	});
 
+	$("body").on("click", ".entryTitle", function() {
+		$(".edit").hide();
+		$(this).parent().find(".edit").show();
+	});
 
+	$("body").on("click", ".closeEntry", function() {
+		$(this).closest(".edit").hide();
+	});
+
+	$("body").on("click", ".deleteClass", function() {
+		var victim = $(this);
+		$.post("/courses/delete", { id: victim.attr("data-id") }, function(data){ 
+			console.log(data);
+			victim.popover('hide');
+			reLoadCourses();
+		});
+	});
 
 	buildDepartments();
 	reLoadCourses();
 
+
+	$("#addAssign").submit(function(event){
+		event.preventDefault();
+		$("#addAssnBtn").button('loading');
+		$.post('/assignments', $(this).serialize(), function(data) {
+			console.log(data);
+			reLoadAssignments();
+			$("#rstAssnBtn").trigger('click');
+			$("#addAssnBtn").button('reset');
+		});
+	});
+	reLoadAssignments();
+
+
+	$("#addExam").submit(function(event){
+		event.preventDefault();
+		$("#addExamBtn").button('loading');
+		$.post('/exams', $(this).serialize(), function(data) {
+			console.log(data);
+			reLoadExams();
+
+			$("#rstExamBtn").trigger('click');
+			$("#addExamBtn").button('reset');
+		});
+	});
+	reLoadExams();
 });
 
 function reLoadCourses() {
@@ -33,33 +76,24 @@ function reLoadCourses() {
 		$.each(data, function(key, course) {
 			//console.log(course)
 			var html = '<div class="well well-small entry">';
-			html += '<div class="row-fluid"><div class="span6" data-id="'+course.id+'"><h4 class="courseTitle">'+course.code+' '+course.number+'</h4>'+course.title+' ('+course.type+')</div>';
-			html += '<div class="span6"><span class="pull-right"> '+course.time+" "+course.days+' </span></div></div>';
+			html += '<div class="entryTitle" data-id="'+course.id+'"><h4 class="courseTitle">'+course.code+' '+course.number+'</h4>'+course.title+' ('+course.type+')</div>';
+			html += '<div class="tags"><span class="label">test</span></div>';
 
-				html += '<div class="row-fluid edit">';
-					html += '<div class="span9">'+course.instructor+'</br>'+course.location+'</div>';
-					html += '<div class="span3"><div class="pull-right"><a class="btn btn-danger btn-small deleteClass" data-id="'+course.id+'" role="button">';
+				html += '<div class="row-fluid edit hide ">';
+					html += '<div class="span9">'+course.instructor+'</br>'+course.location+' - '+course.days+' '+course.time+'</div>';
+
+					html += '<div class="span3"><div class="pull-right editBtns"><a class="btn btn-danger btn-small deleteClass" role="button" data-id="'+course.id+'">';
 				      html += '<i class="icon-ban-circle"></i></a>';
-				    html += '<a class="btn btn-success btn-small" data-toggle="modal" href="#editClass" role="button">';
-				      html += '<i class="icon-pencil"></i></a></div></div>';
+				    html += '<a class="btn btn-success btn-small closeEntry" role="button">';
+				      html += '<i class="icon-chevron-up"></i></a></div></div>';
 			 	html += '</div></div>';
-			 
-			/*$(".entry").click(function(event){
-				$(this).find(".edit").toggle();
-			});*/
+
 
 			$("#courseList").append(html);
 			var html2 = '<div class="label smallCourse" data-id="'+course.id+'">';
 				html2 += course.code+' '+course.number;
 				html2 += '</div>';
 			$("#courseListSmall").append(html2);
-
-			$(".deleteClass").click(function(event){
-				$.post("/delete", {id:$(this).attr("data-id")},function(data){ 
-					console.log(data);
-					reLoadCourses();
-				})
-			})
 
 		});
 		if(data=="") {
@@ -71,6 +105,56 @@ function reLoadCourses() {
 
 };
 
+function reLoadAssignments() {
+	$.getJSON('/assignments', function(data) {
+
+		console.log(data);
+		$("#assignList").html("");
+		$.each(data, function(key, assign) {
+			var html = '<div class="well well-small">';
+			html += '<button class="btn pull-right"><i class="icon-ok"></i></button>';
+				html += '<div class="listTitle">';
+				 //   |  Worksheet
+				 //   .pull-right
+				 //       span.label EECS 370
+				 html += ' '+ assign.title+'</h5>';
+
+			html += '</div>';
+
+			$("#assignList").append(html);
+		});
+		if(data=="") {
+			$("#assignAlert").show();
+		} else {
+			$("#assignAlert").hide();
+		}
+	}); 
+};
+
+function reLoadExams() {
+	$.getJSON('/exams', function(data) {
+
+		console.log(data);
+		$("#examList").html("");
+		$.each(data, function(key, exam) {
+			var html = '<div class="well well-small">';
+			//html += '<div class="pull-right"><span class="label">hello</span></div>';
+				html += '<div class="listTitle">';
+				 html += ' '+ exam.title+'</h5>';
+			html += '</div>';
+
+			$("#examList").append(html);
+		});
+		if(data=="") {
+			$("#examAlert").show();
+		} else {
+			$("#examAlert").hide();
+		}
+	}); 
+};
+
+///
+
 function optionAdder(arr, cb){
 	if(!(arr instanceof Array)) {
 		var junkArr = new Array(arr);
@@ -80,6 +164,8 @@ function optionAdder(arr, cb){
 }
 
 function buildDepartments() {
+
+	$("#addClassBtn").button('loading');
 	$.get("/codes", {}, function(data) {
 		var depts = $.parseJSON(data);
 		
@@ -98,6 +184,7 @@ function buildDepartments() {
 }
 
 function buildNumbers() {
+	$("#addClassBtn").button('loading');
 	$.get("/numbers", { subj: $(".deptSelector").val() }, function(data) {
 		var nums = $.parseJSON(data);
 
@@ -116,6 +203,8 @@ function buildNumbers() {
 }
 
 function buildSections() {
+
+	$("#addClassBtn").button('loading');
 	$.get("/sections", { subj: $(".deptSelector").val(), num: $(".numSelector").val() }, function(data) {
 		
 		var sects = $.parseJSON(data);
@@ -138,11 +227,12 @@ function buildSections() {
 }
 
 function buildInfo() {
+
 	$.get("/info", { id: $(".sectSelector").val(),}, function(data) {
 		
 		var sect = $.parseJSON(data);
 		var selected = "";
-		console.log(sect);
+		//console.log(sect);
 
 		optionAdder(sect, function(x,info) {
 			var html = '<p>'+info[x].days+' '+info[x].time+'</br>';
@@ -150,9 +240,12 @@ function buildInfo() {
 			html += info[x].location+'</p>';
 			$(".infoBox").html(html);
 			idToAdd = info[x].id;
+
+			$("#addClassBtn").button('reset');
 			$("#addClassBtn").html("Add "+info[x].code+" "+info[x].number);
 		});
 
 		$(".infoBox").show();
+
 	});
 }

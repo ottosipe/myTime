@@ -87,3 +87,18 @@ body {
     cursor: pointer;
     box-shadow: 1px 1px 5px #888888;
 }
+
+.editBtns {
+    margin-top:10px;
+}
+.tags {
+    position: relative;
+    float:right;
+    margin-top: -45px;
+}
+
+.listTitle {
+    font-size: 15px;
+    margin:6px;
+    font-weight: bold;
+}

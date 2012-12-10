@@ -1,6 +1,10 @@
 {% autoescape off %}
-if noob
-  form#welcome.modal.fade.form-horizontal
+
+
+//- opens the welcome modal only if user is new
+if noob 
+  // new user modal
+  form#welcome.modal.form-horizontal
       .modal-header
           button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
           h3 Welcome, #{user}.
@@ -21,26 +25,46 @@ if noob
         a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
         a.btn.btn-success(data-dismiss='modal', href="#addClass", role='button', data-toggle='modal') Add Manually  
         
-form#account.modal.hide.fade.form-horizontal
+// account edit modal
+form#account.modal.hide.form-horizontal
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
         h3=user
       .modal-body
         .control-group
-            label.control-label(for='inputEmail') Email
+            label.control-label Name:
             .controls
-              input#inputEmail(type='text', placeholder='Email')
+              input(type='text', placeholder="ex. Susie Queue")
         .control-group
-          label.control-label(for='inputPassword') Password
-          .controls
-            input#inputPassword(type='password', placeholder='Password')
+            label.control-label Class Year:
+            .controls
+              select.years
+                option(val="Freshman") Freshman
+                option(val="Sophomore") Sophomore
+                option(val="Junior") Junior
+                option(val="Senior") Senior
+                option(val="Grad. Student") Grad. Student
+        .control-group
+            label.control-label Major:
+            .controls
+              input(type="text", placeholder="ex. Phrenology")
+        .control-group
+            label.control-label Advisor Email:
+            .controls
+              input(type="email", placeholder="advisor@umich.edu")
+
 
     .modal-footer
+      a.pull-left.btn.btn-danger(href='#{logoutUrl}')
+        i.icon-ban-circle
+        |   Log Out
       button.btn(data-dismiss='modal') Cancel
       button.btn.btn-success(type='submit') Save Changes
 
-form#addClass.modal.hide.fade.form-horizontal
-  
+
+
+// add class modal
+form#addClass.modal.hide.form-horizontal
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
         h3 New Class
@@ -64,11 +88,43 @@ form#addClass.modal.hide.fade.form-horizontal
         .control-group
           label.control-label Info:
           .controls.form-inline
-            input#idToAdd(type="hidden", name="id")
             .infoBox(type="text", disabled="true", value="person") 
         
     .modal-footer
       button.btn.btn-info.pull-left(data-dismiss='modal') Done Adding
-      button.btn.btn-success(type='submit',id="addClassBtn") Add
+      button.btn.btn-success(type='submit',id="addClassBtn",data-loading-text="Working...") Add
+      
+
+// add assignment modal
+form#addAssign.modal.hide.form-horizontal
+    .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h3 New Assignment
+
+      .modal-body
+        .control-group
+          label.control-label Name:
+          .controls.form-inline
+            input(type="text", name="title")
+        
+    .modal-footer
+      button.btn.btn-success(type='submit',id="addAssnBtn", data-loading-text="Working...") Add
+      button.btn.hide(type="reset", data-dismiss='modal', id="rstAssnBtn")
+
+// add exam modal
+form#addExam.modal.hide.form-horizontal
+    .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h3 New Exam
+
+      .modal-body
+        .control-group
+          label.control-label Name:
+          .controls.form-inline
+            input(type="text", name="title")
+        
+    .modal-footer
+      button.btn.btn-success(type='submit',id="addExamBtn", data-loading-text="Working...") Add
+      button.btn.hide(type="reset", data-dismiss='modal', id="rstExamBtn")
       
 {% endautoescape %}

@@ -38,23 +38,10 @@ html
                       li: a(href='#two',class="tabNav") Two
                       li: a(href='#three',class="tabNav") Three
                     ul.nav.pull-right
-                        .btn-group
-                          a.btn.btn-primary(href='#account', role='button', data-toggle='modal')
-                              i.icon-user.icon-white 
-                              |   #{user} 
-
-                            a.btn.btn-primary.dropdown-toggle(data-toggle='dropdown', href='#')
-                              span.caret
-                            ul.dropdown-menu
-                              li
-                                a(href='#settings')
-                                  i.icon-pencil
-                                  |   Edit
-                              li.divider
-                              li
-                                a(href='#{logoutUrl}')
-                                  i.icon-ban-circle
-                                  |   Log Out
+                      .btn-group
+                        a.btn.btn-primary(href='#account', role='button', data-toggle='modal')
+                            i.icon-user.icon-white 
+                            |   #{user} 
                     
            
           .tab-content

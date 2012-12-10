@@ -2,16 +2,10 @@
 
 .well.well-small
   h4.boxTitle.well Exams
-    a.btn.btn-small.addBtn.btn-primary.pull-right(href="#addClass", data-toggle='modal') &plus;
+    a.btn.btn-small.addBtn.btn-primary.pull-right(href="#addExam", data-toggle='modal') &plus;
      
-  
-  .alert.alert-warning You don't have any exams!
+  .alert.alert-warning.hide#examAlert You don't have any exams!
     a.close(data-dismiss='alert', href='#') &times;
 
-  //.well.well-small EECS 281
-    .pull-right 
-        span.label.label-important Today
-  //.well.well-small EECS 370
-    .pull-right 
-        span.label.label-warning 7 Days
+  #examList
 {% endautoescape %}
