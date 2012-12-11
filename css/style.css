@@ -70,6 +70,20 @@ body {
 
 /*Modals*/
 
+.selector {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.infoBox {
+    margin-top: 10px;
+}
+
+#courseListSmall {
+    margin-bottom: 10px; 
+    text-align: center;
+}
+
 .form-inline {
     max-width: 260px;
 }

@@ -18,9 +18,6 @@ if noob
             li Reflect on how you are doing during the semester.
             li Help make sure your priorities are on target. 
       .modal-footer
-        //h4.pull-left get started:
-        //a.btn.btn-danger(href="http://www.google.com") Nope
-        // import not working yet :(
         //- add data-dismiss='modal',  href="#importClasses"
         a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
         a.btn.btn-success(data-dismiss='modal', href="#addClass", role='button', data-toggle='modal') Add Manually  
@@ -67,32 +64,22 @@ form#account.modal.hide.form-horizontal
 form#addClass.modal.hide.form-horizontal
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 New Class
+        h3 Add Courses
 
       .modal-body
-        .control-group
-          label.control-label Clases:
-          .controls.form-inline#courseListSmall
-        .control-group
-          label.control-label Department:
-          .controls.form-inline
-            select.deptSelector(disabled="true")
-        .control-group
-          label.control-label Course:
-          .controls.form-inline
-            select.numSelector(disabled="true")
-        .control-group
-          label.control-label Section:
-          .controls.form-inline
-            select.sectSelector(disabled="true")
-        .control-group
-          label.control-label Info:
-          .controls.form-inline
-            .infoBox(type="text", disabled="true", value="person") 
+        #courseListSmall
+        
+        .row-fluid
+          .span6
+            select.selector.deptSelector(disabled="true")
+            select.selector.numSelector(disabled="true")
+            select.selector.sectSelector(disabled="true")
+          .span6
+            .infoBox.well.well-small.hidden-phone --- Couse Info --- 
         
     .modal-footer
-      button.btn.btn-info.pull-left(data-dismiss='modal') Done Adding
-      button.btn.btn-success(type='submit',id="addClassBtn",data-loading-text="Working...") Add
+      button.btn.btn-info.pull-left(data-dismiss='modal') Done
+      button.btn.btn-success(type='submit',id="addClassBtn",data-loading-text="Waiting...") Add
       
 
 // add assignment modal

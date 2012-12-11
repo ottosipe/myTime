@@ -16,7 +16,8 @@ $(document).ready(function(){
 			console.log(data);
 			reLoadCourses();
 
-			$("#addClassBtn").button('reset');
+			$("#addClassBtn").html('Course Added').attr("disabled","disabled");
+			
 		});
 	});
 
@@ -90,7 +91,7 @@ function reLoadCourses() {
 
 
 			$("#courseList").append(html);
-			var html2 = '<div class="label smallCourse" data-id="'+course.id+'">';
+			var html2 = '<div class="btn smallCourse" data-id="'+course.id+'">';
 				html2 += course.code+' '+course.number;
 				html2 += '</div>';
 			$("#courseListSmall").append(html2);
@@ -100,6 +101,9 @@ function reLoadCourses() {
 			$("#courseAlert").show();
 		} else {
 			$("#courseAlert").hide();
+		}
+		if($("#courseListSmall").html() == "") {
+			$("#courseListSmall").html("<div class='btn'>You aren't in any courses, yet.</div>")
 		}
 	});
 
@@ -166,17 +170,18 @@ function optionAdder(arr, cb){
 function buildDepartments() {
 
 	$("#addClassBtn").button('loading');
+	$(".numSelector").html('<option value="">--- Course ----</option>');
+	$(".sectSelector").html('<option value="">--- Section ---</option>');
 	$.get("/codes", {}, function(data) {
 		var depts = $.parseJSON(data);
 		
 		var selected = "";
-		$(".deptSelector").empty();
+		$(".deptSelector").html('<option value="">--- Subject ---</option>');
 		optionAdder(depts, function(x,depts) {
-			if(depts[x].code == "EECS") selected = 'selected="selected"';
-			else selected = "";
+			//if(depts[x].code == "EECS") selected = 'selected="selected"';
 			$(".deptSelector").append('<option '+selected+' value="'+depts[x].code+'">'+depts[x].subject+'</option>');
 		});
-		buildNumbers();
+		//buildNumbers();
 		$(".deptSelector").removeAttr("disabled").change(function(){
 			buildNumbers();
 		});
@@ -191,8 +196,7 @@ function buildNumbers() {
 		var selected = "";
 		$(".numSelector").empty();
 		optionAdder(nums, function(x,nums) {
-			if(nums[x].number == 210 || nums[x].number == 281) selected = 'selected="selected"';
-			else selected = "";
+			//if(nums[x].number == 210 || nums[x].number == 281) selected = 'selected="selected"';
 			$(".numSelector").append('<option '+selected+' value="'+nums[x].number+'">('+nums[x].number+') '+nums[x].title +'</option>');
 		});
 		buildSections();
@@ -205,6 +209,7 @@ function buildNumbers() {
 function buildSections() {
 
 	$("#addClassBtn").button('loading');
+		
 	$.get("/sections", { subj: $(".deptSelector").val(), num: $(".numSelector").val() }, function(data) {
 		
 		var sects = $.parseJSON(data);
@@ -212,8 +217,7 @@ function buildSections() {
 
 		$(".sectSelector").empty();
 		optionAdder(sects, function(x,sects) {
-			if(sects[x].number == 1) selected = 'selected="selected"';
-			else selected = "";
+			//if(sects[x].number == 1) selected = 'selected="selected"';
 			var html = '<option '+selected+' value="'+sects[x].id+'">'+sects[x].type +' - '+sects[x].section+' ';
 			html += (sects[x].instructor)? "("+sects[x].instructor+")" : "(staff)";
 			html += ' </option>';
@@ -244,8 +248,5 @@ function buildInfo() {
 			$("#addClassBtn").button('reset');
 			$("#addClassBtn").html("Add "+info[x].code+" "+info[x].number);
 		});
-
-		$(".infoBox").show();
-
 	});
 }
