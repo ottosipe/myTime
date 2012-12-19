@@ -36,22 +36,22 @@ html
                   a.brand(href='#home') myTime
                   .nav-collapse
                     ul.nav
-                      li: a(href='#one',class="tabNav") One
-                      li: a(href='#two',class="tabNav") Two
-                      li: a(href='#three',class="tabNav") Three
+                      if(admin)
+                        li: a(href='#admin',class="tabNav") Admin
                     ul.nav.pull-right
                       .btn-group
                         a.btn.btn-primary(href='#account', role='button', data-toggle='modal')
                             i.icon-user.icon-white 
-                            |   #{user} 
+                            |  #{user} 
                     
            
           .tab-content
+            
             #home.tab-pane.active
               include home
-            #one.tab-pane one
-            #two.tab-pane two
-            #three.tab-pane three
+            if(admin)
+              #admin.tab-pane
+                include admin
 
           
 

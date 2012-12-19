@@ -34,10 +34,24 @@ class MainPage(jade.jadeHandler):
           'email': User.email(),
           'logoutUrl': users.create_logout_url("/"),
           'achievement': 89,
-          'noob': isNoob
+          'noob': isNoob,
+          'admin': users.is_current_user_admin()
       }
 
       self.render_response('index.jade', **context)
     else: 
       self.redirect(users.create_login_url(self.request.uri))
+
+
+class AdminPage(jade.jadeHandler):
+  def get(self):
+    #handles get requests, context is object sent to jade renderer
+
+    User = users.get_current_user()
+    
+    if users.is_current_user_admin():
+      context = {}
+      self.render_response('admin.jade', **context)
+    else: 
+      self.redirect("/")
 

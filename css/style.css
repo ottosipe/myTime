@@ -12,6 +12,9 @@ body {
     height: 100%;
 }
 
+hr {
+    border-top: 1px solid #DDD;
+}
 .btn {
     margin-left: 3px;
 }
@@ -48,7 +51,7 @@ body {
 }
 
 .boxTitle {
-    margin: -10px -10px 10px -10px;
+    margin: -10px -10px 20px -10px;
     padding: 10px;
     background-color: #ddd;
 }
@@ -97,11 +100,6 @@ body {
     margin: 3px 0px;
 }
 
-.entry:hover {
-    cursor: pointer;
-    box-shadow: 1px 1px 5px #888888;
-}
-
 .editBtns {
     margin-top:10px;
 }
@@ -111,8 +109,22 @@ body {
     margin-top: -45px;
 }
 
-.listTitle {
-    font-size: 15px;
+.entry {
     margin:6px;
-    font-weight: bold;
+}
+
+.courseLabel {
+    font-size: 13px;
+
+}
+
+.dateLabel {
+    margin: 0px;
+}
+
+.listTitle {
+    width: 75%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin: 0px 0px 3px 0px;
 }

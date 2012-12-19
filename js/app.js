@@ -1,4 +1,5 @@
 var idToAdd = 0; // global for adding a class, should be attached to the dom ***
+var courseArray = [];
 
 $(document).ready(function(){
 	$('.tabNav').click(function (e) { // not a good solution!
@@ -19,15 +20,6 @@ $(document).ready(function(){
 			$("#addClassBtn").html('Course Added').attr("disabled","disabled");
 			
 		});
-	});
-
-	$("body").on("click", ".entryTitle", function() {
-		$(".edit").hide();
-		$(this).parent().find(".edit").show();
-	});
-
-	$("body").on("click", ".closeEntry", function() {
-		$(this).closest(".edit").hide();
 	});
 
 	$("body").on("click", ".deleteClass", function() {
@@ -68,26 +60,54 @@ $(document).ready(function(){
 		});
 	});
 	reLoadExams();
+
+	loadReminders();
+
+	$(".date").datepicker({
+		format: 'mm/dd/yyyy',
+		todayHighlight: true,
+		autoclose:true
+	}); //set date range
+
+	// *** // for the admin page only
+
+	$("#addReminder").submit(function(event){
+		event.preventDefault();
+		$.post('/reminders', $(this).serialize(), function(data) {
+			alert(data);
+			window.location = "/";
+		});
+	});
 });
 
 function reLoadCourses() {
 	$.getJSON('courses', function(data) {
-		$("#courseList").html("");
-		$("#courseListSmall").html("");
+		$("#courseList").empty();
+		$("#courseListSmall").empty();
+		$(".courseSelector").empty();
+		courseArray = [];
+
 		$.each(data, function(key, course) {
 			//console.log(course)
-			var html = '<div class="well well-small entry">';
+			var html = '<div class="entry">';
 			html += '<div class="entryTitle" data-id="'+course.id+'"><h4 class="courseTitle">'+course.code+' '+course.number+'</h4>'+course.title+' ('+course.type+')</div>';
-			html += '<div class="tags"><span class="label">test</span></div>';
+			html += '<div class="tags"><span class="label">hw due soon</span></div>';
 
-				html += '<div class="row-fluid edit hide ">';
-					html += '<div class="span9">'+course.instructor+'</br>'+course.location+' - '+course.days+' '+course.time+'</div>';
+				html += '<div class="row-fluid">';
+					html += '<div class="span7">'+course.instructor+'</br>'+course.location+' - '+course.days+' '+course.time+'</div>';
 
-					html += '<div class="span3"><div class="pull-right editBtns"><a class="btn btn-danger btn-small deleteClass" role="button" data-id="'+course.id+'">';
-				      html += '<i class="icon-ban-circle"></i></a>';
-				    html += '<a class="btn btn-success btn-small closeEntry" role="button">';
-				      html += '<i class="icon-chevron-up"></i></a></div></div>';
-			 	html += '</div></div>';
+					html += '<div class="span5"><div class="pull-right editBtns">';
+
+					html += '<div class="btn-group"><a class="btn" role="button" href="mailto:ottosipe@gmail.com">';
+				      html += '<i class="icon-envelope"></i></a>';
+
+					html += '<a class="btn" role="button" href="http://ctools.umich.edu" target="_blank">';
+				      html += '<i class="icon-globe"></i></a>';
+
+					html += '<a class="btn dropdown-toggle" data-toggle="dropdown">';
+				      html += '<i class="icon-pencil"></i> <span class="caret"></span></a>';
+				      html += '<ul class="dropdown-menu"><li><a href="#">Edit Details</a></li><li><a href="#">Change Sections</a></li><li><a href="#" class="deleteClass" data-id="'+course.id+'">Delete</a></li></ul></div>';
+			 	html += '</div></div></div><hr>';
 
 
 			$("#courseList").append(html);
@@ -96,6 +116,9 @@ function reLoadCourses() {
 				html2 += '</div>';
 			$("#courseListSmall").append(html2);
 
+			$(".courseSelector").append('<option value="'+course.id+'">'+course.code+' '+course.number+'</option>');
+
+			courseArray[course.id] = course;
 		});
 		if(data=="") {
 			$("#courseAlert").show();
@@ -115,15 +138,15 @@ function reLoadAssignments() {
 		console.log(data);
 		$("#assignList").html("");
 		$.each(data, function(key, assign) {
-			var html = '<div class="well well-small">';
-			html += '<button class="btn pull-right"><i class="icon-ok"></i></button>';
-				html += '<div class="listTitle">';
-				 //   |  Worksheet
-				 //   .pull-right
-				 //       span.label EECS 370
-				 html += ' '+ assign.title+'</h5>';
-
-			html += '</div>';
+			var html = '<div class="entry">';
+			var course = courseArray[assign.course];
+			html += '<span class="courseLabel">'+course.code+' '+ course.number+'</span>';
+			html += '<div class="btn-group pull-right"><button class="btn">';
+			html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+			html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#">Delete</a></li></ul></div>';
+				html += '<h4 class="listTitle">'+ assign.title+'</h4>';
+				html += '<span class="courseLabel">'+ assign.date +'</span>';
+			html += '</div><hr>';
 
 			$("#assignList").append(html);
 		});
@@ -141,11 +164,15 @@ function reLoadExams() {
 		console.log(data);
 		$("#examList").html("");
 		$.each(data, function(key, exam) {
-			var html = '<div class="well well-small">';
-			//html += '<div class="pull-right"><span class="label">hello</span></div>';
-				html += '<div class="listTitle">';
-				 html += ' '+ exam.title+'</h5>';
-			html += '</div>';
+			var html = '<div class="entry">';
+			var course = courseArray[exam.course];
+			html += '<span class="courseLabel">'+course.code+' '+ course.number+'</span>';
+			html += '<div class="btn-group pull-right"><button class="btn">';
+			html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+			html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#">Delete</a></li></ul></div>';
+				html += '<h4 class="listTitle">'+ exam.title+'</h4>';
+				html += '<span class="courseLabel">'+ exam.date +'</span>';
+			html += '</div><hr>';
 
 			$("#examList").append(html);
 		});
@@ -157,7 +184,23 @@ function reLoadExams() {
 	}); 
 };
 
-///
+function loadReminders() {
+	$.getJSON('/reminders', function(data) {
+
+		console.log(data);
+		$("#reminderList").empty();
+		$.each(data, function(key, rem) {
+			var html = '<div class="entry">';
+			html += '<h4 class="listTitle">'+ rem.title+'</h4>';
+			html += '<div class="listText">'+rem.text+'</div>';
+			html += '</div><hr>';
+
+			$("#reminderList").append(html);
+		});
+	}); 
+};
+
+///////
 
 function optionAdder(arr, cb){
 	if(!(arr instanceof Array)) {

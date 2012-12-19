@@ -13,7 +13,7 @@ if noob
           //h3 myTime can help you stay organized!
           h4 Get the grades you want, with myTime!
           ul
-            li Sync your classes with Google calendar.
+            //li Sync your classes with Google calendar.
             li Track important assignments, tests, and events.
             li Reflect on how you are doing during the semester.
             li Help make sure your priorities are on target. 
@@ -85,15 +85,26 @@ form#addClass.modal.hide.form-horizontal
 // add assignment modal
 form#addAssign.modal.hide.form-horizontal
     .modal-header
-        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 New Assignment
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+      h3 New Assignment
 
       .modal-body
         .control-group
-          label.control-label Name:
+          label.control-label Title:
           .controls.form-inline
             input(type="text", name="title")
-        
+
+        .control-group
+          label.control-label Course:
+          .controls.form-inline
+            select.courseSelector(name="course")
+        .control-group
+          label.control-label Due Date:
+          .controls.form-inline
+            input.date.span2(type='text', name="date", placeholder="(optional)")
+                span.add-on
+                  i.icon-th
+
     .modal-footer
       button.btn.btn-success(type='submit',id="addAssnBtn", data-loading-text="Working...") Add
       button.btn.hide(type="reset", data-dismiss='modal', id="rstAssnBtn")
@@ -101,15 +112,25 @@ form#addAssign.modal.hide.form-horizontal
 // add exam modal
 form#addExam.modal.hide.form-horizontal
     .modal-header
-        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 New Exam
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+      h3 New Exam
 
       .modal-body
         .control-group
-          label.control-label Name:
+          label.control-label Exam:
           .controls.form-inline
             input(type="text", name="title")
-        
+
+        .control-group
+          label.control-label Course:
+          .controls.form-inline
+            select.courseSelector(name="course")
+        .control-group
+          label.control-label Date:
+          .controls.form-inline
+            input.date.span2(type='text', name="date", placeholder="(optional)")
+                span.add-on
+                  i.icon-th
     .modal-footer
       button.btn.btn-success(type='submit',id="addExamBtn", data-loading-text="Working...") Add
       button.btn.hide(type="reset", data-dismiss='modal', id="rstExamBtn")

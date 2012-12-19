@@ -17,16 +17,18 @@ class Course(ndb.Model):
 class Assignment(ndb.Model):
   # need id***?
   title = ndb.StringProperty()
-  course = ndb.KeyProperty(kind=Course)
-  due = ndb.IntegerProperty() #unix timestamp
+  course = ndb.IntegerProperty()
+  date = ndb.StringProperty() #eventually a unix timestamp
   completed = ndb.BooleanProperty()
   #added = ndb.DateTimeProperty(auto_now_add=True)
 
 class Exam(ndb.Model):
-  # need id? ***
+  # need id***?
   title = ndb.StringProperty()
-  course = ndb.KeyProperty(kind=Course)
-  time = ndb.IntegerProperty() #unix timestamp
+  course = ndb.IntegerProperty()
+  date = ndb.StringProperty() #eventually a unix timestamp
+  completed = ndb.BooleanProperty()
+  #added = ndb.DateTimeProperty(auto_now_add=True)
 
 class Student(ndb.Model):
   user = ndb.UserProperty()
@@ -34,10 +36,8 @@ class Student(ndb.Model):
   assignments = ndb.StructuredProperty(Assignment, repeated=True)
   exams = ndb.StructuredProperty(Exam, repeated=True)
 
-# class Meeting(ndb.Model):
-#   days = ndb.StringProperty()
-#   begin = ndb.TimeProperty()
-#   end = ndb.TimeProperty()
-#   location = ndb.StringProperty()
-#   instructor = ndb.StringProperty()
+###
+class Reminder(ndb.Model):
+  title = ndb.StringProperty() 
+  text = ndb.StringProperty()
 

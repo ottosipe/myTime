@@ -1,0 +1,16 @@
+{% autoescape off %}
+
+.well 
+
+    form#addReminder(method="post", action="/reminders")
+        fieldset
+            legend Add a reminder
+            div
+                input(name="title", type='text', placeholder='Reminder Title…')
+            //- span.help-block Example block-level help text here.
+            div
+                textarea(name="text", placeholder="Reminder subtext (optional)", style="width:100%; height:140px;")
+            div
+                button.btn(type="submit") save
+
+{% endautoescape %}

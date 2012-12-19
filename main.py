@@ -11,15 +11,21 @@ import views
 
 app = webapp2.WSGIApplication([
     ('/', views.MainPage),
+    ('/admin', views.AdminPage),
+    
+    # class apis
     ('/codes', api.Code),
     ('/numbers', api.Numbers),
     ('/sections', api.Sections),
     ('/info', api.Info),
+
+    # user apis
     ('/courses', api.Courses),
     ('/courses/delete', api.DeleteCourse),
     ('/assignments', api.Assignments),
     ('/assignments/delete', api.DeleteAssignment),
     ('/assignments/complete', api.CompleteAssignment),
     ('/exams', api.Exams),
-    ('/exams/delete', api.DeleteExam)
+    ('/exams/delete', api.DeleteExam),
+    ('/reminders', api.Reminders)
 ], debug=True)

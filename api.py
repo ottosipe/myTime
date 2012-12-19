@@ -82,7 +82,8 @@ class Assignments(webapp2.RequestHandler):
     student.assignments += [models.Assignment(
       title = self.request.get('title'),
       completed = False,
-      due = 1356472800 #christmas
+      date =  self.request.get('date'),
+      course = int(self.request.get('course'))
     )]
     
     student.put()
@@ -140,7 +141,9 @@ class Exams(webapp2.RequestHandler):
 
     student.exams += [models.Exam(
       title = self.request.get('title'),
-      time = 1356472800 #christmas
+      completed = False,
+      date =  self.request.get('date'),
+      course = int(self.request.get('course'))
     )]
     
     student.put()
@@ -176,8 +179,24 @@ class DeleteExam(webapp2.RequestHandler):
 
 
 
+class Reminders(webapp2.RequestHandler):
+  def get(self):
+      reminders = models.Reminder.query().fetch()
 
+      logging.warning(reminders)
 
+      output = []
+      for x in reminders:
+        output.append(x.to_dict())
+
+      self.response.out.write(json.dumps(output))
+  def post(self):
+      newReminder = models.Reminder(
+        title = self.request.get('title'),
+        text = self.request.get('text')
+      ) 
+      newReminder.put();
+      self.response.out.write("Reminder: '" + newReminder.title +"'' added!")
 
 
 # api wrapper used to build course info from umich.io
