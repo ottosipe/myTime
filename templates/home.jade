@@ -1,7 +1,7 @@
 {% autoescape off %}
 
 
-.row-fluid
+//.row-fluid
   .span2 Achievement:
   if (achievement > 60)
     .progress.progress-success.progress-striped
@@ -13,10 +13,8 @@
 .row-fluid
   .span7
     include courses
-    include reminders
+    include announcements
   .span5.row
-    include assignments
-    include exams
-    //include events
+    include reminders
 
 {% endautoescape %}

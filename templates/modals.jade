@@ -76,63 +76,48 @@ form#addClass.modal.hide.form-horizontal
             select.selector.sectSelector(disabled="true")
           .span6
             .infoBox.well.well-small.hidden-phone --- Couse Info --- 
-        
+
     .modal-footer
       button.btn.btn-info.pull-left(data-dismiss='modal') Done
       button.btn.btn-success(type='submit',id="addClassBtn",data-loading-text="Waiting...") Add
       
 
 // add assignment modal
-form#addAssign.modal.hide.form-horizontal
+form#addReminder.modal.hidex
     .modal-header
       button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-      h3 New Assignment
+      h3 New Reminder
 
       .modal-body
-        .control-group
-          label.control-label Title:
-          .controls.form-inline
-            input(type="text", name="title")
-
-        .control-group
-          label.control-label Course:
-          .controls.form-inline
-            select.courseSelector(name="course")
-        .control-group
-          label.control-label Due Date:
-          .controls.form-inline
-            input.date.span2(type='text', name="date", placeholder="(optional)")
+        .form-horizontal
+          .control-group
+            label.control-label Type:
+            .controls
+              .reminderTag.btn-group(data-toggle="buttons-radio")
+                a.btn.btn-small(val="Homework") Homework
+                a.btn.btn-small(val="Project") Project
+                a.btn.btn-small(val="Exam") Exam
+                a.btn.btn-small(val="Exam") To Do
+              
+          .control-group
+            label.control-label Info:
+            .controls
+              input.reminderTitle(type='text', name="title", placeholder="Title")
+          
+          .control-group
+            label.control-label Course:
+            .controls
+              select.input-medium.courseSelector(name="course")
+          .control-group
+            label.control-label Due/Date:
+            .controls
+              .input-append
+                input.input-small.date(type='text', name="date")
                 span.add-on
-                  i.icon-th
+                  i.icon-calendar
 
     .modal-footer
-      button.btn.btn-success(type='submit',id="addAssnBtn", data-loading-text="Working...") Add
-      button.btn.hide(type="reset", data-dismiss='modal', id="rstAssnBtn")
+      button.btn.btn-success(type='submit',id="addRemindBtn", data-loading-text="Working...") Add
+      button.btn.hide(type="reset", data-dismiss='modal', id="rstRemindBtn")
 
-// add exam modal
-form#addExam.modal.hide.form-horizontal
-    .modal-header
-      button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-      h3 New Exam
-
-      .modal-body
-        .control-group
-          label.control-label Exam:
-          .controls.form-inline
-            input(type="text", name="title")
-
-        .control-group
-          label.control-label Course:
-          .controls.form-inline
-            select.courseSelector(name="course")
-        .control-group
-          label.control-label Date:
-          .controls.form-inline
-            input.date.span2(type='text', name="date", placeholder="(optional)")
-                span.add-on
-                  i.icon-th
-    .modal-footer
-      button.btn.btn-success(type='submit',id="addExamBtn", data-loading-text="Working...") Add
-      button.btn.hide(type="reset", data-dismiss='modal', id="rstExamBtn")
-      
 {% endautoescape %}

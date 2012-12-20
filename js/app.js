@@ -1,6 +1,14 @@
 var idToAdd = 0; // global for adding a class, should be attached to the dom ***
 var courseArray = [];
 
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1; //January is 0!
+
+var yyyy = today.getFullYear();
+if(dd<10){dd='0'+dd} 
+if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
+
 $(document).ready(function(){
 	$('.tabNav').click(function (e) { // not a good solution!
 	  e.preventDefault();
@@ -31,60 +39,59 @@ $(document).ready(function(){
 		});
 	});
 
-	buildDepartments();
 	reLoadCourses();
 
 
-	$("#addAssign").submit(function(event){
+	$("#addReminder").submit(function(event){
 		event.preventDefault();
-		$("#addAssnBtn").button('loading');
-		$.post('/assignments', $(this).serialize(), function(data) {
+		$("#addRemindBtn").button('loading');
+		$.post('/reminders', $(this).serialize(), function(data) {
 			console.log(data);
-			reLoadAssignments();
-			$("#rstAssnBtn").trigger('click');
-			$("#addAssnBtn").button('reset');
+			reLoadReminders();
+			$("#rstRemindBtn").trigger('click');
+			$("#addRemindBtn").button('reset');
 		});
 	});
-	reLoadAssignments();
-
-
-	$("#addExam").submit(function(event){
-		event.preventDefault();
-		$("#addExamBtn").button('loading');
-		$.post('/exams', $(this).serialize(), function(data) {
-			console.log(data);
-			reLoadExams();
-
-			$("#rstExamBtn").trigger('click');
-			$("#addExamBtn").button('reset');
-		});
-	});
-	reLoadExams();
-
-	loadReminders();
+	reLoadReminders();
+	loadAnnouncements();
 
 	$(".date").datepicker({
 		format: 'mm/dd/yyyy',
 		todayHighlight: true,
 		autoclose:true
-	}); //set date range
+	}).val(today); //set date range
+
+
+	$(".reminderTag a").click(function() {
+		var that = $(this);
+		$(".reminderTitle").val(function( index, value ) {
+		  if (value == "") return that.html();
+		  return that.html() + ' '+ value;
+		}).focus();
+	});
+
+
+
+	//reads from apis
+	buildDepartments();
 
 	// *** // for the admin page only
 
-	$("#addReminder").submit(function(event){
+	$("#addAnnounce").submit(function(event){
 		event.preventDefault();
-		$.post('/reminders', $(this).serialize(), function(data) {
+		$.post('/announcements', $(this).serialize(), function(data) {
 			alert(data);
 			window.location = "/";
 		});
 	});
+
 });
 
 function reLoadCourses() {
 	$.getJSON('courses', function(data) {
 		$("#courseList").empty();
 		$("#courseListSmall").empty();
-		$(".courseSelector").empty();
+		$(".courseSelector").html('<option value="0">None</option>');
 		courseArray = [];
 
 		$.each(data, function(key, course) {
@@ -132,70 +139,51 @@ function reLoadCourses() {
 
 };
 
-function reLoadAssignments() {
-	$.getJSON('/assignments', function(data) {
-
-		console.log(data);
-		$("#assignList").html("");
-		$.each(data, function(key, assign) {
-			var html = '<div class="entry">';
-			var course = courseArray[assign.course];
-			html += '<span class="courseLabel">'+course.code+' '+ course.number+'</span>';
-			html += '<div class="btn-group pull-right"><button class="btn">';
-			html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
-			html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#">Delete</a></li></ul></div>';
-				html += '<h4 class="listTitle">'+ assign.title+'</h4>';
-				html += '<span class="courseLabel">'+ assign.date +'</span>';
-			html += '</div><hr>';
-
-			$("#assignList").append(html);
-		});
-		if(data=="") {
-			$("#assignAlert").show();
-		} else {
-			$("#assignAlert").hide();
-		}
-	}); 
-};
-
-function reLoadExams() {
-	$.getJSON('/exams', function(data) {
-
-		console.log(data);
-		$("#examList").html("");
-		$.each(data, function(key, exam) {
-			var html = '<div class="entry">';
-			var course = courseArray[exam.course];
-			html += '<span class="courseLabel">'+course.code+' '+ course.number+'</span>';
-			html += '<div class="btn-group pull-right"><button class="btn">';
-			html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
-			html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#">Delete</a></li></ul></div>';
-				html += '<h4 class="listTitle">'+ exam.title+'</h4>';
-				html += '<span class="courseLabel">'+ exam.date +'</span>';
-			html += '</div><hr>';
-
-			$("#examList").append(html);
-		});
-		if(data=="") {
-			$("#examAlert").show();
-		} else {
-			$("#examAlert").hide();
-		}
-	}); 
-};
-
-function loadReminders() {
+function reLoadReminders() {
 	$.getJSON('/reminders', function(data) {
 
 		console.log(data);
-		$("#reminderList").empty();
+		$("#remindList").html("");
+		$.each(data, function(key, remind) {
+			try {
+			var html = '<div class="entry">';
+			
+				var course = courseArray[remind.course];
+
+			html += '<span class="courseLabel">'+course.code+' '+ course.number+'</span>';
+			html += '<div class="btn-group pull-right"><button class="btn">';
+			html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+			html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#">Delete</a></li></ul></div>';
+				html += '<h4 class="listTitle">'+ remind.title+'</h4>';
+				html += '<span class="courseLabel">'+ remind.date +'</span>';
+			html += '</div><hr>';
+
+			$("#remindList").append(html);
+			} catch(err) {
+				console.log(err)
+			}
+		});
+		if(data=="") {
+			$("#remindAlert").show();
+		} else {
+			$("#remindAlert").hide();
+		}
+		
+	}); 
+};
+
+function loadAnnouncements() {
+	$.getJSON('/announcements', function(data) {
+
+		console.log(data);
+		$("#announceList").empty();
 		$.each(data, function(key, rem) {
 			var html = '<div class="entry">';
 			html += '<h4 class="listTitle">'+ rem.title+'</h4>';
 			html += '<div class="listText">'+rem.text+'</div>';
 			html += '</div><hr>';
 
-			$("#reminderList").append(html);
+			$("#announceList").append(html);
 		});
 	}); 
 };

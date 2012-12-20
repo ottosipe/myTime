@@ -1,8 +1,11 @@
 {% autoescape off %}
 
-.well.well-small.hidden-phone
+.well.well-small
   h4.boxTitle.well Reminders
+    a.btn.btn-small.addBtn.btn-primary.pull-right(href="#addReminder", data-toggle='modal') &plus;
+     
+  .alert.alert-warning.hide#remindAlert You don't have any assignments!
+    a.close(data-dismiss='alert', href='#') &times;
 
-  #reminderList
-
+  #remindList
 {% endautoescape %}

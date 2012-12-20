@@ -87,10 +87,6 @@ hr {
     text-align: center;
 }
 
-.form-inline {
-    max-width: 260px;
-}
-
 .smallCourse {
     margin:3px;
     display: inline-block;
@@ -115,7 +111,6 @@ hr {
 
 .courseLabel {
     font-size: 13px;
-
 }
 
 .dateLabel {

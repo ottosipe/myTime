@@ -22,10 +22,8 @@ app = webapp2.WSGIApplication([
     # user apis
     ('/courses', api.Courses),
     ('/courses/delete', api.DeleteCourse),
-    ('/assignments', api.Assignments),
-    ('/assignments/delete', api.DeleteAssignment),
-    ('/assignments/complete', api.CompleteAssignment),
-    ('/exams', api.Exams),
-    ('/exams/delete', api.DeleteExam),
-    ('/reminders', api.Reminders)
+    ('/reminders', api.Reminders),
+    ('/reminders/delete', api.DeleteReminder),
+    ('/reminders/complete', api.CompleteReminder),
+    ('/announcements', api.Announcements)
 ], debug=True)

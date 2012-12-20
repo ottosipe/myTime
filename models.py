@@ -19,6 +19,7 @@ class Assignment(ndb.Model):
   title = ndb.StringProperty()
   course = ndb.IntegerProperty()
   date = ndb.StringProperty() #eventually a unix timestamp
+  note = ndb.TextProperty()
   completed = ndb.BooleanProperty()
   #added = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -37,7 +38,7 @@ class Student(ndb.Model):
   exams = ndb.StructuredProperty(Exam, repeated=True)
 
 ###
-class Reminder(ndb.Model):
+class Announcement(ndb.Model):
   title = ndb.StringProperty() 
   text = ndb.StringProperty()
 

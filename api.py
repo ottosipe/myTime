@@ -73,7 +73,7 @@ class DeleteCourse(webapp2.RequestHandler):
       self.response.out.write("['auth':'fail']");
 
 
-class Assignments(webapp2.RequestHandler):
+class Reminders(webapp2.RequestHandler):
   def post(self):
     
     User = users.get_current_user()
@@ -83,7 +83,8 @@ class Assignments(webapp2.RequestHandler):
       title = self.request.get('title'),
       completed = False,
       date =  self.request.get('date'),
-      course = int(self.request.get('course'))
+      course = int(self.request.get('course')),
+      note = self.request.get('note')
     )]
     
     student.put()
@@ -102,7 +103,7 @@ class Assignments(webapp2.RequestHandler):
     else: 
       self.response.out.write("['auth':'fail']");
 
-class DeleteAssignment(webapp2.RequestHandler):
+class DeleteReminder(webapp2.RequestHandler):
   def post(self):
     User = users.get_current_user()
     newAssign = []
@@ -117,7 +118,7 @@ class DeleteAssignment(webapp2.RequestHandler):
     else: 
       self.response.out.write("['auth':'fail']");
 
-class CompleteAssignment(webapp2.RequestHandler):
+class CompleteReminder(webapp2.RequestHandler):
   def post(self):
     User = users.get_current_user()
     if User:
@@ -132,71 +133,24 @@ class CompleteAssignment(webapp2.RequestHandler):
 
 
 
-
-class Exams(webapp2.RequestHandler):
-  def post(self):
-    
-    User = users.get_current_user()
-    student = models.Student.query(models.Student.user == User).fetch(1)[0]
-
-    student.exams += [models.Exam(
-      title = self.request.get('title'),
-      completed = False,
-      date =  self.request.get('date'),
-      course = int(self.request.get('course'))
-    )]
-    
-    student.put()
-  
+class Announcements(webapp2.RequestHandler):
   def get(self):
-    User = users.get_current_user()
-    if User:
-    
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      announcements = models.Announcement.query().fetch()
+
+      logging.warning(announcements)
 
       output = []
-      for x in student.exams:
-        output.append(x.to_dict()); #sort by date ***
-
-      self.response.out.write(json.dumps(output))
-    else: 
-      self.response.out.write("['auth':'fail']");
-
-class DeleteExam(webapp2.RequestHandler):
-  def post(self):
-    User = users.get_current_user()
-    newExams = []
-    if User:
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
-      for x in student.exams:
-        if x.id != int(self.request.get('id')):
-          newExams.append(x)
-      student.assignments = newExams
-      student.put()
-      self.response.out.write("deleted exam")
-    else: 
-      self.response.out.write("['auth':'fail']");
-
-
-
-class Reminders(webapp2.RequestHandler):
-  def get(self):
-      reminders = models.Reminder.query().fetch()
-
-      logging.warning(reminders)
-
-      output = []
-      for x in reminders:
+      for x in announcements:
         output.append(x.to_dict())
 
       self.response.out.write(json.dumps(output))
   def post(self):
-      newReminder = models.Reminder(
+      announce = models.Announcement(
         title = self.request.get('title'),
         text = self.request.get('text')
       ) 
-      newReminder.put();
-      self.response.out.write("Reminder: '" + newReminder.title +"'' added!")
+      announce.put();
+      self.response.out.write("Announcement: '" + announce.title +"'' added!")
 
 
 # api wrapper used to build course info from umich.io
