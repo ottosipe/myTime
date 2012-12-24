@@ -14,8 +14,9 @@ class Course(ndb.Model):
   instructor = ndb.StringProperty()
   #meetings = ndb.LocalStructuredProperty(Meeting)#, repeated=True)
 
-class Assignment(ndb.Model):
-  # need id***?
+class Reminder(ndb.Model):
+  id = ndb.IntegerProperty()
+  type = ndb.StringProperty()
   title = ndb.StringProperty()
   course = ndb.IntegerProperty()
   date = ndb.StringProperty() #eventually a unix timestamp
@@ -33,8 +34,12 @@ class Exam(ndb.Model):
 
 class Student(ndb.Model):
   user = ndb.UserProperty()
+  name = ndb.StringProperty()
+  major = ndb.StringProperty()
+  advisor_email = ndb.StringProperty()
+
   courses = ndb.StructuredProperty(Course, repeated=True)
-  assignments = ndb.StructuredProperty(Assignment, repeated=True)
+  reminders = ndb.StructuredProperty(Reminder, repeated=True)
   exams = ndb.StructuredProperty(Exam, repeated=True)
 
 ###

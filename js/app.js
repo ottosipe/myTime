@@ -64,13 +64,22 @@ $(document).ready(function(){
 
 	$(".reminderTag a").click(function() {
 		var that = $(this);
-		$(".reminderTitle").val(function( index, value ) {
+		/*$(".reminderTitle").val(function( index, value ) {
 		  if (value == "") return that.html();
 		  return that.html() + ' '+ value;
-		}).focus();
+		}).focus();*/
+		$(".typeTag").val(that.html());
 	});
 
-
+	$("#account").submit(function(event){
+		event.preventDefault();
+		$("#acctBtn").button('saving');
+		$.post('/user', $(this).serialize(), function(data) {
+			console.log(data);
+			$("#acctBtn").button('reset');
+			window.location = "/"
+		});
+	});
 
 	//reads from apis
 	buildDepartments();
@@ -148,14 +157,21 @@ function reLoadReminders() {
 			try {
 			var html = '<div class="entry">';
 			
-				var course = courseArray[remind.course];
+			var course = {
+				code: "",
+				number: ""
+			};
+			if (remind.course) {
+				course = courseArray[remind.course];
+			}
 
-			html += '<span class="courseLabel">'+course.code+' '+ course.number+'</span>';
+			html += '<span class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</span>';
 			html += '<div class="btn-group pull-right"><button class="btn">';
 			html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
 			html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#">Delete</a></li></ul></div>';
 				html += '<h4 class="listTitle">'+ remind.title+'</h4>';
-				html += '<span class="courseLabel">'+ remind.date +'</span>';
+				html += '<div class="dateLabel">'+ remind.date +'</div>';
+				html += '<div class="noteLabel">'+remind.note+'</div>'
 			html += '</div><hr>';
 
 			$("#remindList").append(html);

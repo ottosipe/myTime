@@ -18,9 +18,12 @@ class MainPage(jade.jadeHandler):
       if(std_query == []): 
         models.Student(user=User,
           courses = [],
-          assignments = [],
-          exams = []
-          ).put();
+          reminders = [],
+          exams = [],
+          major = "",
+          advisor_email = "",
+          name = User.nickname()
+        ).put();
         isNoob = 1;
         student = models.Student.query(models.Student.user == User).fetch(1)[0]
       else:
@@ -29,9 +32,10 @@ class MainPage(jade.jadeHandler):
       logging.warning(student)
 
       context = {
-          'title': 'MyTime',
-          'user': User.nickname(),
-          'email': User.email(),
+          'name': student.name,
+          'email': student.user.email(),
+          'major': student.major,
+          'advisor_email': student.advisor_email,
           'logoutUrl': users.create_logout_url("/"),
           'achievement': 89,
           'noob': isNoob,

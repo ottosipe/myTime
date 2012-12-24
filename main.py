@@ -20,6 +20,7 @@ app = webapp2.WSGIApplication([
     ('/info', api.Info),
 
     # user apis
+    ('/user', api.User),
     ('/courses', api.Courses),
     ('/courses/delete', api.DeleteCourse),
     ('/reminders', api.Reminders),

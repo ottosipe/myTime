@@ -79,14 +79,15 @@ class Reminders(webapp2.RequestHandler):
     User = users.get_current_user()
     student = models.Student.query(models.Student.user == User).fetch(1)[0]
     logging.warning(self.request.get('title'))
-    student.assignments += [models.Assignment(
+    student.reminders += [models.Reminder(
+      type = self.request.get('type'),
       title = self.request.get('title'),
       completed = False,
       date =  self.request.get('date'),
       course = int(self.request.get('course')),
-      note = self.request.get('note')
+      note = self.request.get('note'),
+      id = 1
     )]
-    
     student.put()
   
   def get(self):
@@ -95,7 +96,7 @@ class Reminders(webapp2.RequestHandler):
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
 
       output = []
-      for x in student.assignments:
+      for x in student.reminders:
         if(x.completed == False):
           output.append(x.to_dict());
 
@@ -106,13 +107,13 @@ class Reminders(webapp2.RequestHandler):
 class DeleteReminder(webapp2.RequestHandler):
   def post(self):
     User = users.get_current_user()
-    newAssign = []
+    newReminds = []
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
-      for x in student.assignment:
+      for x in student.reminders:
         if x.id != int(self.request.get('id')):
           newAssign.append(x)
-      student.assignments = newAssign
+      student.reminders = newReminds
       student.put()
       self.response.out.write("deleted assignment")
     else: 
@@ -123,11 +124,11 @@ class CompleteReminder(webapp2.RequestHandler):
     User = users.get_current_user()
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
-      for x in student.assignment:
+      for x in student.reminders:
         if x.id == int(self.request.get('id')):
           x.completed = True
       student.put()
-      self.response.out.write("completed assignment")
+      self.response.out.write("completed reminders")
     else: 
       self.response.out.write("['auth':'fail']");
 
@@ -151,6 +152,20 @@ class Announcements(webapp2.RequestHandler):
       ) 
       announce.put();
       self.response.out.write("Announcement: '" + announce.title +"'' added!")
+
+
+class User(webapp2.RequestHandler):
+  def post(self):
+    User = users.get_current_user()
+    if User:
+      student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      student.name = self.request.get('name')
+      student.major = self.request.get('major')
+      student.advisor_email = self.request.get('advisor_email')
+      student.put()
+      self.response.out.write("saved user info")
+    else: 
+      self.response.out.write("['auth':'fail']");
 
 
 # api wrapper used to build course info from umich.io

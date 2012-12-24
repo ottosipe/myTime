@@ -114,7 +114,12 @@ hr {
 }
 
 .dateLabel {
-    margin: 0px;
+    text-align: right;
+    margin: -11px -1px;
+}
+
+.noteLabel {
+    font-size:12px;
 }
 
 .listTitle {
