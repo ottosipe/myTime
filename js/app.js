@@ -56,7 +56,7 @@ $(document).ready(function(){
 	loadAnnouncements();
 
 	$(".date").datepicker({
-		format: 'mm/dd/yyyy',
+		format: 'mm/dd/yy',
 		todayHighlight: true,
 		autoclose:true
 	}).val(today); //set date range
@@ -70,6 +70,16 @@ $(document).ready(function(){
 		}).focus();*/
 		$(".typeTag").val(that.html());
 	});
+
+
+	$("body").on("click", ".deleteRemind", function() {
+		var victim = $(this);
+		$.post("/reminders/delete", { id: victim.attr("data-id") }, function(data){ 
+			console.log(data);
+			reLoadReminders();
+		});
+	});
+	
 
 	$("#account").submit(function(event){
 		event.preventDefault();
@@ -100,7 +110,7 @@ function reLoadCourses() {
 	$.getJSON('courses', function(data) {
 		$("#courseList").empty();
 		$("#courseListSmall").empty();
-		$(".courseSelector").html('<option value="0">None</option>');
+		$(".courseSelector").html('<option value="0">-- Course --</option>');
 		courseArray = [];
 
 		$.each(data, function(key, course) {
@@ -164,15 +174,21 @@ function reLoadReminders() {
 			if (remind.course) {
 				course = courseArray[remind.course];
 			}
-
-			html += '<span class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</span>';
-			html += '<div class="btn-group pull-right"><button class="btn">';
-			html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
-			html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#">Delete</a></li></ul></div>';
+			html += '<div class="row-fluid">';
+			html += '<div class="span9">';
+				html += '<div class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</div>';
 				html += '<h4 class="listTitle">'+ remind.title+'</h4>';
-				html += '<div class="dateLabel">'+ remind.date +'</div>';
 				html += '<div class="noteLabel">'+remind.note+'</div>'
-			html += '</div><hr>';
+			html += '</div>'
+			html += '<div class="span3 dateCheckLabel">';
+				html += '<div class="dateLabel">'+ remind.date +'</div>';
+				html += '<div class="btn-group"><button class="btn">';
+				html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+				html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div>';
+			html += '</div>';
+				
+				
+			html += '</div></div><hr>';
 
 			$("#remindList").append(html);
 			} catch(err) {

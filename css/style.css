@@ -113,9 +113,8 @@ hr {
     font-size: 13px;
 }
 
-.dateLabel {
+.dateCheckLabel {
     text-align: right;
-    margin: -11px -1px;
 }
 
 .noteLabel {
@@ -123,8 +122,20 @@ hr {
 }
 
 .listTitle {
-    width: 75%;
     text-overflow: ellipsis;
     overflow: hidden;
     margin: 0px 0px 3px 0px;
+}
+
+.reminderTag {
+    margin-bottom:10px;
+}
+
+.reminderInputs {
+    margin-top:10px;
+    text-align: center;
+}
+
+.reminderNote {
+    width: 80%;
 }

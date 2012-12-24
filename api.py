@@ -3,6 +3,7 @@ import webapp2
 import logging
 import json
 import datetime
+import time
 
 import models
 
@@ -86,7 +87,7 @@ class Reminders(webapp2.RequestHandler):
       date =  self.request.get('date'),
       course = int(self.request.get('course')),
       note = self.request.get('note'),
-      id = 1
+      id = int(time.time())
     )]
     student.put()
   
@@ -112,7 +113,7 @@ class DeleteReminder(webapp2.RequestHandler):
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
       for x in student.reminders:
         if x.id != int(self.request.get('id')):
-          newAssign.append(x)
+          newReminds.append(x)
       student.reminders = newReminds
       student.put()
       self.response.out.write("deleted assignment")

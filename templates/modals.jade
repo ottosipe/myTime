@@ -84,39 +84,31 @@ form#addReminder.modal.hide
       button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
       h3 New Reminder
 
-      .modal-body
-        .form-horizontal
-          .control-group
-            label.control-label Type:
-            .controls
-              input.typeTag(type='hidden', name="type")
-              .reminderTag.btn-group(data-toggle="buttons-radio")
-                a.btn.btn-small(val="Homework") Homework
-                a.btn.btn-small(val="Project") Project
-                a.btn.btn-small(val="Exam") Exam
-                a.btn.btn-small(val="Exam") To Do
-                
-          .control-group
-            label.control-label Info:
-            .controls
+      .modal-body.reminderInputs
+        input.typeTag(type='hidden', name="type")
+        .reminderTag.btn-group(data-toggle="buttons-radio")
+          a.btn(val="Homework") Homework
+          a.btn(val="Project") Project
+          a.btn(val="Exam") Exam
+          a.btn(val="Goal") Goal
+          a.btn(val="To Do") To Do
+        .row-fluid
+          .span6
+            div
               input.reminderTitle(type='text', name="title", placeholder="Title")
-          
-          .control-group
-            label.control-label Course:
-            .controls
-              select.input-medium.courseSelector(name="course")
-          .control-group
-            label.control-label Due/Date:
-            .controls
+            div
+              select.courseSelector(name="course")
+          .span6      
+            div
               .input-append
-                input.input-small.date(type='text', name="date")
+                input.date(type='text', name="date")
                 span.add-on
                   i.icon-calendar
-          .control-group
-            label.control-label Note:
-            .controls
-              textarea(name="note")
-
+            a.addNote(href="#") add note
+        div
+          textarea.reminderNote(name="note", placeholder="Note")
+    
+          
     .modal-footer
       button.btn.btn-success(type='submit',id="addRemindBtn", data-loading-text="Working...") Add
       button.btn.hide(type="reset", data-dismiss='modal', id="rstRemindBtn")
