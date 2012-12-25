@@ -1,8 +1,12 @@
 {% autoescape off %}
 
-.well.well-small
+.well.well-small.box
   h4.boxTitle.well Reminders
-    a.btn.btn-small.addBtn.btn-primary.pull-right(href="#addReminder", data-toggle='modal') &plus;
+
+    a.btn.btn-small.addBtn.btn-success.pull-right(href="#addReminder", data-toggle='modal')
+      i.icon-plus
+    a.btn.btn-small.addBtn.btn-inverse.pull-right#showAllRemind(href="#")
+      i.icon-check.icon-white
      
   .alert.alert-warning.hide#remindAlert You don't have any assignments!
     a.close(data-dismiss='alert', href='#') &times;

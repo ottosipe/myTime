@@ -96,6 +96,9 @@ $(document).ready(function(){
 		});
 	});
 	
+	$("#showAllRemind").click(function(){
+		reLoadReminders(true)
+	})
 	
 
 	$("#account").submit(function(event){
@@ -205,8 +208,14 @@ function reLoadReminders(showCompleted) {
 				html += '</div>'
 				html += '<div class="span3"><span class="pull-right">';
 					html += '<div class="dateLabel">'+ remind.date +'</div>';
-					html += '<div class="btn-group"><button class="btn completeRemind" data-id="'+remind.id+'">';
-					html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+					var extra = "";
+					var icon = 'icon-ok';
+					if(remind.completed) {
+						extra = 'disabled="true"'
+						icon = 'icon-minus'
+					}
+					html += '<div class="btn-group"><button class="btn completeRemind" '+extra+'data-id="'+remind.id+'">';
+					html += '<i class="'+icon+'"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
 					html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';
 				html += '</div>';
 					
