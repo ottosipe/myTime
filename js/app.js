@@ -76,7 +76,7 @@ $(document).ready(function(){
 		  if (value == "") return that.html();
 		  return that.html() + ' '+ value;
 		}).focus();*/
-		$(".typeTag").val(that.html());
+		$(".typeTag").val(that.attr("value"));
 	});
 
 
@@ -134,10 +134,10 @@ function reLoadCourses() {
 			//console.log(course)
 			var html = '<div class="entry">';
 			html += '<div class="entryTitle" data-id="'+course.id+'"><h4 class="courseTitle">'+course.code+' '+course.number+'</h4>'+course.title+' ('+course.type+')</div>';
-			html += '<div class="tags"><span class="label">hw due soon</span></div>';
+			html += '<div class="tags"><span class="badge">'+course.days+' '+course.time+'</span></div>';
 
 				html += '<div class="row-fluid">';
-					html += '<div class="span7">'+course.instructor+'</br>'+course.location+' - '+course.days+' '+course.time+'</div>';
+					html += '<div class="span7">'+course.instructor+'</br>'+course.location+'</div>';
 
 					html += '<div class="span5"><div class="pull-right editBtns">';
 
@@ -182,32 +182,38 @@ function reLoadReminders(showCompleted) {
 		$("#remindList").html("");
 		$.each(data, function(key, remind) {
 			try {
-			var html = '<div class="entry">';
-			
-			var course = {
-				code: "",
-				number: ""
-			};
-			if (remind.course) {
-				course = courseArray[remind.course];
-			}
-			html += '<div class="row-fluid">';
-			html += '<div class="span9">';
-				html += '<div class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</div>';
-				html += '<h4 class="listTitle">'+ remind.title+'</h4>';
-				html += '<div class="noteLabel">'+remind.note+'</div>'
-			html += '</div>'
-			html += '<div class="span3"><span class="pull-right">';
-				html += '<div class="dateLabel">'+ remind.date +'</div>';
-				html += '<div class="btn-group"><button class="btn completeRemind" data-id="'+remind.id+'">';
-				html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
-				html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';
-			html += '</div>';
+				var html = '<div class="entry">';
 				
-				
-			html += '</div></div><hr>';
+				var course = courseArray[remind.course];
+				if(course == undefined && remind.course == 0) {
+					course = {
+						code: "",
+						number: ""
+					}
+				} else if (course == undefined) {
+					course = {
+						code: "(Course ",
+						number: "Deleted)"
+					}
+				}
 
-			$("#remindList").append(html);
+				html += '<div class="row-fluid">';
+				html += '<div class="span9">';
+					html += '<div class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</div>';
+					html += '<h4 class="listTitle">'+ remind.title+'</h4>';
+					html += '<div class="noteLabel">'+remind.note+'</div>'
+				html += '</div>'
+				html += '<div class="span3"><span class="pull-right">';
+					html += '<div class="dateLabel">'+ remind.date +'</div>';
+					html += '<div class="btn-group"><button class="btn completeRemind" data-id="'+remind.id+'">';
+					html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
+					html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';
+				html += '</div>';
+					
+					
+				html += '</div></div><hr>';
+
+				$("#remindList").append(html);
 			} catch(err) {
 				console.log(err)
 			}
