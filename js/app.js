@@ -199,21 +199,23 @@ function reLoadReminders(showCompleted) {
 						number: "Deleted)"
 					}
 				}
-
+				var extra = "";
+				var extraClass = "";
+				var icon = 'icon-ok';
+				if(remind.completed) {
+					extra = 'disabled="true"'
+					extraClass = "stike";
+					icon = 'icon-minus'
+				}
 				html += '<div class="row-fluid">';
 				html += '<div class="span9">';
 					html += '<div class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</div>';
-					html += '<h4 class="listTitle">'+ remind.title+'</h4>';
+					html += '<h4 class="listTitle '+extraClass+'">'+ remind.title+'</h4>';
 					html += '<div class="noteLabel">'+remind.note+'</div>'
 				html += '</div>'
 				html += '<div class="span3"><span class="pull-right">';
 					html += '<div class="dateLabel">'+ remind.date +'</div>';
-					var extra = "";
-					var icon = 'icon-ok';
-					if(remind.completed) {
-						extra = 'disabled="true"'
-						icon = 'icon-minus'
-					}
+					
 					html += '<div class="btn-group"><button class="btn completeRemind" '+extra+'data-id="'+remind.id+'">';
 					html += '<i class="'+icon+'"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
 					html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';

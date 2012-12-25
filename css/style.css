@@ -12,6 +12,10 @@ body {
     height: 100%;
 }
 
+.stike {
+    text-decoration: line-through;
+}
+
 hr {
     border-top: 1px solid #DDD;
     margin: 15px 0px;
