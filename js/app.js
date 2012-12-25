@@ -45,10 +45,18 @@ $(document).ready(function(){
 	$("#addReminder").submit(function(event){
 		event.preventDefault();
 		$("#addRemindBtn").button('loading');
+
+		if($("#addReminder .reminderTitle").val() == "") {
+			$("#reminderAlert").show();
+			$("#addRemindBtn").button('reset');
+			$("#addReminder .reminderTitle").focus();
+			return;
+		}
 		$.post('/reminders', $(this).serialize(), function(data) {
 			console.log(data);
 			reLoadReminders();
 			$("#rstRemindBtn").trigger('click');
+			$(".close").trigger("click");
 			$("#addRemindBtn").button('reset');
 		});
 	});
@@ -56,10 +64,10 @@ $(document).ready(function(){
 	loadAnnouncements();
 
 	$(".date").datepicker({
-		format: 'mm/dd/yy',
+		format: 'mm/dd/yyyy',
 		todayHighlight: true,
 		autoclose:true
-	}).val(today); //set date range
+	});//.val(today); //set date range
 
 
 	$(".reminderTag a").click(function() {
@@ -79,6 +87,15 @@ $(document).ready(function(){
 			reLoadReminders();
 		});
 	});
+
+	$("body").on("click", ".completeRemind", function() {
+		var victim = $(this);
+		$.post("/reminders/complete", { id: victim.attr("data-id") }, function(data){ 
+			console.log(data);
+			reLoadReminders();
+		});
+	});
+	
 	
 
 	$("#account").submit(function(event){
@@ -158,8 +175,8 @@ function reLoadCourses() {
 
 };
 
-function reLoadReminders() {
-	$.getJSON('/reminders', function(data) {
+function reLoadReminders(showCompleted) {
+	$.getJSON('/reminders', { showAll: showCompleted }, function(data) {
 
 		console.log(data);
 		$("#remindList").html("");
@@ -180,11 +197,11 @@ function reLoadReminders() {
 				html += '<h4 class="listTitle">'+ remind.title+'</h4>';
 				html += '<div class="noteLabel">'+remind.note+'</div>'
 			html += '</div>'
-			html += '<div class="span3 dateCheckLabel">';
+			html += '<div class="span3"><span class="pull-right">';
 				html += '<div class="dateLabel">'+ remind.date +'</div>';
-				html += '<div class="btn-group"><button class="btn">';
+				html += '<div class="btn-group"><button class="btn completeRemind" data-id="'+remind.id+'">';
 				html += '<i class="icon-ok"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
-				html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div>';
+				html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';
 			html += '</div>';
 				
 				

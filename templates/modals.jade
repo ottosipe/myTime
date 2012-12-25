@@ -14,7 +14,7 @@ if noob
           h4 Get the grades you want, with myTime!
           ul
             //li Sync your classes with Google calendar.
-            li Track important assignments, tests, and events.
+            li Track important assignments, tests, and classes.
             li Reflect on how you are doing during the semester.
             li Help make sure your priorities are on target. 
       .modal-footer
@@ -85,32 +85,39 @@ form#addReminder.modal.hide
       h3 New Reminder
 
       .modal-body.reminderInputs
+        #reminderAlert.alert.hide
+          button.close(type='button', data-dismiss='alert') ×
+          | Reminder title required!
+
         input.typeTag(type='hidden', name="type")
         .reminderTag.btn-group(data-toggle="buttons-radio")
+          a.btn.active(val="") None
           a.btn(val="Homework") Homework
           a.btn(val="Project") Project
           a.btn(val="Exam") Exam
           a.btn(val="Goal") Goal
           a.btn(val="To Do") To Do
+
+        
         .row-fluid
-          .span6
-            div
-              input.reminderTitle(type='text', name="title", placeholder="Title")
-            div
-              select.courseSelector(name="course")
-          .span6      
-            div
+          .span7
+            .control-group
+              input.width100.reminderTitle(type='text', name="title", placeholder="Title")
+            .control-group
+              textarea.width100.reminderNote(name="note", placeholder="Note")
+          .span5 
+
+            .control-group
+              select.input-medium.courseSelector(name="course")
+            .control-group
               .input-append
-                input.date(type='text', name="date")
+                input.input-small.date(type='text', name="date", placeholder="Date")
                 span.add-on
                   i.icon-calendar
-            a.addNote(href="#") add note
-        div
-          textarea.reminderNote(name="note", placeholder="Note")
-    
           
     .modal-footer
+
+      input.btn.pull-left(type="reset", id="rstRemindBtn") Reset
       button.btn.btn-success(type='submit',id="addRemindBtn", data-loading-text="Working...") Add
-      button.btn.hide(type="reset", data-dismiss='modal', id="rstRemindBtn")
 
 {% endautoescape %}

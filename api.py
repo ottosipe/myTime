@@ -98,7 +98,7 @@ class Reminders(webapp2.RequestHandler):
 
       output = []
       for x in student.reminders:
-        if(x.completed == False):
+        if(self.request.get('showAll') or x.completed == False):
           output.append(x.to_dict());
 
       self.response.out.write(json.dumps(output))
