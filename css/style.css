@@ -46,6 +46,8 @@ hr {
     -moz-box-shadow: 0 0 30px 5px #999;
     -webkit-box-shadow: 0 0 30px 5px #999;
     box-shadow: 0 0 30px 5px #999;
+    height: 100%;
+    overflow: auto;
 }
 
 .addBtn {
@@ -54,6 +56,7 @@ hr {
 
 .content {
     padding:20px;
+    min-height: 85%;
 }
 
 .box {
