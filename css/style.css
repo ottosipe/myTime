@@ -142,7 +142,7 @@ hr {
     margin: 0px 0px 3px 0px;
 }
 .dateLabel {
-    margin: 0 -4px;
+    margin: 0 2px;
 }
 .reminderTag {
     margin-bottom:20px;
@@ -153,6 +153,13 @@ hr {
     text-align: center;
 }
 
+.date input{
+    width: 107px;
+}
+
+.date span i {
+    margin: 3px 0px 0px 2px;
+}
 .width100 {
     width: 100%;
 }

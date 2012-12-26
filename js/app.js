@@ -5,9 +5,13 @@ var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth()+1; //January is 0!
 
-var yyyy = today.getFullYear();
-if(dd<10){dd='0'+dd} 
-if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
+var yyyy = today.getFullYear() - 2000;
+if(dd<10) {
+	dd='0'+dd;
+} if(mm<10) {
+	mm='0'+mm;
+}
+today = mm+'/'+dd+'/'+yyyy;
 
 $(document).ready(function(){
 	$('.tabNav').click(function (e) { // not a good solution!
@@ -16,7 +20,6 @@ $(document).ready(function(){
 	  $(this).tab('show');
 	})
 	$('#welcome').modal();
-	$("#exam1").datepicker({todayHighlight: true, autoclose:true}); //set date range
 
 	$("#addClass").submit(function(event){
 		event.preventDefault();
@@ -64,10 +67,10 @@ $(document).ready(function(){
 	loadAnnouncements();
 
 	$(".date").datepicker({
-		format: 'mm/dd/yyyy',
+		format: 'mm/dd/yy',
 		todayHighlight: true,
 		autoclose:true
-	});//.val(today); //set date range
+	}); //set date range
 
 
 	$(".reminderTag a").click(function() {
@@ -153,7 +156,7 @@ function reLoadCourses() {
 
 					html += '<a class="btn dropdown-toggle" data-toggle="dropdown">';
 				      html += '<i class="icon-pencil"></i> <span class="caret"></span></a>';
-				      html += '<ul class="dropdown-menu"><li><a href="#">Edit Details</a></li><li><a href="#">Change Sections</a></li><li><a href="#" class="deleteClass" data-id="'+course.id+'">Delete</a></li></ul></div>';
+				      html += '<ul class="dropdown-menu pull-right"><li><a href="#">Edit Details</a></li><li><a href="#">Change Sections</a></li><li><a href="#" class="deleteClass" data-id="'+course.id+'">Delete</a></li></ul></div>';
 			 	html += '</div></div></div><hr>';
 
 
@@ -220,7 +223,7 @@ function reLoadReminders() {
 					
 					html += '<div class="btn-group"><button class="btn completeRemind" '+extra+'data-id="'+remind.id+'">';
 					html += '<i class="'+icon+'"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
-					html += '<ul class="dropdown-menu"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';
+					html += '<ul class="dropdown-menu pull-right"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';
 				html += '</div>';
 					
 					

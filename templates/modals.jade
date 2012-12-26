@@ -110,10 +110,11 @@ form#addReminder.modal.hide
             .control-group
               select.input-medium.courseSelector(name="course")
             .control-group
-              .input-append
-                input.input-small.date(type='text', name="date", placeholder="Date")
+              .input-prepend.date
                 span.add-on
                   i.icon-calendar
+                input(type='text', name="date", placeholder="Date", readonly)
+                
           
     .modal-footer
 
