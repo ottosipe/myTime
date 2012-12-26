@@ -8,7 +8,7 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1')
     meta(name="apple-mobile-web-app-capable", content="yes")
       
-    title=title
+    title LSA myTime
     link(rel='stylesheet', type='text/css', href='css/bootstrap.min.css')
     link(rel='stylesheet', type='text/css', href='css/bootstrap-responsive.min.css')
     link(rel='stylesheet', type='text/css', href='css/style.css')
@@ -21,7 +21,7 @@ html
   body
     div(style='height: 100%;')
       .upperBodyColor
-      .container-fluid
+      .container-fluid.main
         
         .content
           .row-fluid.header
@@ -52,14 +52,13 @@ html
               #admin.tab-pane
                 include admin
 
-          
-
-        .row-fluid.copyright(style='text-align: center;')
+        include modals 
+      .container-fluid.row-fluid.copyright(style='text-align: center;')
           .span4 College of Literature, Science, and the Arts
           .span4 435 S. State Street, Ann Arbor, MI 48109
           .span4 © 2012 Regents of the University of Michigan
 
-        include modals
+        
         
 
 

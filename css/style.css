@@ -10,6 +10,7 @@ body {
     margin: 0px;
     padding: 0px;
     height: 100%;
+    overflow: hidden;
 }
 
 .stike {
@@ -37,6 +38,11 @@ hr {
 .container-fluid {
     margin: 0 auto;
     max-width: 940px;
+    
+    overflow: hidden;
+}
+
+.main {
     background-color: white;
     border-color: #ABA67C;
     border-style: solid;
@@ -55,8 +61,7 @@ hr {
 }
 
 .content {
-    padding:20px;
-    min-height: 85%;
+    padding:10px;
 }
 
 .box {
@@ -82,6 +87,7 @@ hr {
 .copyright {
     color: #3e3b2a;
     font-size: 7pt;
+    margin: -30px auto;
 }
 
 /*Modals*/
