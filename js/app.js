@@ -97,7 +97,8 @@ $(document).ready(function(){
 	});
 	
 	$("#showAllRemind").click(function(){
-		reLoadReminders(true)
+		remindToggle = !remindToggle;
+		reLoadReminders();
 	})
 	
 
@@ -178,8 +179,9 @@ function reLoadCourses() {
 
 };
 
-function reLoadReminders(showCompleted) {
-	$.getJSON('/reminders', { showAll: showCompleted }, function(data) {
+var remindToggle = false;
+function reLoadReminders() {
+	$.getJSON('/reminders', { showAll: remindToggle }, function(data) {
 
 		console.log(data);
 		$("#remindList").html("");
@@ -203,14 +205,14 @@ function reLoadReminders(showCompleted) {
 				var extraClass = "";
 				var icon = 'icon-ok';
 				if(remind.completed) {
-					extra = 'disabled="true"'
+					//extra = 'disabled="true"';
 					extraClass = "stike";
-					icon = 'icon-minus'
+					icon = 'icon-repeat';
 				}
 				html += '<div class="row-fluid">';
-				html += '<div class="span9">';
+				html += '<div class="span9 '+extraClass+'">';
 					html += '<div class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</div>';
-					html += '<h4 class="listTitle '+extraClass+'">'+ remind.title+'</h4>';
+					html += '<h4 class="listTitle">'+ remind.title+'</h4>';
 					html += '<div class="noteLabel">'+remind.note+'</div>'
 				html += '</div>'
 				html += '<div class="span3"><span class="pull-right">';
@@ -229,7 +231,7 @@ function reLoadReminders(showCompleted) {
 				console.log(err)
 			}
 		});
-		if(data=="") {
+		if(data=="" || data==[]) {
 			$("#remindAlert").show();
 		} else {
 			$("#remindAlert").hide();

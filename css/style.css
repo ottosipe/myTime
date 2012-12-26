@@ -14,6 +14,7 @@ body {
 
 .stike {
     text-decoration: line-through;
+    color: gray;
 }
 
 hr {

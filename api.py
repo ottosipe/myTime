@@ -98,7 +98,7 @@ class Reminders(webapp2.RequestHandler):
 
       output = []
       for x in student.reminders:
-        if(self.request.get('showAll') or x.completed == False):
+        if(self.request.get('showAll') == "true" or x.completed == False):
           output.append(x.to_dict());
 
       self.response.out.write(json.dumps(output))
@@ -121,13 +121,14 @@ class DeleteReminder(webapp2.RequestHandler):
       self.response.out.write("['auth':'fail']");
 
 class CompleteReminder(webapp2.RequestHandler):
+  # toggle completed state
   def post(self):
     User = users.get_current_user()
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
       for x in student.reminders:
         if x.id == int(self.request.get('id')):
-          x.completed = True
+          x.completed = not x.completed
       student.put()
       self.response.out.write("completed reminders")
     else: 
