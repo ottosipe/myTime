@@ -1,15 +1,44 @@
 {% autoescape off %}
 
 
-//.row-fluid
-  .span2 Achievement:
-  if (achievement > 60)
-    .progress.progress-success.progress-striped
-      .bar(style='width: #{achievement}%;')
-  else
-    .progress.progress-danger.progress-striped
-      .bar(style='width: #{achievement}%;')
-      
+//-.row-fluid
+  .span2 
+    button.btn.btn-mini Achievement Tool
+
+  .progress.progress-success.progress-striped
+    .bar(style='width: #{achievement}%;')
+
+//-.achievementTool
+  .row-fluid
+    .span3
+      p EECS 281
+    .span9.well.well-small
+      .question.span4 
+        div Are you doing well?
+        label.checkbox.inline yes
+        input(type="checkbox")
+        label.checkbox.inline no
+        input(type="checkbox")
+      .question.span4 
+        div Are you gonna fail?
+        label.checkbox.inline yes
+        input(type="checkbox")
+        label.checkbox.inline no
+        input(type="checkbox")
+      .question.span4 
+        div Do you care for pudding?
+        label.checkbox.inline yes
+        input(type="checkbox")
+        label.checkbox.inline no
+        input(type="checkbox")
+  .row-fluid
+    .span3
+      p EECS 281
+    .span9
+      .progress.progress-success.progress-striped
+        .bar(style='width: 40%;')
+     
+
 .row-fluid
   .span7
     include courses

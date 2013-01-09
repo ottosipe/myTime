@@ -102,7 +102,7 @@ $(document).ready(function(){
 	$("#showAllRemind").click(function(){
 		remindToggle = !remindToggle;
 		reLoadReminders();
-	})
+	});
 	
 
 	$("#account").submit(function(event){
@@ -156,7 +156,7 @@ function reLoadCourses() {
 
 					html += '<a class="btn dropdown-toggle" data-toggle="dropdown">';
 				      html += '<i class="icon-pencil"></i> <span class="caret"></span></a>';
-				      html += '<ul class="dropdown-menu pull-right"><li><a href="#">Edit Details</a></li><li><a href="#">Change Sections</a></li><li><a href="#" class="deleteClass" data-id="'+course.id+'">Delete</a></li></ul></div>';
+				      html += '<ul class="dropdown-menu pull-right"><li><a href="#">Edit Details</a></li><li><a href="#" class="deleteClass" data-id="'+course.id+'">Delete</a></li></ul></div>';
 			 	html += '</div></div></div><hr>';
 
 
@@ -239,7 +239,6 @@ function reLoadReminders() {
 		} else {
 			$("#remindAlert").hide();
 		}
-		
 	}); 
 };
 

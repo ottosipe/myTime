@@ -1,15 +1,16 @@
 {% autoescape off %}
 
 .well.well-small.box
-  h4.boxTitle.well Reminders
+  h4.boxTitle.well Tasks and Reminders
 
     button.btn.btn-small.addBtn.btn-success.pull-right(href="#addReminder", data-toggle='modal')
       i.icon-plus.icon-white
     button.btn.btn-small.addBtn.btn-warning.pull-right#showAllRemind(data-toggle="button")
       i.icon-th-list.icon-white
      
-  .alert.alert-warning.hide#remindAlert You don't have any reminders!
+  .alert.alert-warning.hide#remindAlert 
     a.close(data-dismiss='alert', href='#') &times;
+    | Look at your syllabus! Add upcoming exams, projects, and homeworks.
 
   #remindList
 {% endautoescape %}

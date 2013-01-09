@@ -13,14 +13,14 @@ if noob
           //h3 myTime can help you stay organized!
           h4 Get the grades you want, with myTime!
           ul
-            //li Sync your classes with Google calendar.
+            //-li Sync your classes with Google calendar.
             li Track important assignments, tests, and classes.
             li Reflect on how you are doing during the semester.
             li Help make sure your priorities are on target. 
       .modal-footer
         //- add data-dismiss='modal',  href="#importClasses"
-        a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
-        a.btn.btn-success(data-dismiss='modal', href="#addClass", role='button', data-toggle='modal') Add Manually  
+        //-a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
+        a.btn.btn-success(data-dismiss='modal', href="#addClass", role='button', data-toggle='modal') Get Started 
         
 // account edit modal
 form#account.modal.hide.form-horizontal
@@ -66,11 +66,18 @@ form#addClass.modal.hide.form-horizontal
         #courseListSmall
         
         .row-fluid
-          .span6
-            select.selector.deptSelector(disabled="true")
-            select.selector.numSelector(disabled="true")
-            select.selector.sectSelector(disabled="true")
-          .span6
+          .span7
+            .selector
+              select.deptSelector(disabled="true")
+              input(type="text").input-mini
+            .selector
+              select.numSelector(disabled="true")
+              input(type="text").input-mini
+            .selector
+              select.sectSelector.input-medium(disabled="true")
+              button.btn
+                i.icon-plus
+          .span5
             .infoBox.well.well-small.hidden-phone --- Couse Info --- 
 
     .modal-footer
