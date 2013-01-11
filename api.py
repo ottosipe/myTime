@@ -28,6 +28,89 @@ class Courses(webapp2.RequestHandler):
         self.response.write("already in this course")
         return
 
+    # change time format from TTH 1-230 to 2011-06-03T10:00:00.000-07:00
+    startDate = info["start"]
+    endDate = info["end"]
+
+    calStartDate = startDate[6:] + "-" + startDate[0:1] + "-" + startDate[3:4]
+    calStartDate += "T"
+
+    calEndDate = endDate[6:] + endDate[0:1] + endDate[3:4]
+
+    classDaysInfo = info["days"]
+    classDays = ""
+    classTime = info["time"]
+    i = 0
+    for char in classDaysInfo
+      if char == 'M'
+        classDays += "MO,"
+      else if char == 'T'
+        if classTime[i+1] == 'H'
+          # Thursday
+          classDays += "TH,"
+        else
+          # Tuesday
+          classDays += "TU,"
+      else if char == 'W'
+        classDays += "WE,"
+      else if char == 'F'
+        classDays += "FR,"
+      else if char == 'S'
+        if classTime[i+1] == 'U'
+          # Sunday
+          classDays += "SU,"
+        else
+          # Saturday
+          classDays += "SA,"
+      else if char == 'U' or char == 'A' or char == 'H'
+        # do nothing
+      else
+        # char is something foreign
+        break
+      ++i
+    if i == 0
+      return
+
+    classDays = classDays[:-1] # chop off last erroneous comma
+
+    # determine am or pm
+    am = true
+    if classTime[-2:] == "PM"
+      am = false
+
+    # determine hour:minute timestamp
+    i = 0
+    startTime = ""
+    for char in classTime
+      if char == "-"
+        break
+      startTime += char
+      ++i
+    if i == 0
+      return
+    classTime = classTime[i:]
+
+    i = 0
+    endTime = ""
+    for char in classTime
+      if char == 'P' or char == 'A
+        break
+      endTime += char
+      ++i
+    if i == 0
+      return
+
+    # check if the class takes up zero time
+    if endTime == startTime
+      return
+
+    timeLength = len(startTime)
+    if timeLength == 1 and (am == true or (am == false and endTime[0] < startTime))
+      startTime = calStartDate + "0" + startTime + ":00:00.000-05:00"
+    else if timeLength == 1
+      startTime = calStartDate + (int(startTime)
+    else if timeLength = 2
+      startTime = calStartDate + s
     student.courses += [models.Course(
       id = info["id"],
       code = info["code"],
