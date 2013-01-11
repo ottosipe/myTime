@@ -1,0 +1,15 @@
+{% autoescape off %}
+
+.well 
+    form#sendFeedback(method="post", action="/feedback")
+        fieldset
+            legend Submit Your Feedback
+            div
+                input(name="name", type='text', value="#{name}")
+                input(name="email", type='text', value="#{email}")
+            div
+                textarea(name="text", placeholder="What works? what does not work? Thanks!", style="width:100%; height:140px;")
+            div
+                button.btn(type="submit") Send
+
+{% endautoescape %}
