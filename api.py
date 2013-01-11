@@ -9,7 +9,6 @@ import models
 
 from google.appengine.api import users
 from google.appengine.api import urlfetch
-from google.appengine.ext import ndb
 
 
 # for adding and deleting user specific courses

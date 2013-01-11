@@ -9,8 +9,6 @@ body {
     background-color: #E4DEC0;
     margin: 0px;
     padding: 0px;
-    height: 100%;
-    overflow: hidden;
 }
 
 .stike {
@@ -38,8 +36,6 @@ hr {
 .container-fluid {
     margin: 0 auto;
     max-width: 940px;
-    
-    overflow: hidden;
 }
 
 .main {
