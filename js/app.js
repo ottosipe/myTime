@@ -19,7 +19,6 @@ $(document).ready(function(){
 	  window.location.hash = $(this).attr("href");
 	  $(this).tab('show');
 	})
-	$('#welcome').modal();
 
 	$("#addClass").submit(function(event){
 		event.preventDefault();

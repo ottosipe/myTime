@@ -39,11 +39,10 @@ html
                       if(admin)
                         li: a(href='#admin',class="tabNav") Admin
                     ul.nav.pull-right
-                      .btn-group
-                        a.btn.btn-primary(href='#account', role='button', data-toggle='modal')
-                            i.icon-user.icon-white 
+                      li: a(href='#account', role='button', data-toggle='modal')
+                            i.icon-user 
                             |  #{name} 
-                    
+                  
            
           .tab-content
             #home.tab-pane.active
