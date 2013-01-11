@@ -38,6 +38,7 @@ html
                     ul.nav
                       if(admin)
                         li: a(href='#admin',class="tabNav") Admin
+                      li: a(href='#feedback',class="tabNav") Feedback
                     ul.nav.pull-right
                       li: a(href='#account', role='button', data-toggle='modal')
                             i.icon-user 
@@ -47,6 +48,8 @@ html
           .tab-content
             #home.tab-pane.active
               include home
+            #feedback.tab-pane
+              include feedback
             if(admin)
               #admin.tab-pane
                 include admin
