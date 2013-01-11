@@ -2,25 +2,30 @@
 
 
 //- opens the welcome modal only if user is new
-if noob 
-  // new user modal
-  form#welcome.modal.form-horizontal
-      .modal-header
-          button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-          h3 Welcome, #{name}.
 
-        .modal-body
-          //h3 myTime can help you stay organized!
-          h4 Get the grades you want, with myTime!
-          ul
-            //-li Sync your classes with Google calendar.
-            li Track important assignments, tests, and classes.
-            li Reflect on how you are doing during the semester.
-            li Help make sure your priorities are on target. 
-      .modal-footer
-        //- add data-dismiss='modal',  href="#importClasses"
-        //-a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
-        a.btn.btn-success(data-dismiss='modal', href="#addClass", role='button', data-toggle='modal') Get Started 
+// new user modal
+if(noob)
+  script 
+    $(document).ready(function(){
+      $('#welcome').modal();
+    });
+form#welcome.modal.hide
+    .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h3 Welcome, #{name}.
+
+      .modal-body
+        h3 myTime can help you stay organized!
+        h4 Get the grades you want, with myTime!
+        ul
+          //-li Sync your classes with Google calendar.
+          li Track important assignments, tests, and classes.
+          li Reflect on how you are doing during the semester.
+          li Help make sure your priorities are on target. 
+    .modal-footer
+      //- add data-dismiss='modal',  href="#importClasses"
+      //-a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
+      a.btn.btn-success(data-dismiss='modal', href="#addClass", role='button', data-toggle='modal') Get Started 
         
 // account edit modal
 form#account.modal.hide.form-horizontal
@@ -51,6 +56,7 @@ form#account.modal.hide.form-horizontal
       a.pull-left.btn.btn-danger(href='#{logoutUrl}')
         i.icon-ban-circle
         |   Log Out
+      a.pull-left.btn(href="#welcome",  data-dismiss='modal', data-toggle='modal') Back to Setup
       button.btn(data-dismiss='modal') Cancel
       button#acctBtn.btn.btn-success(type='submit') Save Changes
 

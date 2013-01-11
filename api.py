@@ -9,7 +9,7 @@ import models
 
 from google.appengine.api import users
 from google.appengine.api import urlfetch
-from google.appengine.ext import ndb
+from google.appengine.api import mail
 
 
 # for adding and deleting user specific courses
@@ -237,6 +237,19 @@ class Announcements(webapp2.RequestHandler):
       ) 
       announce.put();
       self.response.out.write("Announcement: '" + announce.title +"'' added!")
+
+
+class Feedback(webapp2.RequestHandler):
+  def post(self):
+      mail.send_mail(
+        sender= self.request.get('name') + " <"+self.request.get('email')+">",
+        to= "Otto Sipe <ottosipe@umich.edu>,",# Josh Billingham <wjbillin@umich.edu>",
+        subject= "MyTime Feedback from: " + self.request.get('name'),
+        body= self.request.get('text')
+      )
+
+      self.response.out.write("Feedback sent!")
+
 
 
 class User(webapp2.RequestHandler):

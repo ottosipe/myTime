@@ -11,7 +11,7 @@ import views
 
 app = webapp2.WSGIApplication([
     ('/', views.MainPage),
-    ('/admin', views.AdminPage),
+    #('/admin', views.AdminPage),
     
     # class apis
     ('/codes', api.Code),
@@ -26,5 +26,8 @@ app = webapp2.WSGIApplication([
     ('/reminders', api.Reminders),
     ('/reminders/delete', api.DeleteReminder),
     ('/reminders/complete', api.CompleteReminder),
-    ('/announcements', api.Announcements)
+    ('/announcements', api.Announcements),
+
+    #feedback api
+    ('/feedback', api.Feedback)
 ], debug=True)

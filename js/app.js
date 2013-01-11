@@ -19,7 +19,6 @@ $(document).ready(function(){
 	  window.location.hash = $(this).attr("href");
 	  $(this).tab('show');
 	})
-	$('#welcome').modal();
 
 	$("#addClass").submit(function(event){
 		event.preventDefault();
@@ -117,6 +116,16 @@ $(document).ready(function(){
 
 	//reads from apis
 	buildDepartments();
+
+
+	// feedback
+	$("#sendFeedback").submit(function(event){
+		event.preventDefault();
+		var that = $(this);
+		$.post('/feedback', $(this).serialize(), function(data) {
+			that.html(data);
+		});
+	});
 
 	// *** // for the admin page only
 
