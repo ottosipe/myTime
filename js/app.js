@@ -41,7 +41,10 @@ $(document).ready(function(){
 		});
 	});
 
-	reLoadCourses();
+	reLoadCourses(function() {
+		// prevents empty course object - this needs to be fixed!
+		reLoadReminders();
+	});
 
 
 	$("#addReminder").submit(function(event){
@@ -62,7 +65,7 @@ $(document).ready(function(){
 			$("#addRemindBtn").button('reset');
 		});
 	});
-	reLoadReminders();
+
 	loadAnnouncements();
 
 	$(".date").datepicker({
@@ -139,7 +142,7 @@ $(document).ready(function(){
 
 });
 
-function reLoadCourses() {
+function reLoadCourses(callback) {
 	$.getJSON('courses', function(data) {
 		$("#courseList").empty();
 		$("#courseListSmall").empty();
@@ -188,7 +191,7 @@ function reLoadCourses() {
 			$("#courseListSmall").html("<div class='btn'>You aren't in any courses, yet.</div>")
 		}
 	});
-
+	callback();
 };
 
 var remindToggle = false;

@@ -1,28 +1,41 @@
 import os
 import webapp2
 import jade
+import json
 import logging
 import models
 import views
 
 from google.appengine.api import users
+from google.appengine.api import urlfetch
 
 class MainPage(jade.jadeHandler):
   def get(self):
     #handles get requests, context is object sent to jade renderer
 
     User = users.get_current_user()
+
+    # this should be moved to a seperate api and triggered by new users! ***
     if User:
       isNoob = 0;
       std_query = models.Student.query(models.Student.user == User).fetch(1)
       if(std_query == []): 
+
+        try:
+          url = "https://mcommunity.umich.edu/mcPeopleService/people/" + User.nickname()
+          result = urlfetch.fetch(url)
+          info = json.loads(result.content)
+          studentName = info['person']['displayName']
+        except:
+          studentName = User.nickname()
+
         models.Student(user=User,
           courses = [],
           reminders = [],
           exams = [],
           major = "",
           advisor_email = "",
-          name = User.nickname()
+          name = studentName
         ).put();
         isNoob = 1;
         student = models.Student.query(models.Student.user == User).fetch(1)[0]
