@@ -9,6 +9,7 @@ body {
     background-color: #E4DEC0;
     margin: 0px;
     padding: 0px;
+    min-height: 100%;
 }
 
 .stike {
