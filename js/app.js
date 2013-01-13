@@ -13,7 +13,11 @@ if(dd<10) {
 }
 today = mm+'/'+dd+'/'+yyyy;
 
+
+
 $(document).ready(function(){
+	$('body').animate({ scrollTop: '0px' }, 0);
+
 	$('.tabNav').click(function (e) { // not a good solution!
 	  e.preventDefault();
 	  window.location.hash = $(this).attr("href");
