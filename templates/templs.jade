@@ -16,12 +16,12 @@
               button.btn.dropdown-toggle(data-toggle='dropdown')
                 span.caret
               ul.dropdown-menu.pull-right
-                li
+                //li
                   a(href='#') Edit
                 li
                   a.deleteRemind(href='#', data-id!='<%= remind.id %>') Delete
     hr
-      
+
   script#course-template(type="template")
     .entry
       .entryTitle(data-id!='<%= id %>')
@@ -37,15 +37,15 @@
           .span5
             .pull-right.editBtns
               .btn-group
-                a.btn(role='button', href='mailto:ottosipe@gmail.com')
+                //a.btn(role='button', href='mailto:ottosipe@gmail.com')
                   i.icon-envelope
-                a.btn(role='button', href='http://ctools.umich.edu', target='_blank')
+                //a.btn(role='button', href='http://ctools.umich.edu', target='_blank')
                   i.icon-globe
                 a.btn.dropdown-toggle(data-toggle='dropdown')
-                  i.icon-pencil
+                  i.icon-pencil 
                   span.caret
                 ul.dropdown-menu.pull-right
-                  li
+                  //li
                     a(href='#') Edit Details
                   li
                     a.deleteClass(href='#', data-id!='<%= id %>') Delete
