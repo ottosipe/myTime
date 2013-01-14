@@ -9,7 +9,7 @@ body {
     background-color: #E4DEC0;
     margin: 0px;
     padding: 0px;
-    min-height: 100%;
+    height: 100%;
 }
 
 .stike {
@@ -49,8 +49,7 @@ hr {
     -moz-box-shadow: 0 0 30px 5px #999;
     -webkit-box-shadow: 0 0 30px 5px #999;
     box-shadow: 0 0 30px 5px #999;
-    height: 100%;
-    overflow: auto;
+    min-height: 100%;
 }
 
 .addBtn {

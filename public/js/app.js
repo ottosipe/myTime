@@ -147,6 +147,8 @@ $(document).ready(function(){
 });
 
 function reLoadCourses(callback) {
+
+	var template = _.template( $('#course-template').html() );
 	$.getJSON('courses', function(data) {
 		$("#courseList").empty();
 		$("#courseListSmall").empty();
@@ -154,29 +156,9 @@ function reLoadCourses(callback) {
 		courseArray = [];
 
 		$.each(data, function(key, course) {
-			//console.log(course)
-			var html = '<div class="entry">';
-			html += '<div class="entryTitle" data-id="'+course.id+'"><h4 class="courseTitle">'+course.code+' '+course.number+'</h4>'+course.title+' ('+course.type+')</div>';
-			html += '<div class="tags"><span class="badge">'+course.days+' '+course.time+'</span></div>';
 
-				html += '<div class="row-fluid">';
-					html += '<div class="span7">'+course.instructor+'</br>'+course.location+'</div>';
+			$("#courseList").append(template(course));
 
-					html += '<div class="span5"><div class="pull-right editBtns">';
-
-					html += '<div class="btn-group"><a class="btn" role="button" href="mailto:ottosipe@gmail.com">';
-				      html += '<i class="icon-envelope"></i></a>';
-
-					html += '<a class="btn" role="button" href="http://ctools.umich.edu" target="_blank">';
-				      html += '<i class="icon-globe"></i></a>';
-
-					html += '<a class="btn dropdown-toggle" data-toggle="dropdown">';
-				      html += '<i class="icon-pencil"></i> <span class="caret"></span></a>';
-				      html += '<ul class="dropdown-menu pull-right"><li><a href="#">Edit Details</a></li><li><a href="#" class="deleteClass" data-id="'+course.id+'">Delete</a></li></ul></div>';
-			 	html += '</div></div></div><hr>';
-
-
-			$("#courseList").append(html);
 			var html2 = '<div class="btn smallCourse" data-id="'+course.id+'">';
 				html2 += course.code+' '+course.number;
 				html2 += '</div>';
@@ -200,52 +182,39 @@ function reLoadCourses(callback) {
 
 var remindToggle = false;
 function reLoadReminders() {
+	
+	var template = _.template( $('#reminder-template').html() );
 	$.getJSON('/reminders', { showAll: remindToggle }, function(data) {
 
-		console.log(data);
 		$("#remindList").html("");
 		$.each(data, function(key, remind) {
 			try {
-				var html = '<div class="entry">';
 				
-				var course = courseArray[remind.course];
-				if(course == undefined && remind.course == 0) {
-					course = {
+				var obj = {
+					remind: remind,
+					course: courseArray[remind.course]
+				};
+				if(obj.course == undefined && obj.remind.course == 0) {
+					obj.course = {
 						code: "",
 						number: ""
 					}
-				} else if (course == undefined) {
-					course = {
+				} else if (obj.course == undefined) {
+					obj.course = {
 						code: "(Course ",
 						number: "Deleted)"
 					}
 				}
-				var extra = "";
-				var extraClass = "";
-				var icon = 'icon-ok';
-				if(remind.completed) {
+				obj.extra = "";
+				obj.extraClass = "";
+				obj.icon = 'icon-ok';
+				if(obj.remind.completed) {
 					//extra = 'disabled="true"';
-					extraClass = "stike";
-					icon = 'icon-repeat';
+					obj.extraClass = "stike";
+					obj.icon = 'icon-repeat';
 				}
-				html += '<div class="row-fluid">';
-				html += '<div class="span9 '+extraClass+'">';
-					html += '<div class="courseLabel">'+course.code+' '+ course.number+' '+remind.type+'</div>';
-					html += '<h4 class="listTitle">'+ remind.title+'</h4>';
-					html += '<div class="noteLabel">'+remind.note+'</div>'
-				html += '</div>'
-				html += '<div class="span3"><span class="pull-right">';
-					html += '<div class="dateLabel">'+ remind.date +'</div>';
-					
-					html += '<div class="btn-group"><button class="btn completeRemind" '+extra+'data-id="'+remind.id+'">';
-					html += '<i class="'+icon+'"></i></button><button class="btn dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>';
-					html += '<ul class="dropdown-menu pull-right"><li><a href="#">Edit</a></li><li><a href="#" class="deleteRemind" data-id="'+remind.id+'">Delete</a></li></ul></div></span>';
-				html += '</div>';
-					
-					
-				html += '</div></div><hr>';
 
-				$("#remindList").append(html);
+				$("#remindList").append(template(obj));
 			} catch(err) {
 				console.log(err)
 			}
@@ -259,17 +228,13 @@ function reLoadReminders() {
 };
 
 function loadAnnouncements() {
+
+	var template = _.template( $('#announce-template').html() );
 	$.getJSON('/announcements', function(data) {
 
-		console.log(data);
 		$("#announceList").empty();
 		$.each(data, function(key, rem) {
-			var html = '<div class="entry">';
-			html += '<h4 class="listTitle">'+ rem.title+'</h4>';
-			html += '<div class="listText">'+rem.text+'</div>';
-			html += '</div><hr>';
-
-			$("#announceList").append(html);
+			$("#announceList").append(template(rem));
 		});
 	}); 
 };
