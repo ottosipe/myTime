@@ -1,48 +1,65 @@
+
 var Router = Backbone.Router.extend({ 
 	routes: {
 		""					: "home",
 		"editAccount" 		: "editAccount",
-		"addClass"			: "addClass",
-		"editClass/:id"		: "editClass",
+		"addCourse"			: "addCourse",
+		"editCourse/:id"	: "editCourse",
 		"addReminder"		: "addReminder",
 		"editReminder/:id"	: "editReminder",
-		"feedback"			: "feedback"
+        "welcome"           : "welcome",
+		"feedback"			: "feedback",
+        "admin"             : "admin"
 	},
 	initialize: function () {
-        // check if noob here, display start screen
+        new MainView();
     },
 
     home: function() {
-        var courseList = new CourseCollection();
-        courseList.fetch({success: function(){
-            $("body").html(new CourseListView({model: courseList}).el);
-        }});
+        /*var courseList = new CourseCollection();
+        courseList.fetch({
+            success: function(){
+                $("body").html(new CourseListView({model: courseList}).el);
+            }
+        });*/
+        $(".modal").modal("hide");
+        $("[href='#home']").tab('show');
+        $(".nav li").removeClass("active");
     },
 
     editAccount: function() {
-
+        $("#editAccount").modal();
     },
 
-    addClass: function() {
-
+    addCourse: function() {
+        $("#addCourse").modal();
     },
 
-    editClass: function(id) {
-
+    editCourse: function(id) {
+        $("#editCourse").modal();
     },
 
     addReminder: function() {
-
+        $("#addReminder").modal();
     },
 
     editReminder: function(id) {
+        $("#editReminder").modal();
+    },
 
+    welcome: function() {
+        $("#welcome").modal()
     },
 
     feedback: function() {
+        $("[href='#feedback']").tab('show');
+    },
 
+    admin: function() {
+        $("[href='#admin']").tab('show');
     }
 });
+
 
 window.app = new Router();
 Backbone.history.start();

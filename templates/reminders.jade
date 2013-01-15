@@ -3,12 +3,12 @@
 .well.well-small.box
   h4.boxTitle.well Tasks and Reminders
 
-    button.btn.btn-small.addBtn.btn-success.pull-right(href="#addReminder", data-toggle='modal')
+    a.btn.btn-small.addBtn.btn-success.pull-right(href="#addReminder")
       i.icon-plus.icon-white
-    button.btn.btn-small.addBtn.btn-warning.pull-right#showAllRemind(data-toggle="button")
+    a.btn.btn-small.addBtn.btn-warning.pull-right#showAllRemind(data-toggle="button")
       i.icon-th-list.icon-white
      
-  .alert.alert-warning.hide#remindAlert 
+  .alert.alert-warning.hide#remindAlert
     a.close(data-dismiss='alert', href='#') &times;
     | Look at your syllabus! Add upcoming exams, projects, and homeworks.
 

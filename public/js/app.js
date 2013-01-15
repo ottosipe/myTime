@@ -24,14 +24,14 @@ $(document).ready(function(){
 	  $(this).tab('show');
 	})
 
-	$("#addClass").submit(function(event){
+	$("#addCourse").submit(function(event){
 		event.preventDefault();
-		$("#addClassBtn").button('loading');
+		$("#addCourseBtn").button('loading');
 		$.post('/courses', { "id": idToAdd }, function(data) {
 			console.log(data);
 			reLoadCourses();
 
-			$("#addClassBtn").html('Course Added').attr("disabled","disabled");
+			$("#addCourseBtn").html('Course Added').attr("disabled","disabled");
 			
 		});
 	});
@@ -251,7 +251,7 @@ function optionAdder(arr, cb){
 
 function buildDepartments() {
 
-	$("#addClassBtn").button('loading');
+	$("#addCourseBtn").button('loading');
 	$(".numSelector").html('<option value="">--- Course ----</option>');
 	$(".sectSelector").html('<option value="">--- Section ---</option>');
 	$.get("/codes", {}, function(data) {
@@ -271,7 +271,7 @@ function buildDepartments() {
 }
 
 function buildNumbers() {
-	$("#addClassBtn").button('loading');
+	$("#addCourseBtn").button('loading');
 	$.get("/numbers", { subj: $(".deptSelector").val() }, function(data) {
 		var nums = $.parseJSON(data);
 
@@ -290,7 +290,7 @@ function buildNumbers() {
 
 function buildSections() {
 
-	$("#addClassBtn").button('loading');
+	$("#addCourseBtn").button('loading');
 		
 	$.get("/sections", { subj: $(".deptSelector").val(), num: $(".numSelector").val() }, function(data) {
 		
@@ -327,8 +327,8 @@ function buildInfo() {
 			$(".infoBox").html(html);
 			idToAdd = info[x].id;
 
-			$("#addClassBtn").button('reset');
-			$("#addClassBtn").html("Add "+info[x].code+" "+info[x].number);
+			$("#addCourseBtn").button('reset');
+			$("#addCourseBtn").html("Add "+info[x].code+" "+info[x].number);
 		});
 	});
 }
