@@ -23,7 +23,7 @@ var Router = Backbone.Router.extend({
             }
         });*/
         $(".modal").modal("hide");
-        $("[href='#home']").tab('show');
+        $("a[href='#home']").tab('show');
         $(".nav li").removeClass("active");
     },
 
@@ -52,11 +52,11 @@ var Router = Backbone.Router.extend({
     },
 
     feedback: function() {
-        $("[href='#feedback']").tab('show');
+        $("a[href='#feedback']").tab('show');
     },
 
     admin: function() {
-        $("[href='#admin']").tab('show');
+        $("a[href='#admin']").tab('show');
     }
 });
 

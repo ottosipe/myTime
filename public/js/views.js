@@ -1,31 +1,3 @@
-/// main view ///
-
-window.MainView = Backbone.View.extend({
-	events: {
-		"click #mainNav .brand": "brand",
-		"hidden .modal": "modalHide",
-		"click [data-dismiss='modal']": "test",
-		"click .nav a": "test"
-	},
-	el: 'body',
-	initialize: function() {
-		$('body').animate({ scrollTop: '0px' }, 0);
-		// check if noob here, display start screen
-	},
-	render: function() {
-		return this;
-	},
-	brand: function() {
-		$(".nav li").removeClass("active");
-	},
-	modalHide: function() {
-		 window.location.hash = "";
-	},
-	test: function(e) {
-		window.location.hash = e.currentTarget.hash;
-		$(e)
-	}
-});
 
 /// item views /// 
 
@@ -80,8 +52,37 @@ window.GenericListView = Backbone.View.extend({
 
 window.CourseListView = GenericListView.extend({
 
-})
+});
 
 window.RemindeListView = GenericListView.extend({
 
-})
+});
+
+/// main view ///
+
+window.MainView = Backbone.View.extend({
+	// controls modals and navigation
+	events: {
+		"click #mainNav .brand": "brand",
+		"hidden .modal": "modalHide",
+		"click a[data-dismiss='modal']": "hash",
+		"click .nav a": "hash"
+	},
+	el: 'body',
+	initialize: function() {
+		$('body').animate({ scrollTop: '0px' }, 0);
+		// check if noob here, display start screen
+	},
+	render: function() {
+		return this;
+	},
+	brand: function() {
+		$(".nav li").removeClass("active");
+	},
+	modalHide: function() {
+		 window.location.hash = "";
+	},
+	hash: function(e) {
+		window.location.hash = e.currentTarget.hash;
+	}
+});
