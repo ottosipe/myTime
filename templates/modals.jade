@@ -12,10 +12,10 @@ if(noob)
 form#welcome.modal.hide
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 Welcome, #{name}.
+        h3 Welcome, #{name}
 
       .modal-body
-        h3 myTime can help you stay organized!
+        //-h3 myTime can help you stay organized!
         h4 Get the grades you want, with myTime!
         ul
           //-li Sync your classes with Google calendar.
@@ -75,13 +75,13 @@ form#addClass.modal.hide.form-horizontal
           .span7
             .selector
               select.deptSelector(disabled="true")
-              input(type="text").input-mini
+              //-input(type="text").input-mini
             .selector
               select.numSelector(disabled="true")
-              input(type="text").input-mini
+              //-input(type="text").input-mini
             .selector
-              select.sectSelector.input-medium(disabled="true")
-              button.btn
+              select.sectSelector(disabled="true")
+              //-button.btn
                 i.icon-plus
           .span5
             .infoBox.well.well-small.hidden-phone --- Couse Info --- 

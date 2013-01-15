@@ -1,0 +1,60 @@
+{% autoescape off %}
+.hide
+  script#reminder-template(type="template")
+    .entry
+      .row-fluid
+        div(class!="span9 <%= extraClass %>")
+          .courseLabel <%= course.code +' '+ course.number +' '+ remind.type %>
+          h4.listTitle <%= remind.title %>
+          .noteLabel <%= remind.note %>
+        .span3
+          span.pull-right
+            .dateLabel <%= remind.date %>
+            .btn-group
+              button.btn.completeRemind(data-id!='<%= remind.id %>')
+                i(class!="<%= icon %>")
+              button.btn.dropdown-toggle(data-toggle='dropdown')
+                span.caret
+              ul.dropdown-menu.pull-right
+                //li
+                  a(href='#') Edit
+                li
+                  a.deleteRemind(href='#', data-id!='<%= remind.id %>') Delete
+    hr
+
+  script#course-template(type="template")
+    .entry
+      .entryTitle(data-id!='<%= id %>')
+          h4.courseTitle <%= code +' '+ number %>
+          | <%= title +' ('+ type +')'%>
+        .tags
+          span.badge  <%= days +' '+ time %>
+        .row-fluid
+          .span7
+            | <%= instructor %>
+            br
+            | <%= location %>
+          .span5
+            .pull-right.editBtns
+              .btn-group
+                //a.btn(role='button', href='mailto:ottosipe@gmail.com')
+                  i.icon-envelope
+                //a.btn(role='button', href='http://ctools.umich.edu', target='_blank')
+                  i.icon-globe
+                a.btn.dropdown-toggle(data-toggle='dropdown')
+                  i.icon-pencil 
+                  span.caret
+                ul.dropdown-menu.pull-right
+                  //li
+                    a(href='#') Edit Details
+                  li
+                    a.deleteClass(href='#', data-id!='<%= id %>') Delete
+    hr
+
+  script#announce-template(type="template")
+    .entry
+      h4.listTitle <%= title %>
+      .listText <%= text %>
+    hr
+
+{% endautoescape %}

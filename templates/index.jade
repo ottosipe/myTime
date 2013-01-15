@@ -5,7 +5,7 @@ html
 
   head
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="viewport", content="width=device-width, user-scalable=no initial-scale=1.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
       
     title LSA myTime
@@ -13,10 +13,7 @@ html
     link(rel='stylesheet', type='text/css', href='css/bootstrap-responsive.min.css')
     link(rel='stylesheet', type='text/css', href='css/style.css')
     link(rel='stylesheet', type='text/css', href='css/datepicker.css')
-    script(src="js/jquery.min.js", type="text/javascript")
-    script(src="js/bootstrap.min.js", type="text/javascript")
-    script(src="js/bootstrap-datepicker.js", type="text/javascript")  
-    script(src="js/app.js", type="text/javascript")
+    
   
   body
     div(style='height: 100%;')
@@ -55,13 +52,26 @@ html
                 include admin
 
         include modals 
-      //-.container-fluid.row-fluid.copyright(style='text-align: center;')
+      .container-fluid.row-fluid.copyright.hidden-phone(style='text-align: center;')
           .span4 College of Literature, Science, and the Arts
           .span4 435 S. State Street, Ann Arbor, MI 48109
           .span4 © 2012 Regents of the University of Michigan
 
-        
-        
+    //- include json2.js ?? ***
+    script(src="js/libs/jquery.min.js", type="text/javascript")
+    script(src="js/libs/bootstrap.min.js", type="text/javascript")
+    script(src="js/libs/bootstrap-datepicker.js", type="text/javascript")  
+    
+    script(src="js/libs/underscore-min.js", type="text/javascript")
+    script(src="js/libs/backbone-min.js", type="text/javascript") 
+    script(src="js/app.js", type="text/javascript")
 
+    //script(src="js/utils.js", type="text/javascript")
+    //script(src="js/models.js", type="text/javascript")
+    //script(src="js/views.js", type="text/javascript")
+    //script(src="js/main.js", type="text/javascript")
+
+    // templates here
+    include templs
 
 {% endautoescape %}

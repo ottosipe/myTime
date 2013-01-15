@@ -243,7 +243,7 @@ class Feedback(webapp2.RequestHandler):
   def post(self):
       mail.send_mail(
         sender= self.request.get('name') + " <"+self.request.get('email')+">",
-        to= "Otto Sipe <ottosipe@umich.edu>,",# Josh Billingham <wjbillin@umich.edu>",
+        to= "Otto Sipe <ottosipe@umich.edu>, Josh Billingham <wjbillin@umich.edu>, Hans Anderson <hansande@umich.edu>",
         subject= "MyTime Feedback from: " + self.request.get('name'),
         body= self.request.get('text')
       )
