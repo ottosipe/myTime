@@ -22,10 +22,10 @@ app = webapp2.WSGIApplication([
     # user apis
     ('/user', api.User),
     ('/courses', api.Courses),
-    ('/courses/delete', api.DeleteCourse),
+    (r'/courses/(.*)', api.EditCourse),
     ('/reminders', api.Reminders),
-    ('/reminders/delete', api.DeleteReminder),
-    ('/reminders/complete', api.CompleteReminder),
+    (r'/reminders/(.*)', api.EditReminder),
+#    ('/reminders/complete', api.CompleteReminder),
     ('/announcements', api.Announcements),
 
     #feedback api

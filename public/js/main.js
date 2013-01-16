@@ -48,7 +48,8 @@ $(function() {
             $("#editAccount").modal();
         },
 
-        addCourse: function() {
+        addCourse: function() {           
+            new addCourseModal({model: Course});
             $("#addCourse").modal();
         },
 
@@ -57,6 +58,7 @@ $(function() {
         },
 
         addReminder: function() {
+            new addReminderModal({model: Reminder});
             $("#addReminder").modal();
         },
 

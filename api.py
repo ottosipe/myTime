@@ -58,14 +58,14 @@ class Courses(webapp2.RequestHandler):
     else: 
       self.response.out.write("['auth':'fail']");
 
-class DeleteCourse(webapp2.RequestHandler):
-  def post(self):
-    User = users.get_current_user()
+class EditCourse(webapp2.RequestHandler):
+  def delete(self, idArg):
+    User = users.get_current_user() # dont do this so often ***
     newCourses = []
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
       for x in student.courses:
-        if x.id != int(self.request.get('id')):
+        if x.id != int(idArg):
           newCourses.append(x)
       student.courses = newCourses
       student.put()
@@ -105,14 +105,14 @@ class Reminders(webapp2.RequestHandler):
     else: 
       self.response.out.write("['auth':'fail']");
 
-class DeleteReminder(webapp2.RequestHandler):
-  def post(self):
+class EditReminder(webapp2.RequestHandler):
+  def delete(self, idArg):
     User = users.get_current_user()
     newReminds = []
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
       for x in student.reminders:
-        if x.id != int(self.request.get('id')):
+        if x.id != int(idArg):
           newReminds.append(x)
       student.reminders = newReminds
       student.put()
