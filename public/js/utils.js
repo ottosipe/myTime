@@ -1,3 +1,5 @@
-window.utils = {
+$(function() {
+	window.utils = {
 	
-};
+	}; 
+});
