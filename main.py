@@ -18,17 +18,16 @@ app = webapp2.WSGIApplication([
     
     # class apis
     ('/codes', api.Code),
-    ('/numbers', api.Numbers),
-    ('/sections', api.Sections),
-    ('/info', api.Info),
+    (r'/numbers/(.*)', api.Numbers),
+    (r'/sections/(.*)/(.*)', api.Sections),
+    (r'/info/(.*)', api.Info),
 
     # user apis
     ('/user', api.User),
     ('/courses', api.Courses),
-    ('/courses/delete', api.DeleteCourse),
+    (r'/courses/(.*)', api.EditCourse),
     ('/reminders', api.Reminders),
-    ('/reminders/delete', api.DeleteReminder),
-    ('/reminders/complete', api.CompleteReminder),
+    (r'/reminders/(.*)', api.EditReminder),
     ('/announcements', api.Announcements),
 
     # feedback api

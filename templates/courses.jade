@@ -2,7 +2,7 @@
 
 .well.well-small.box
   h4.boxTitle.well Courses
-    a.btn.btn-small.addBtn.btn-success.pull-right(href="#addClass", data-toggle='modal')
+    a.btn.btn-small.addBtn.btn-success.pull-right(href="#addCourse")
       i.icon-plus.icon-white
    
 
@@ -10,7 +10,8 @@
     a.close(data-dismiss='alert', href='#') &times;
     p You don't have any courses!
     //-a.btn.btn-warning.btn-mini(href="#", role='button', disabled="disabled") Import Schedule
-    a.btn.btn-success.btn-mini(data-toggle='modal', href="#addClass", role='button') Add Courses  
+    a.btn.btn-success.btn-mini(href="#addCourse") Add Courses  
+    
   #courseList
 
 {% endautoescape %}
