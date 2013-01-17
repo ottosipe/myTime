@@ -32,7 +32,6 @@ class MainPage(jade.jadeHandler):
         models.Student(user=User,
           courses = [],
           reminders = [],
-          exams = [],
           major = "",
           advisor_email = "",
           name = studentName
