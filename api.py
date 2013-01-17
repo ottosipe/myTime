@@ -203,11 +203,23 @@ class Courses(webapp2.RequestHandler):
     logging.warning("Class Start " + classStartTime.isoformat())
     logging.warning("Class End " + classEndTime.isoformat())
 
+    # determine semester
+    semester = ""
+    if classStartTime.month == 1:
+      semester = "W"
+    elif classStartTime.month == 9:
+      semester = "F"
+    elif classStartTime.month == 5:
+      semester = "SP"
+    else:
+      semester = "SU"
+    semester += (str(classStartTime.year)[2:])
+
     # create the courses calendar if it doesn't already exist
     if student.calID is None or student.calID == "":
       logging.warning('student calID is in fact empty')
       calendar = {
-        'summary': 'Courses',
+        'summary': 'Courses ' + semester,
         'timeZone': 'America/New_York'
       }
       request = service.calendars().insert(body=calendar)
@@ -285,6 +297,9 @@ class EditCourse(webapp2.RequestHandler):
       for x in student.courses:
         if x.id != int(idArg):
           newCourses.append(x)
+        else:
+          # delete class from google calendar
+          logging.warning("deleting class")
       student.courses = newCourses
       student.put()
       self.response.out.write("deleted class")
