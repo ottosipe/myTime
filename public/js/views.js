@@ -54,13 +54,13 @@ $(function() {
 		},
 		viewType: CourseView,
 		render: function() {
-		    //$(this.el).html('<ul class="thumbnails"></ul>');
-		    var courses = this.model.models;
-	        for (var i = 0; i < courses.length; i++) {
-	            var viewType = new this.viewType({model: courses[i]});
+		    var modeldata = this.model.models;
+
+	        for (var i = 0; i < modeldata.length; i++) {
+	            var viewType = new this.viewType({model: modeldata[i]});
 	            this.$el.append( viewType.render().el );
 	            
-	            if(i+1 != courses.length) this.$el.append("<hr>")
+	            if(i+1 != modeldata.length) this.$el.append("<hr>")
 	        }
 			return this;
 		}
@@ -86,34 +86,34 @@ $(function() {
 	/// modal views ///
 
 	window.GenericModalView = Backbone.View.extend({
-		
-	});
-
-	window.addCourseModal = GenericModalView.extend({
 		events: {
-			"click #addCourseBtn": "submit",
+			"click .add": "submit",
 			
-		},
-		el: $("#addCourse"),
-		initialize: function() {
-			// build seperate model for these, and render views (caching)
-			buildDepartments();
 		},
 		submit: function(e) {
 			e.preventDefault();
-			$("#addCourseBtn").button('loading');
-			$.post('/courses', { "id": idToAdd }, function(data) {
+			$(".add", this.el).button('loading');
+			this.model.save();
+			/*$.post('/courses', { "id": idToAdd }, function(data) {
 				console.log(data);
-				this.model.sync();
 				$("#addCourseBtn").html('Course Added').attr("disabled","disabled");
 				
-			});
+			});*/
 		}
 	});
 
-	window.addReminderModal = GenericModalView.extend({
-		events: {
+	window.addCourseModal = GenericModalView.extend({
+		
+		el: $("#addCourse"),
+		initialize: function() {
+			// build seperate model for these, and render views (caching)
+			//buildDepartments();
+			new CodeDataView({model: new APICollection()});
 		},
+		
+	});
+
+	window.addReminderModal = GenericModalView.extend({
 		el: $("#addReminder")
 	});
 
@@ -145,97 +145,72 @@ $(function() {
 			window.location.hash = e.currentTarget.hash;
 		}
 	});
+
+	window.CodeDataView = Backbone.View.extend({
+		events: {
+			"change .deptSelector":"render_numbers",
+			"change .numSelector":"render_sections"	
+		},
+		el: $('.selector'),
+		initialize: function() {
+			this.render_codes();
+		},
+		render_codes: function() {
+			var that = this;
+			var template = _.template($("#code-select-template").html());
+			this.model.fetch({
+				success: function(model) {
+					for (var i = 0; i < model.length; i++) {
+						var html = template(model.models[i].toJSON());
+						$(".deptSelector").append(html)
+					}
+					that.render_numbers();
+					$(".deptSelector").removeAttr("disabled")
+				}
+			});
+		},
+		render_numbers: function() {
+			var url = "/numbers/" + $(".deptSelector", this.el).val()
+			var numbs = new (APICollection.extend({url:url}));
+			var that = this;
+			var template = _.template($("#num-select-template").html());
+			numbs.fetch({
+				success: function(model) {
+					$(".numSelector").empty();
+					for (var i = 0; i < model.length; i++) {
+						var html = template(model.models[i].toJSON());
+						$(".numSelector").append(html);
+					}
+					that.render_sections();
+					$(".numSelector").removeAttr("disabled");
+				}
+			});
+		}, 
+		render_sections: function() {
+			var url = "/sections/" + 
+				$(".deptSelector").val() +"/"+ 
+				$(".numSelector").val();
+			var sects = new (APICollection.extend({url:url}));
+			var that = this;
+			var template = _.template($("#sect-select-template").html());
+			sects.fetch({
+				success: function(model) {
+					$(".sectSelector").empty();
+					var types = model.pluck("type");
+					var types = _.uniq(types);
+					_.each(types, function(type){
+						console.log(type)
+						var subSet = model.where({type:type});
+						$(".sectSelector").append("<select></select>")
+							for (var i = 0; i < subSet.length; i++) {
+								var html = template(subSet[i].toJSON());
+								$(".sectSelector select:last").append(html);
+							}
+					})
+					
+					$(".sectSelector").removeAttr("disabled");
+				}
+			});
+		}
+	});
 });
-
-
-function optionAdder(arr, cb){
-	if(!(arr instanceof Array)) {
-		var junkArr = new Array(arr);
-		arr = junkArr;
-	}
-	for (i in arr) cb(i,arr);
-}
-
-function buildDepartments() {
-
-	$("#addCourseBtn").button('loading');
-	$(".numSelector").html('<option value="">--- Course ----</option>');
-	$(".sectSelector").html('<option value="">--- Section ---</option>');
-	$.get("/codes", {}, function(data) {
-		var depts = $.parseJSON(data);
-		
-		var selected = "";
-		$(".deptSelector").html('<option value="">--- Subject ---</option>');
-		optionAdder(depts, function(x,depts) {
-			//if(depts[x].code == "EECS") selected = 'selected="selected"';
-			$(".deptSelector").append('<option '+selected+' value="'+depts[x].code+'">'+depts[x].subject+'</option>');
-		});
-		//buildNumbers();
-		$(".deptSelector").removeAttr("disabled").change(function(){
-			buildNumbers();
-		});
-	});
-}
-
-function buildNumbers() {
-	$("#addCourseBtn").button('loading');
-	$.get("/numbers", { subj: $(".deptSelector").val() }, function(data) {
-		var nums = $.parseJSON(data);
-
-		var selected = "";
-		$(".numSelector").empty();
-		optionAdder(nums, function(x,nums) {
-			//if(nums[x].number == 210 || nums[x].number == 281) selected = 'selected="selected"';
-			$(".numSelector").append('<option '+selected+' value="'+nums[x].number+'">('+nums[x].number+') '+nums[x].title +'</option>');
-		});
-		buildSections();
-		$(".numSelector").removeAttr("disabled").change(function(){
-			buildSections();
-		});
-	});
-}
-
-function buildSections() {
-
-	$("#addCourseBtn").button('loading');
-		
-	$.get("/sections", { subj: $(".deptSelector").val(), num: $(".numSelector").val() }, function(data) {
-		
-		var sects = $.parseJSON(data);
-		var selected = "";
-
-		$(".sectSelector").empty();
-		optionAdder(sects, function(x,sects) {
-			//if(sects[x].number == 1) selected = 'selected="selected"';
-			var html = '<option '+selected+' value="'+sects[x].id+'">'+sects[x].type +' - '+sects[x].section+' ';
-			html += (sects[x].instructor)? "("+sects[x].instructor+")" : "(staff)";
-			html += ' </option>';
-			$(".sectSelector").append(html);
-		});
-		buildInfo();
-		$(".sectSelector").removeAttr("disabled").change(function(){
-			buildInfo();
-		});
-	});
-}
-
-function buildInfo() {
-
-	$.get("/info", { id: $(".sectSelector").val(),}, function(data) {
-		
-		var sect = $.parseJSON(data);
-		var selected = "";
-		//console.log(sect);
-
-		optionAdder(sect, function(x,info) {
-			var html = '<p>'+info[x].days+' '+info[x].time+'</br>';
-			html += (info[x].instructor)? info[x].instructor+"</br>" : "(staff)</br>";
-			html += info[x].location+'</p>';
-			$(".infoBox").html(html);
-			idToAdd = info[x].id;
-
-			$("#addCourseBtn").button('reset');
-			$("#addCourseBtn").html("Add "+info[x].code+" "+info[x].number);
-		});
-	});
-}

@@ -36,6 +36,10 @@ $(function() {
                     new AnnounceListView({model: announceList});
                 }
             });
+
+            new addCourseModal({model: new Course});
+
+            new addReminderModal({model: new Reminder});
         },
 
         home: function() {
@@ -49,7 +53,6 @@ $(function() {
         },
 
         addCourse: function() {           
-            new addCourseModal({model: Course});
             $("#addCourse").modal();
         },
 
@@ -58,7 +61,6 @@ $(function() {
         },
 
         addReminder: function() {
-            new addReminderModal({model: Reminder});
             $("#addReminder").modal();
         },
 

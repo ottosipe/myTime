@@ -16,6 +16,7 @@ from google.appengine.api import mail
 
 class Courses(webapp2.RequestHandler):
   def post(self):
+    logging.warning(self.request)
     url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
     result = urlfetch.fetch(url)
     info = json.loads(result.content)[0]
@@ -195,8 +196,8 @@ class Code(webapp2.RequestHandler):
       self.response.out.write("[]")
 
 class Numbers(webapp2.RequestHandler):
-  def get(self):
-    url = "http://umich.io/academics/v0/"+self.request.get('subj')+"/courses"
+  def get(self, codeID):
+    url = "http://umich.io/academics/v0/"+codeID+"/courses"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)
@@ -204,8 +205,8 @@ class Numbers(webapp2.RequestHandler):
       self.response.out.write("[]")
 
 class Sections(webapp2.RequestHandler):
-  def get(self):
-    url = "http://umich.io/academics/v0/"+self.request.get('subj')+"/"+self.request.get('num')+"/sections"
+  def get(self, codeID, numID):
+    url = "http://umich.io/academics/v0/"+codeID+"/"+numID+"/sections"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)
@@ -213,8 +214,8 @@ class Sections(webapp2.RequestHandler):
       self.response.out.write("[]")
 
 class Info(webapp2.RequestHandler):
-  def get(self):
-    url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
+  def get(self, numID):
+    url = "http://umich.io/academics/v0/"+numID+"/info"
     result = urlfetch.fetch(url)
     if result.status_code == 200:
       self.response.out.write(result.content)

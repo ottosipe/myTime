@@ -2,6 +2,7 @@ $(function() {
 	/// models ///
 
 	window.Course = Backbone.Model.extend({
+		url: "/courses",
 		defaults: {
 			id: null,
 			code: "",
@@ -17,14 +18,15 @@ $(function() {
 	});
 
 	window.Reminder = Backbone.Model.extend({
+		url: "/reminders",
 		defaults: {
+			id: null,
 			type: "",
 			title: "",
 			completed: false,
 			date: "",
 			course: null,
-			note: "",
-			id: null
+			note: ""
 		},
 		toggle: function() {
 			this.save({
@@ -35,18 +37,17 @@ $(function() {
 
 	window.Announcement = Backbone.Model.extend({
 		defaults: {
-			type: "",
 			title: "",
-			completed: false,
-			date: "",
-			course: null,
-			note: "",
-			id: null
-		},
-		toggle: function() {
-			this.save({
-				completed: !this.get('completed')
-			});
+			text: ""
+		}
+	});
+
+	window.Student = Backbone.Model.extend({
+		defaults: {
+			user: "",
+			name: "",
+			major: "",
+			advisor_email: ""
 		}
 	});
 
@@ -72,7 +73,16 @@ $(function() {
 	window.AnnouncementCollection = Backbone.Collection.extend({
 		
 	    model: Announcement,
-	    url: "/announcements",
+	    url: "/announcements"
 
 	});
+
+	/// other API collections ///
+
+	window.APICollection = Backbone.Collection.extend({
+	    model: Backbone.Model,
+		url: "/codes"
+	});
+
+
 });

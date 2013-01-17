@@ -80,7 +80,7 @@ form#addCourse.modal.hide.form-horizontal
               select.numSelector(disabled="true")
               //-input(type="text").input-mini
             .selector
-              select.sectSelector(disabled="true")
+              .sectSelector
               //-button.btn
                 i.icon-plus
           .span5
@@ -88,7 +88,7 @@ form#addCourse.modal.hide.form-horizontal
 
     .modal-footer
       button.btn.btn-info.pull-left(data-dismiss='modal') Done
-      button.btn.btn-success(type='submit',id="addCourseBtn", data-loading-text="Waiting...") Add
+      button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Add
       
 
 // add assignment modal
@@ -132,6 +132,6 @@ form#addReminder.modal.hide
     .modal-footer
 
       input.btn.pull-left(type="reset", id="rstRemindBtn") Reset
-      button.btn.btn-success(type='submit',id="addRemindBtn", data-loading-text="Working...") Add
+      button.btn.btn-success.add(type='submit', data-loading-text="Working...") Add
 
 {% endautoescape %}

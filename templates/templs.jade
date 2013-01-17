@@ -53,4 +53,14 @@
       h4.listTitle <%= title %>
       .listText <%= text %>
 
+  script#code-select-template(type="template")
+    option(value!="<%= code %>") <%= subject %>
+
+  script#num-select-template(type="template")
+    option(value!="<%= number %>") <%= "("+ number +") " + title %>
+
+  script#sect-select-template(type="template")
+    option(value!="<%= id %>") <%= section + " " + type %> <% if(instructor) print(" - "+instructor);%>
+
+
 {% endautoescape %}
