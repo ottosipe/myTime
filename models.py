@@ -37,6 +37,7 @@ class Student(ndb.Model):
   name = ndb.StringProperty()
   major = ndb.StringProperty()
   advisor_email = ndb.StringProperty()
+  calID = ndb.StringProperty()
 
   courses = ndb.StructuredProperty(Course, repeated=True)
   reminders = ndb.StructuredProperty(Reminder, repeated=True)

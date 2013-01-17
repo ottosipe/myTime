@@ -4,12 +4,24 @@ import jade
 import json
 import logging
 import models
-import views
 
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 
+import httplib2
+from oauth2client.appengine import OAuth2Decorator
+from apiclient.discovery import build
+
+decorator = OAuth2Decorator(
+  client_id='100813449163-vl4u1p376hjrc1e3gc090e8miarjnir3.apps.googleusercontent.com',
+  client_secret='L3TfdZSaobeM9EANnUhivnyg',
+  scope='https://www.googleapis.com/auth/calendar',
+  user_agent='myTime')
+
+service = build('calendar', 'v3')
+
 class MainPage(jade.jadeHandler):
+  @decorator.oauth_required
   def get(self):
     #handles get requests, context is object sent to jade renderer
 
@@ -35,7 +47,8 @@ class MainPage(jade.jadeHandler):
           exams = [],
           major = "",
           advisor_email = "",
-          name = studentName
+          name = studentName,
+          calID = ""
         ).put();
         isNoob = 1;
         student = models.Student.query(models.Student.user == User).fetch(1)[0]

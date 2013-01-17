@@ -10,6 +10,9 @@ import views
 # view: templates/
 
 app = webapp2.WSGIApplication([
+    # oauth callback
+    (views.decorator.callback_path, views.decorator.callback_handler()),
+
     ('/', views.MainPage),
     #('/admin', views.AdminPage),
     
@@ -28,6 +31,7 @@ app = webapp2.WSGIApplication([
     ('/reminders/complete', api.CompleteReminder),
     ('/announcements', api.Announcements),
 
-    #feedback api
+    # feedback api
     ('/feedback', api.Feedback)
+
 ], debug=True)

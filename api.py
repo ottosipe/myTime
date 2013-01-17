@@ -4,6 +4,8 @@ import logging
 import json
 import datetime
 import time
+from views import service
+from views import decorator
 
 import models
 
@@ -11,10 +13,10 @@ from google.appengine.api import users
 from google.appengine.api import urlfetch
 from google.appengine.api import mail
 
-
 # for adding and deleting user specific courses
 
 class Courses(webapp2.RequestHandler):
+
   def post(self):
     url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
     result = urlfetch.fetch(url)
@@ -32,85 +34,217 @@ class Courses(webapp2.RequestHandler):
     startDate = info["start"]
     endDate = info["end"]
 
-    calStartDate = startDate[6:] + "-" + startDate[0:1] + "-" + startDate[3:4]
-    calStartDate += "T"
+    # debugging output
+    logging.warning("Start date is " + startDate)
+    logging.warning("End date is " + endDate)
+    logging.warning("Start month is " + startDate[0:2])
 
-    calEndDate = endDate[6:] + endDate[0:1] + endDate[3:4]
+    classStartTime = datetime.datetime(int(startDate[6:]), int(startDate[0:2]), int(startDate[3:5]))
+    classEndTime = classStartTime
+    classEndDate = datetime.datetime(int(endDate[6:]), int(endDate[0:2]), int(endDate[3:5]))
+
+    # determine day of the week of start date; Mon = 0 ... Sun = 6
+    dayOfWeek = classStartTime.weekday()
+    classOnFirstDay = False
 
     classDaysInfo = info["days"]
+    if classDaysInfo is None or classDaysInfo== "TBA" or classDaysInfo == "":
+      logging.warning("class days info is no good")
+      return
+    logging.warning(classDaysInfo)
+
     classDays = ""
+    classDayNums = []
     classTime = info["time"]
     i = 0
-    for char in classDaysInfo
-      if char == 'M'
+    for char in classDaysInfo:
+      if char == 'M':
         classDays += "MO,"
-      else if char == 'T'
-        if classTime[i+1] == 'H'
+        classDayNums.append(0)
+        if dayOfWeek == 0: classOnFirstDay = True
+      elif char == 'T':
+        if classDaysInfo[i+1] == 'H':
           # Thursday
           classDays += "TH,"
-        else
+          classDayNums.append(3)
+          if dayOfWeek == 3: classOnFirstDay = True
+        else:
           # Tuesday
           classDays += "TU,"
-      else if char == 'W'
+          classDayNums.append(1)
+          if dayOfWeek == 1: classOnFirstDay = True
+      elif char == 'W':
         classDays += "WE,"
-      else if char == 'F'
+        classDayNums.append(2)
+        if dayOfWeek == 2: classOnFirstDay = True
+      elif char == 'F':
         classDays += "FR,"
-      else if char == 'S'
-        if classTime[i+1] == 'U'
+        classDayNums.append(4)
+        if dayOfWeek == 4: classOnFirstDay = True
+      elif char == 'S':
+        if classDaysInfo[i+1] == 'U':
           # Sunday
           classDays += "SU,"
-        else
+          classDayNums.append(6)
+        else:
           # Saturday
           classDays += "SA,"
-      else if char == 'U' or char == 'A' or char == 'H'
-        # do nothing
-      else
+          classDayNums.append(5)
+      elif char == 'U' or char == 'A' or char == 'H':
+        continue
+      else:
         # char is something foreign
         break
-      ++i
-    if i == 0
+      i = i + 1
+    if i == 0:
+      logging.warning("class days info is empty")
       return
 
-    classDays = classDays[:-1] # chop off last erroneous comma
+    # chop off last erroneous comma
+    classDays = classDays[:-1]
+    logging.warning(classDays)
+
+    # make first class meeting correct, will break if semester start date
+    # and first class meeting date are in different months
+    if not classOnFirstDay:
+      logging.warning("does not have class on the first day")
+      diff = 0
+      for num in classDayNums:
+        if dayOfWeek < num:
+          diff = num - dayOfWeek
+          break
+      if diff == 0:
+        diff = classDayNums[0] - dayOfWeek + 7
+      classStartTime = classStartTime.replace(day = classStartTime.day + diff)
+      classEndTime = classStartTime
 
     # determine am or pm
-    am = true
-    if classTime[-2:] == "PM"
-      am = false
+    am = True
+    if classTime[-2:] == "PM":
+      am = False
 
-    # determine hour:minute timestamp
+    # parse start and end times for class
     i = 0
     startTime = ""
-    for char in classTime
-      if char == "-"
+    for char in classTime:
+      if char == "-":
         break
-      startTime += char
-      ++i
-    if i == 0
+      else:
+        startTime += char
+      i = i + 1
+    if i == 0:
+      logging.warning("no start time")
       return
-    classTime = classTime[i:]
+    classTime = classTime[i+1:]
 
     i = 0
     endTime = ""
-    for char in classTime
-      if char == 'P' or char == 'A
+    for char in classTime:
+      if char == 'P' or char == 'A':
         break
       endTime += char
-      ++i
-    if i == 0
+      i = i + 1
+    if i == 0:
+      logging.warning("no end time")
       return
 
     # check if the class takes up zero time
-    if endTime == startTime
+    if endTime == startTime:
       return
 
+    # convert class end time
+    timeLength = len(endTime)
+    endHour = 0
+    endMin = 0
+    if timeLength == 1 or timeLength == 2:
+      endHour = int(endTime)
+    elif timeLength == 3:
+      endHour = int(endTime[0])
+      endMin = int(endTime[1:3])
+    elif timeLength == 4:
+      endHour = int(endTime[0:2])
+      endMin = int(endTime[2:4])
+    else:
+      # wrongly formatted
+      return
+    if am or endHour == 12:
+      classEndTime = classEndTime.replace(hour=endHour)
+    else:
+      classEndTime = classEndTime.replace(hour=endHour + 12)
+    classEndTime = classEndTime.replace(minute=endMin)
+    classEndTime = classEndTime.replace(second=0)
+    classEndTime = classEndTime.replace(microsecond=0)
+  
+    # convert class start time
     timeLength = len(startTime)
-    if timeLength == 1 and (am == true or (am == false and endTime[0] < startTime))
-      startTime = calStartDate + "0" + startTime + ":00:00.000-05:00"
-    else if timeLength == 1
-      startTime = calStartDate + (int(startTime)
-    else if timeLength = 2
-      startTime = calStartDate + s
+    startHour = 0
+    startMin = 0
+    if timeLength == 1 or timeLength == 2:
+      startHour = int(startTime)
+    elif timeLength == 3:
+      startHour = int(startTime[0])
+      startMin = int(startTime[1:3])
+    elif timeLength == 4:
+      startHour = int(startTime[0:2])
+      startMin = int(startTime[2:4])
+    else:
+      # wrongly formatted
+      return
+    if am or startHour > endHour or endHour == 12:
+      classStartTime = classStartTime.replace(hour=startHour)
+    else:
+      classStartTime = classStartTime.replace(hour=startHour + 12)
+    classStartTime = classStartTime.replace(minute=startMin)
+    classStartTime = classStartTime.replace(second=0)
+    classStartTime = classStartTime.replace(microsecond=0)
+
+    # logging for debugging
+    logging.warning("Class Start " + classStartTime.isoformat())
+    logging.warning("Class End " + classEndTime.isoformat())
+
+    # create the courses calendar if it doesn't already exist
+    if student.calID is None or student.calID == "":
+      logging.warning('student calID is in fact empty')
+      calendar = {
+        'summary': 'Courses',
+        'timeZone': 'America/New_York'
+      }
+      request = service.calendars().insert(body=calendar)
+      created_cal = request.execute(http=decorator.http())
+      student.calID = created_cal["id"]
+    else:
+      logging.warning('student id is something else')
+      logging.warning('student id is %s' % student.calID)
+
+    # create the calendar event
+    event = {
+      'summary': str(info["code"]) + " " + str(info["number"]) + ": " + info["title"],
+      'location': 'University of Michigan',
+      'start': {
+        'dateTime': classStartTime.isoformat() + '.000-05:00',
+        'timeZone': 'America/New_York'
+      },
+      'end': {
+        'dateTime' : classEndTime.isoformat() + '.000-05:00',
+        'timeZone': 'America/New_York'
+      },
+      'recurrence': [
+        'RRULE:FREQ=WEEKLY;BYDAY=' + classDays + ';UNTIL=' + classEndDate.strftime("%Y%m%dT") + '235900Z',
+      ]
+    }
+
+    logging.warning(event)
+
+    request = service.events().insert(calendarId=student.calID, body=event)
+    logging.warning(request)
+    response = request.execute(http=decorator.http())
+
+    logging.warning(response)
+    logging.warning('title is %s' % info["title"])
+    logging.warning('section is %s' % info["section"])
+    logging.warning('code is %s' % info["code"])
+    logging.warning('number is %s' % info["number"])
+
     student.courses += [models.Course(
       id = info["id"],
       code = info["code"],
