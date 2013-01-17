@@ -12,7 +12,6 @@ class Course(ndb.Model):
   time = ndb.StringProperty()
   location = ndb.StringProperty()
   instructor = ndb.StringProperty()
-  #meetings = ndb.LocalStructuredProperty(Meeting)#, repeated=True)
 
 class Reminder(ndb.Model):
   id = ndb.IntegerProperty()

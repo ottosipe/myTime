@@ -88,9 +88,9 @@ hr {
 
 /*Modals*/
 
-.selector {
+.selector select {
     width: 100%;
-    margin: 10px 0;
+    margin: 2px 0;
 }
 
 .infoBox {

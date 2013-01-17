@@ -19,6 +19,7 @@ class Courses(webapp2.RequestHandler):
     logging.warning(self.request)
     url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
     result = urlfetch.fetch(url)
+    logging.warning(url)
     info = json.loads(result.content)[0]
     
     User = users.get_current_user()
