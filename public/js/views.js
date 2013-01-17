@@ -93,12 +93,13 @@ $(function() {
 		submit: function(e) {
 			e.preventDefault();
 			$(".add", this.el).button('loading');
-			this.model.save();
-			/*$.post('/courses', { "id": idToAdd }, function(data) {
+			console.log($("#addCourse select:last").val())
+			//this.model.save();
+			$.post('/courses', { "id": $("#addCourse select:last").val() }, function(data) {
 				console.log(data);
 				$("#addCourseBtn").html('Course Added').attr("disabled","disabled");
 				
-			});*/
+			});
 		}
 	});
 
@@ -201,7 +202,7 @@ $(function() {
 					_.each(types, function(type){
 						console.log(type)
 						var subSet = model.where({type:type});
-						$(".sectSelector").append("<select></select>")
+						$(".sectSelector").append("<select name='id'></select>")
 							for (var i = 0; i < subSet.length; i++) {
 								var html = template(subSet[i].toJSON());
 								$(".sectSelector select:last").append(html);
