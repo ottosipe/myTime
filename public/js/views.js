@@ -21,6 +21,7 @@ $(function() {
 			return this;
 		},
 		delete: function(e) {
+			console.log(this.model)
 			this.model.destroy();
 		},
 		test: function() {
@@ -54,13 +55,12 @@ $(function() {
 		},
 		viewType: CourseView,
 		render: function() {
-		    var modeldata = this.model.models;
 
-	        for (var i = 0; i < modeldata.length; i++) {
-	            var viewType = new this.viewType({model: modeldata[i]});
+	        for (var i = 0; i < this.model.models.length; i++) {
+	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
 	            
-	            if(i+1 != modeldata.length) this.$el.append("<hr>")
+	            if(i+1 != this.model.models.length) this.$el.append("<hr>")
 	        }
 			return this;
 		}

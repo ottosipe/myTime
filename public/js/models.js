@@ -2,7 +2,6 @@ $(function() {
 	/// models ///
 
 	window.Course = Backbone.Model.extend({
-		url: "/courses",
 		defaults: {
 			id: [],
 			code: "",
