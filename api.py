@@ -250,8 +250,8 @@ class Courses(webapp2.RequestHandler):
     logging.warning(event)
 
     request = service.events().insert(calendarId=student.calID, body=event)
-    logging.warning(request)
     response = request.execute(http=decorator.http())
+    eventid = response["id"]
 
     logging.warning(response)
     logging.warning('title is %s' % info["title"])
@@ -269,7 +269,8 @@ class Courses(webapp2.RequestHandler):
       days = info["days"],
       time = info["time"],
       location = info["location"],
-      instructor = info["instructor"]
+      instructor = info["instructor"],
+      eventid = eventid
     )]
     
     student.put()
@@ -290,6 +291,7 @@ class Courses(webapp2.RequestHandler):
       self.response.out.write("['auth':'fail']");
 
 class EditCourse(webapp2.RequestHandler):
+  @decorator.oauth_required
   def delete(self, idArg):
     User = users.get_current_user() # dont do this so often ***
     newCourses = []
@@ -301,6 +303,10 @@ class EditCourse(webapp2.RequestHandler):
         else:
           # delete class from google calendar
           logging.warning("deleting class")
+          request = service.events().delete(calendarId=student.calID, eventId=x.eventid)
+          response = request.execute(http=decorator.http())
+          if response is not None and response != "":
+            logging.warning(response)
       student.courses = newCourses
       student.put()
       self.response.out.write("deleted class")
