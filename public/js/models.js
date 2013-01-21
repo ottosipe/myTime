@@ -4,7 +4,7 @@ $(function() {
 	window.Course = Backbone.Model.extend({
 		url: "/courses",
 		defaults: {
-			id: null,
+			courseId: null,
 			code: "",
 			number: null,
 			section: null,
@@ -12,6 +12,8 @@ $(function() {
 			title: "",
 			days: "", // these will change
 			time: "",
+			start: "",
+			end: "",
 			location: "",
 			instructor: ""
 		}
@@ -20,7 +22,6 @@ $(function() {
 	window.Reminder = Backbone.Model.extend({
 		url: "/reminders",
 		defaults: {
-			id: null,
 			type: "",
 			title: "",
 			completed: false,

@@ -60,7 +60,7 @@
     option(value!="<%= number %>") <%= "("+ number +") " + title %>
 
   script#sect-select-template(type="template")
-    option(value!="<%= id %>") <%= section + " " + type %> <% if(instructor) print(" - "+instructor);%>
+    option(value!="<%= section %>") <%= section + " " + type %> <% if(instructor) print(" - "+instructor);%>
 
 
 {% endautoescape %}
