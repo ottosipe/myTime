@@ -20,6 +20,7 @@ $(function() {
             courseList.fetch({
                 success: function(){
                     new CourseListView({model: courseList});
+                    new addCourseModal({model: courseList});
                 }
             });
 
@@ -27,6 +28,7 @@ $(function() {
             remindList.fetch({
                 success: function(){
                     new ReminderListView({model: remindList});
+                    new addReminderModal({model: remindList});
                 }
             });
 
@@ -37,9 +39,7 @@ $(function() {
                 }
             });
 
-            new addCourseModal({model: new Course});
 
-            new addReminderModal({model: new Reminder});
         },
 
         home: function() {

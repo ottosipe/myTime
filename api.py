@@ -317,19 +317,15 @@ class Reminders(webapp2.RequestHandler):
     
     User = users.get_current_user()
     student = models.Student.query(models.Student.user == User).fetch(1)[0]
-    logging.warning(self.request.get('title'))
-    # debugging
-    logging.warning(self.request.get('type'))
-    logging.warning(self.request.get('date'))
-    logging.warning(self.request.get('course'))
-    logging.warning(self.request.get('note'))
+    postData = json.loads(self.request.body)
+    logging.warning(postData)
     student.reminders += [models.Reminder(
-      type = self.request.get('type'),
-      title = self.request.get('title'),
+      type = postData['type'],
+      title = postData['title'],
       completed = False,
-      date =  self.request.get('date'),
-      course = int(self.request.get('course')),
-      note = self.request.get('note'),
+      date =  postData['date'],
+      #course = postData['course'],
+      note = postData['note'],
       id = int(time.time())
     )]
     student.put()
@@ -363,9 +359,8 @@ class EditReminder(webapp2.RequestHandler):
     else: 
       self.response.out.write("['auth':'fail']");
 
-class CompleteReminder(webapp2.RequestHandler):
   # toggle completed state
-  def post(self):
+  def put(self):
     User = users.get_current_user()
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]

@@ -6,34 +6,27 @@ $(function() {
 		tagName: "div",
 		template: _.template(""), // overriden
 		events: {
-			"click": "test",
 			"click .delete": "delete"
 		},
 		initialize: function() {
-			this.render();
 			this.listenTo(this.model, "change", this.render);	
 			this.listenTo(this.model, 'destroy', this.remove);
 			//this.listenTo(this.model, 'visible', this.toggleVisible);
 		},
 		render: function() {
 			var row = this.template(this.model.attributes);
+			console.log(this.model.attributes)
 			this.$el.html(row);
 			return this;
 		},
 		delete: function(e) {
 			console.log(this.model)
 			this.model.destroy();
-		},
-		test: function() {
-			//alert("something works")
 		}
-
 	});
 
 	window.CourseView = GenericView.extend({
-		
 		template: _.template( $('#course-template').html() ),
-		
 	});
 
 	window.ReminderView = GenericView.extend({
@@ -48,14 +41,15 @@ $(function() {
 	/// list views ///
 
 	window.GenericListView = Backbone.View.extend({
-
+		events: {
+			"click":"test"
+		},
 		initialize: function() {
 			this.render();
-			this.listenTo(this.model, "change", this.render);	
+			this.listenTo(this.model, "change", this.render);
 		},
 		viewType: CourseView,
 		render: function() {
-
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -63,6 +57,9 @@ $(function() {
 	            if(i+1 != this.model.models.length) this.$el.append("<hr>")
 	        }
 			return this;
+		},
+		test: function() {
+			console.log(this.model)
 		}
 
 	});
@@ -88,38 +85,63 @@ $(function() {
 	window.GenericModalView = Backbone.View.extend({
 		events: {
 			"click .add": "submit",
-			
+			"change input": "update",
+			"change textarea": "update",
+			"change select": "update"
 		},
 		submit: function(e) {
 			e.preventDefault();
-                        console.log('inside submit for generic modal view');
-			$(".add", this.el).button('loading');
-			console.log($("#addCourse select:last").val())
-			//this.model.save();
-			$.post('/courses', { "id": $("#addCourse select:last").val() }, function(data) {
-				console.log(data);
-				$("#addCourseBtn").html('Course Added').attr("disabled","disabled");
-				
-			});
+			alert('override me')
+			//MT
+		},
+		update: function(event) {
+			var obj = {};
+			var name = event.currentTarget.name;
+			obj[name] = event.currentTarget.value;
+			this.newModel.set(obj);
+			console.log(this.newModel.attributes)
 		}
 	});
 
 	window.addCourseModal = GenericModalView.extend({
 		el: $("#addCourse"),
+		submit: function(e) {
+			e.preventDefault();
+			//$(".add", this.el).button('loading');
+		
+			this.model.update(this.newModel);
+			this.model.sync("create", this.newModel);
+
+			console.log(this.model)
+			/*$.post('/courses', { "id": $("#addCourse select:last").val() }, function(data) {
+				console.log(data);
+				$("#addCourseBtn").html('Course Added').attr("disabled","disabled");
+				
+			});*/
+		},
 		initialize: function() {
-			// build seperate model for these, and render views (caching)
-			//buildDepartments();
-                        console.log('inside add course modal too');
+			// kick off the API fetch
+			this.newModel = new Course();
 			new CodeDataView({model: new APICollection()});
-                }
+		}
 	});
 
 	window.addReminderModal = GenericModalView.extend({
 		el: $("#addReminder"),
-                initialize: function() {
-                        console.log('inside add reminder modal');
-                }
-	});
+		initialize: function() {
+			this.newModel = new Reminder();
+			$(".date").datepicker({
+				format: 'mm/dd/yy',
+				todayHighlight: true,
+				autoclose:true
+			}); //set date range
+		}, 
+		submit: function(e) {
+			e.preventDefault();
+			this.model.update(this.newModel);
+			console.log(this.model)
+		},
+});
 
 	/// main view ///
 
