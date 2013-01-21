@@ -25,12 +25,15 @@ class Courses(webapp2.RequestHandler):
     #result = urlfetch.fetch(url)
     #logging.warning(url)
     #info = json.loads(result.content)[0]
-    
+
+    info = json.loads(self.request.body)   
+    logging.warning(info)
+ 
     User = users.get_current_user()
     student = models.Student.query(models.Student.user == User).fetch(1)[0]
 
     for x in student.courses:
-      if x.id == int(self.request.get('id')):
+      if x.id == int(info['courseId']):
         self.response.write("already in this course")
         return
 
@@ -258,7 +261,7 @@ class Courses(webapp2.RequestHandler):
     logging.warning(response)
 
     student.courses += [models.Course(
-      id = info["id"],
+      id = info["courseId"],
       code = info["code"],
       number = info["number"],
       section = info["section"],
