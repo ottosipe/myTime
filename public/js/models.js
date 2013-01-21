@@ -2,6 +2,7 @@ $(function() {
 	/// models ///
 
 	window.Course = Backbone.Model.extend({
+		url: "/courses",
 		defaults: {
 			id: [],
 			code: "",
@@ -17,6 +18,7 @@ $(function() {
 	});
 
 	window.Reminder = Backbone.Model.extend({
+		url: "/reminders",
 		defaults: {
 			id: null,
 			type: "",

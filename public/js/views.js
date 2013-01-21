@@ -50,8 +50,6 @@ $(function() {
 		},
 		viewType: CourseView,
 		render: function() {
-
-			this.$el.append("<hr>")
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -111,15 +109,16 @@ $(function() {
 		submit: function(e) {
 			e.preventDefault();
 			//$(".add", this.el).button('loading');
-			console.log($("#addCourse select:last").val())
-			
-			//this.model.update(this.newModel);
+		
+			this.model.update(this.newModel);
+			this.model.sync("create", this.newModel);
+
 			console.log(this.model)
-			$.post('/courses', { "id": $("#addCourse select:last").val() }, function(data) {
+			/*$.post('/courses', { "id": $("#addCourse select:last").val() }, function(data) {
 				console.log(data);
 				$("#addCourseBtn").html('Course Added').attr("disabled","disabled");
 				
-			});
+			});*/
 		},
 		initialize: function() {
 			// kick off the API fetch
