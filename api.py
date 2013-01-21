@@ -18,11 +18,13 @@ from google.appengine.api import mail
 class Courses(webapp2.RequestHandler):
 
   def post(self):
-    logging.warning(self.request)
-    url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
-    result = urlfetch.fetch(url)
-    logging.warning(url)
-    info = json.loads(result.content)[0]
+    logging.warning(self.request.body)
+    # try to avoid calling out to umich.io again - we should already have
+    # this class data
+    #url = "http://umich.io/academics/v0/"+self.request.get('id')+"/info"
+    #result = urlfetch.fetch(url)
+    #logging.warning(url)
+    #info = json.loads(result.content)[0]
     
     User = users.get_current_user()
     student = models.Student.query(models.Student.user == User).fetch(1)[0]
@@ -254,10 +256,6 @@ class Courses(webapp2.RequestHandler):
     eventid = response["id"]
 
     logging.warning(response)
-    logging.warning('title is %s' % info["title"])
-    logging.warning('section is %s' % info["section"])
-    logging.warning('code is %s' % info["code"])
-    logging.warning('number is %s' % info["number"])
 
     student.courses += [models.Course(
       id = info["id"],
@@ -320,6 +318,11 @@ class Reminders(webapp2.RequestHandler):
     User = users.get_current_user()
     student = models.Student.query(models.Student.user == User).fetch(1)[0]
     logging.warning(self.request.get('title'))
+    # debugging
+    logging.warning(self.request.get('type'))
+    logging.warning(self.request.get('date'))
+    logging.warning(self.request.get('course'))
+    logging.warning(self.request.get('note'))
     student.reminders += [models.Reminder(
       type = self.request.get('type'),
       title = self.request.get('title'),

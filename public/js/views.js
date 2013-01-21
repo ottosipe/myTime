@@ -92,6 +92,7 @@ $(function() {
 		},
 		submit: function(e) {
 			e.preventDefault();
+                        console.log('inside submit for generic modal view');
 			$(".add", this.el).button('loading');
 			console.log($("#addCourse select:last").val())
 			//this.model.save();
@@ -104,18 +105,20 @@ $(function() {
 	});
 
 	window.addCourseModal = GenericModalView.extend({
-		
 		el: $("#addCourse"),
 		initialize: function() {
 			// build seperate model for these, and render views (caching)
 			//buildDepartments();
+                        console.log('inside add course modal too');
 			new CodeDataView({model: new APICollection()});
-		},
-		
+                }
 	});
 
 	window.addReminderModal = GenericModalView.extend({
-		el: $("#addReminder")
+		el: $("#addReminder"),
+                initialize: function() {
+                        console.log('inside add reminder modal');
+                }
 	});
 
 	/// main view ///
