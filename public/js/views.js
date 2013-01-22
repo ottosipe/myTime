@@ -99,11 +99,11 @@ $(function() {
 			e.preventDefault();
 			//$(".add", this.el).button('loading');
 			var newCourse = this.data.currentSection;
-			newCourse.courseId = obj.id;
-			newCourse.id = null;
+			newCourse.set({courseId: newCourse.id});
+			newCourse.set({id: null});
 
 			newCourse.save();
-			this.model.add(obj);
+			this.model.add(newCourse);
 
 			console.log(this.model);
 
