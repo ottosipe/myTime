@@ -15,8 +15,8 @@ $(function() {
 			//this.listenTo(this.model, 'visible', this.toggleVisible);
 		},
 		render: function() {
-			var row = this.template(this.model.attributes);
 			console.log(this.model.attributes)
+			var row = this.template(this.model.attributes);
 			this.$el.html(row);
 			return this;
 		},

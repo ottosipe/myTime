@@ -27,6 +27,7 @@ $(function() {
 	window.Reminder = Backbone.Model.extend({
 		urlRoot: "/reminders",
 		defaults: {
+			id: null,
 			type: "",
 			title: "",
 			completed: false,
