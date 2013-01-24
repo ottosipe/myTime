@@ -3,7 +3,7 @@
   script#reminder-template(type="template")
     .row-fluid
       div(class!="span9 <% if(completed) print("strike") %>")
-        //-.courseLabel <%= course.code +' '+ course.number +' '+ type %>
+        .courseLabel <%= /*course.code +' '+ course.number +' '+*/ type %>
         h4.listTitle <%= title %>
         .noteLabel <%= note %>
       .span3
@@ -60,7 +60,9 @@
     option(value!="<%= number %>") <%= "("+ number +") " + title %>
 
   script#sect-select-template(type="template")
-    option(value!="<%= section %>") <%= section + " " + type %> <% if(instructor) print(" - "+instructor);%>
+    option(value!="<%= section %>") <%= section + " " + type %> 
+      | <% if(instructor) print(" - "+instructor);%> 
+      | <% if(time && days) print(" - "+days+ " "+time);%>
 
 
 {% endautoescape %}

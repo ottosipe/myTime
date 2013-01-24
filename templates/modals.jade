@@ -69,23 +69,18 @@ form#addCourse.modal.hide.form-horizontal
         h3 Add Courses
 
       .modal-body
-        #courseListSmall
         
         .row-fluid
           .span7.selector
               select.deptSelector(disabled="true", name="code")
-              //-input(type="text").input-mini
+              input(type="text", placeholder="code").input-mini
               select.numSelector(disabled="true", name="number")
-              //-input(type="text").input-mini
-              .sectSelector
+              input(type="text", placeholder="number").input-mini
+              
+          .span5.selector
+            .sectSelector
               //-button.btn
                 i.icon-plus
-          .span5
-            .infoBox.hidden-phone
-              .well.well-small.info(type="text", name="location")
-              .info(type="text", name="instructor")
-              .info(type="text", name="time")
-              .info(type="text", name="days")
 
 
     .modal-footer

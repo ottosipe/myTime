@@ -1,3 +1,4 @@
+
 $(function() {
 	/// item views /// 
 
@@ -103,10 +104,9 @@ $(function() {
 			newCourse.set({courseId: newCourse.id});
 			newCourse.set({id: null});
 
-			newCourse.save();
-			this.model.add(newCourse);
+			this.model.create(newCourse);
 
-			console.log(this.model);
+			window.location.hash = "";
 
 		},
 		initialize: function() {
@@ -123,6 +123,9 @@ $(function() {
 				todayHighlight: true,
 				autoclose:true
 			}); //set date range
+			$(".reminderTag .btn").click(function() {
+				$("[name='type']", this.el).val($(this).attr("value"));
+			})
 		}, 
 		submit: function(e) {
 			e.preventDefault();
@@ -137,8 +140,7 @@ $(function() {
 				note: $("[name='note']", this.el).val()
 			});
 
-			newReminder.save();
-			this.model.add(newReminder);
+			this.model.create(newReminder);
 
 			console.log(this.model)
 		},

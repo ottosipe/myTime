@@ -1,8 +1,11 @@
+
+var app = app || {};
+
 $(function() {
 	/// models ///
 
 	window.Course = Backbone.Model.extend({
-		url: "/courses",
+		urlRoot: "/courses",
 		defaults: {
 			courseId: null,
 			code: "",
@@ -20,12 +23,13 @@ $(function() {
 	});
 
 	window.Reminder = Backbone.Model.extend({
-		url: "/reminders",
+		urlRoot: "/reminders",
 		defaults: {
 			type: "",
 			title: "",
 			completed: false,
-			date: "",
+			date: "", // switch to timestamp
+			time: "",
 			course: null,
 			note: ""
 		},

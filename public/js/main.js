@@ -16,7 +16,7 @@ $(function() {
     	initialize: function () {
             new MainView();
 
-            var courseList = new CourseCollection();
+            window.courseList = new CourseCollection();
             courseList.fetch({
                 success: function(){
                     new CourseListView({model: courseList});
@@ -24,7 +24,7 @@ $(function() {
                 }
             });
 
-            var remindList = new ReminderCollection();
+            window.remindList = new ReminderCollection();
             remindList.fetch({
                 success: function(){
                     new ReminderListView({model: remindList});
@@ -32,7 +32,7 @@ $(function() {
                 }
             });
 
-            var announceList = new AnnouncementCollection();
+            window.announceList = new AnnouncementCollection();
             announceList.fetch({
                 success: function(){
                     new AnnounceListView({model: announceList});
