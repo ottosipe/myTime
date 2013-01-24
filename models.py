@@ -22,6 +22,7 @@ class Reminder(ndb.Model):
   date = ndb.StringProperty() #eventually a unix timestamp
   note = ndb.TextProperty()
   completed = ndb.BooleanProperty()
+  eventid = ndb.StringProperty()
   #added = ndb.DateTimeProperty(auto_now_add=True)
 
 class Student(ndb.Model):

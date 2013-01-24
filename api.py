@@ -238,7 +238,7 @@ class Courses(webapp2.RequestHandler):
     # create the calendar event
     event = {
       'summary': str(info["code"]) + " " + str(info["number"]) + ": " + info["title"],
-      'location': 'University of Michigan',
+      'location': info['location'],
       'start': {
         'dateTime': classStartTime.isoformat() + '.000-05:00',
         'timeZone': 'America/New_York'
@@ -251,8 +251,6 @@ class Courses(webapp2.RequestHandler):
         'RRULE:FREQ=WEEKLY;BYDAY=' + classDays + ';UNTIL=' + classEndDate.strftime("%Y%m%dT") + '235900Z',
       ]
     }
-
-    logging.warning(event)
 
     request = service.events().insert(calendarId=student.calID, body=event)
     response = request.execute(http=decorator.http())
@@ -314,14 +312,47 @@ class EditCourse(webapp2.RequestHandler):
     else: 
       self.response.out.write("['auth':'fail']");
 
+  @decorator.oauth_required
+  def put(self, idArg):
+    User = users.get_current_user()
+    newCourses = []
+    if User:
+      student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      for course in student.courses:
+        if course.id != int(idArg):
+          newCourses.append(x)
+        else:
+          # update class in google calendar
+          logging.warning("updating class")
+          
+
 
 class Reminders(webapp2.RequestHandler):
+  @decorator.oauth_required
   def post(self):
     
     User = users.get_current_user()
     student = models.Student.query(models.Student.user == User).fetch(1)[0]
     postData = json.loads(self.request.body)
     logging.warning(postData)
+
+    event = {
+      'summary': postData['type'] + ":" + postData['title'],
+      'description': postData['note'],
+      'start': {
+        'dateTime': classStartTime.isoformat() + '.000-05:00',
+        'timeZone': 'America/New_York'
+      },
+      'end': {
+        'dateTime' : classEndTime.isoformat() + '.000-05:00',
+        'timeZone': 'America/New_York'
+      }
+    }
+
+    request = service.events().insert(calendarId=student.calID, body=event)
+    response = request.execute(http=decorator.http())
+    eventid = response['id']
+    
     student.reminders += [models.Reminder(
       type = postData['type'],
       title = postData['title'],
@@ -329,7 +360,8 @@ class Reminders(webapp2.RequestHandler):
       date =  postData['date'],
       #course = postData['course'],
       note = postData['note'],
-      id = int(time.time())
+      id = int(time.time()),
+      eventid = eventid
     )]
     student.put()
   
