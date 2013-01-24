@@ -106,6 +106,8 @@ $(function() {
 
 			this.model.create(newCourse);
 
+			window.location.hash = "";
+
 		},
 		initialize: function() {
 			// kick off the API fetch
