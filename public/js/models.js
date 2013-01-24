@@ -18,7 +18,9 @@ $(function() {
 			start: "",
 			end: "",
 			location: "",
-			instructor: ""
+			instructor: "",
+			email: "",
+			link: ""
 		}
 	});
 
