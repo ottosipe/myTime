@@ -150,6 +150,7 @@ hr {
 
 .date input{
     width: 107px;
+    cursor: pointer;
 }
 
 .date span i {
