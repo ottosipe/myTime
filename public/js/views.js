@@ -50,6 +50,7 @@ $(function() {
 		},
 		viewType: CourseView,
 		render: function() {
+			console.log("test")
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -125,6 +126,19 @@ $(function() {
 		}, 
 		submit: function(e) {
 			e.preventDefault();
+
+			var newReminder = new Reminder( {
+				type: $("[name='type']", this.el).val(),
+				title: $("[name='title']", this.el).val(),
+				completed: false,
+				date: $("[name='date']", this.el).val(), // change to utc
+				time: "", // add selector
+				course: $("[name='course']", this.el).val(),
+				note: $("[name='note']", this.el).val()
+			});
+
+			newReminder.save();
+			this.model.add(newReminder);
 
 			console.log(this.model)
 		},
