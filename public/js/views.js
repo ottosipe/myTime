@@ -15,8 +15,8 @@ $(function() {
 			//this.listenTo(this.model, 'visible', this.toggleVisible);
 		},
 		render: function() {
-			var row = this.template(this.model.attributes);
 			console.log(this.model.attributes)
+			var row = this.template(this.model.attributes);
 			this.$el.html(row);
 			return this;
 		},
@@ -47,11 +47,12 @@ $(function() {
 		},
 		initialize: function() {
 			this.render();
-			this.listenTo(this.model, "change", this.render);
+//			this.listenTo(this.model, "change", this.render);
+			this.listenTo(this.model, "add", this.render);
 		},
-		viewType: CourseView,
+		viewType: null,
 		render: function() {
-			console.log("test")
+			this.$el.html("");
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -62,6 +63,9 @@ $(function() {
 		},
 		test: function() {
 			console.log(this.model)
+		},
+		hello: function() {
+			console.log("Hello")
 		}
 
 	});
@@ -105,6 +109,7 @@ $(function() {
 			newCourse.set({id: null});
 
 			this.model.create(newCourse);
+			console.log(this.model)
 
 			window.location.hash = "";
 
