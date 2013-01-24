@@ -15,13 +15,11 @@ $(function() {
 			//this.listenTo(this.model, 'visible', this.toggleVisible);
 		},
 		render: function() {
-			console.log(this.model.attributes)
 			var row = this.template(this.model.attributes);
 			this.$el.html(row);
 			return this;
 		},
 		delete: function(e) {
-			console.log(this.model)
 			this.model.destroy();
 		}
 	});
@@ -63,9 +61,6 @@ $(function() {
 		},
 		test: function() {
 			console.log(this.model)
-		},
-		hello: function() {
-			console.log("Hello")
 		}
 
 	});
@@ -93,9 +88,14 @@ $(function() {
 			"click .add": "submit"
 		},
 		submit: function(e) {
-			e.preventDefault();
-			alert('override me')
 			//MT
+		},
+		alert: function(msg) {
+			$(".alert .msg", this.el).html(msg)
+			$(".alert", this.el).show();
+			$(".close", this.el).click(function() {
+				$(this).parent().hide();
+			})
 		}
 	});
 
@@ -108,8 +108,16 @@ $(function() {
 			newCourse.set({courseId: newCourse.id});
 			newCourse.set({id: null});
 
+
+			var foundDups = this.model.every(function(i) {
+				return (i.attributes.id != newCourse.attributes.courseId)
+			})
+			if(!foundDups) {
+				this.alert("Yo, I hear you like class. So I put a class in your class so you can class while you're in class. Dawg."); // do fancier alert here
+				return;
+			}
+
 			this.model.create(newCourse);
-			console.log(this.model)
 
 			window.location.hash = "";
 
@@ -147,7 +155,6 @@ $(function() {
 
 			this.model.create(newReminder);
 
-			console.log(this.model)
 		},
 });
 
