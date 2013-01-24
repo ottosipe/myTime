@@ -69,7 +69,10 @@ form#addCourse.modal.hide.form-horizontal
         h3 Add Courses
 
       .modal-body
-        
+        .alert.hide
+          button.close(type='button') ×
+          .msg
+
         .row-fluid
           .span7.selector
               select.deptSelector(disabled="true", name="code")
@@ -95,9 +98,9 @@ form#addReminder.modal.hide
       h3 New Reminder
 
       .modal-body.reminderInputs
-        #reminderAlert.alert.hide
+        .alert.hide
           button.close(type='button', data-dismiss='alert') ×
-          | Reminder title required!
+          .msg
 
         input.typeTag(type='hidden', name="type")
         .reminderTag.btn-group(data-toggle="buttons-radio")
