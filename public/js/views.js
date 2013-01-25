@@ -47,6 +47,7 @@ $(function() {
 			this.render();
 //			this.listenTo(this.model, "change", this.render);
 			this.listenTo(this.model, "add", this.render);
+			this.listenTo(this.model, "remove", this.render);
 		},
 		viewType: null,
 		render: function() {
