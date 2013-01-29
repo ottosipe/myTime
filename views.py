@@ -8,7 +8,10 @@ import models
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 
+from oauth_decorator import decorator
+
 class MainPage(jade.jadeHandler):
+  @decorator.oauth_required
   def get(self):
     #handles get requests, context is object sent to jade renderer
 
