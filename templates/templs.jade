@@ -3,7 +3,7 @@
   script#reminder-template(type="template")
     .row-fluid
       div(class!="span9 <% if(completed) print("strike") %>")
-        .courseLabel <%= /*course.code +' '+ course.number +' '+*/ type %>
+        .courseLabel <%= coursename + " " + type %>
         h4.listTitle <%= title %>
         .noteLabel <%= note %>
       .span3

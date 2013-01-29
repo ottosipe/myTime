@@ -29,7 +29,23 @@ $(function() {
 	});
 
 	window.ReminderView = GenericView.extend({
-	    template: _.template( $('#reminder-template').html() )
+	    template: _.template( $('#reminder-template').html() ),
+	    render: function() {
+	    	var obj = this.model.attributes;
+	    	console.log(this.model.attributes.course)
+	    	var query = window.courseList.where({id:this.model.attributes.course});
+	    	// may need to also query courseId!!!
+	    	if (query.length > 0) {
+		    	var course = query[0].attributes;
+		    	obj.coursename = course.code + " " + course.number;
+		    } else {
+		    	obj.coursename = "-- class deleted --"
+		    }
+			
+			var row = this.template(obj);
+			this.$el.html(row);
+			return this;
+		}
 	});
 
 	window.AnnounceView = GenericView.extend({
@@ -100,13 +116,18 @@ $(function() {
 	});
 
 	window.addCourseModal = GenericModalView.extend({
+		events: {
+			"click .add": "submit",
+			"keypress #searchCode": "searchCode",
+			"keypress #searchNum": "searchNum"
+		},
 		el: $("#addCourse"),
 		submit: function(e) {
 			e.preventDefault();
 			//$(".add", this.el).button('loading');
 			var newCourse = this.data.currentSection;
 			newCourse.set({courseId: newCourse.id});
-			newCourse.set({id: null});
+			newCourse.set({id: null}); // explicitly say isNew() = false
 
 			var foundDups = this.model.every(function(i) {
 				return (i.attributes.id != newCourse.attributes.courseId)
@@ -117,14 +138,22 @@ $(function() {
 			}
 
 			this.model.create(newCourse);
-
+			// need to save id from courseID***
+			// perhaps timestamp id and course id??
 			window.location.hash = "";
 
 		},
 		initialize: function() {
 			// kick off the API fetch
 			this.data = new CodeDataView({model: new APICollection()});
+		},
+		searchCode: function() {
+			console.log(this.data)
+		},
+		searchNum: function() {
+			console.log(this.data)
 		}
+
 	});
 
 	window.addReminderModal = GenericModalView.extend({
