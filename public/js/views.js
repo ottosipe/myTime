@@ -148,10 +148,11 @@ $(function() {
 				completed: false,
 				date: $("[name='date']", this.el).val(), // change to utc
 				time: "", // add selector
-				course: $("[name='course']", this.el).val(),
+				course: parseInt($("[name='course']", this.el).val()),
 				note: $("[name='note']", this.el).val()
 			});
 
+			window.location.hash="#";
 			this.model.create(newReminder);
 
 		},
@@ -205,12 +206,13 @@ $(function() {
 		saveAcct: function(e) {
 			console.log('test')
 			e.preventDefault();
-			$("#editAccount [type='submit']").button('...saving');
+			// check this >>
+			$("#editAccount [type='submit']").button('saving');
 			$.post('/user', $("#editAccount").serialize(), function(data) {
 				console.log(data);
 				$("#username").html( $("#editAccount [name='name']").val() )
 				$("#editAccount [type='submit']").button('reset');
-				//window.location = "/"
+
 			});
 		}
 	});
