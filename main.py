@@ -3,6 +3,7 @@ import webapp2
 import models
 import api
 import views
+import oauth_decorator
 
 ## mvc layout
 # model: api.py and models.py
@@ -11,7 +12,7 @@ import views
 
 app = webapp2.WSGIApplication([
     # oauth callback
-    (views.decorator.callback_path, views.decorator.callback_handler()),
+    (oauth_decorator.decorator.callback_path, oauth_decorator.decorator.callback_handler()),
 
     ('/', views.MainPage),
     #('/admin', views.AdminPage),

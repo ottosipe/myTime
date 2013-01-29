@@ -5,14 +5,15 @@ import json
 import datetime
 import time
 import utils
-from views import service
-from views import decorator
 
 import models
 
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 from google.appengine.api import mail
+
+from oauth_decorator import service
+from oauth_decorator import decorator
 
 # for adding and deleting user specific courses
 
@@ -120,7 +121,8 @@ class EditCourse(webapp2.RequestHandler):
           # update class in google calendar
           logging.warning("updating class")
           event = utils.createEvent(info)
-          request = service.events().update(calendarId=student.calID, eventId=course.eventid, body=event)
+          request = service.events().update(calendarId=student.calID,
+              eventId=course.eventid, body=event)
           response = request.execute(http=decorator.http())
           logging.warning(response)
 

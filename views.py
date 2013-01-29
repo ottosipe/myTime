@@ -8,27 +8,7 @@ import models
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 
-import httplib2
-from oauth2client.appengine import OAuth2Decorator
-from apiclient.discovery import build
-
-"""
-decorator = OAuth2Decorator(
-  client_id='100813449163-vl4u1p376hjrc1e3gc090e8miarjnir3.apps.googleusercontent.com',
-  client_secret='L3TfdZSaobeM9EANnUhivnyg',
-  scope='https://www.googleapis.com/auth/calendar',
-  user_agent='myTime')
-"""
-decorator = OAuth2Decorator(
-  client_id='100813449163-26s1qdti9fukt0up65lljpg24oijl33d.apps.googleusercontent.com',
-  client_secret='E6xiDmvf_cB6RF8WaqYj13Hf',
-  scope='https://www.googleapis.com/auth/calendar',
-  user_agent='myTime')
-  
-service = build('calendar', 'v3')
-
 class MainPage(jade.jadeHandler):
-  @decorator.oauth_required
   def get(self):
     #handles get requests, context is object sent to jade renderer
 
@@ -48,16 +28,17 @@ class MainPage(jade.jadeHandler):
         except:
           studentName = User.nickname()
 
-        models.Student(user=User,
+        student = models.Student(user=User,
           courses = [],
           reminders = [],
           major = "",
           advisor_email = "",
           name = studentName,
           calID = ""
-        ).put();
+        )
+        logging.warning(student)
+        student.put()
         isNoob = 1;
-        student = models.Student.query(models.Student.user == User).fetch(1)[0]
       else:
         student = std_query[0]
       
