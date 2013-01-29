@@ -16,3 +16,4 @@ To Do:
 - achievement tool 
 - pretty times on frontend
 
+- add splash page

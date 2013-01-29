@@ -167,7 +167,8 @@ $(function() {
 			"click #mainNav .brand": "brand",
 			"hidden .modal": "modalHide",
 			"click a[data-dismiss='modal']": "hash",
-			"click .nav a": "hash"
+			"click .nav a": "hash",
+			"submit #editAccount": "saveAcct"
 		},
 		el: $('body'),
 		initialize: function() {
@@ -185,6 +186,17 @@ $(function() {
 		},
 		hash: function(e) {
 			window.location.hash = e.currentTarget.hash;
+		},
+		saveAcct: function(e) {
+			console.log('test')
+			e.preventDefault();
+			$("#editAccount [type='submit']").button('...saving');
+			$.post('/user', $("#editAccount").serialize(), function(data) {
+				console.log(data);
+				$("#username").html( $("#editAccount [name='name']").val() )
+				$("#editAccount [type='submit']").button('reset');
+				//window.location = "/"
+			});
 		}
 	});
 
