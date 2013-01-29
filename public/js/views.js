@@ -41,7 +41,7 @@ $(function() {
 
 	window.GenericListView = Backbone.View.extend({
 		events: {
-			"click":"test"
+			"click": "test"
 		},
 		initialize: function() {
 			this.render();
@@ -51,7 +51,7 @@ $(function() {
 		},
 		viewType: null,
 		render: function() {
-			this.$el.html("");
+			this.$el.empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -63,7 +63,6 @@ $(function() {
 		test: function() {
 			console.log(this.model)
 		}
-
 	});
 
 	window.CourseListView = GenericListView.extend({
@@ -108,7 +107,6 @@ $(function() {
 			var newCourse = this.data.currentSection;
 			newCourse.set({courseId: newCourse.id});
 			newCourse.set({id: null});
-
 
 			var foundDups = this.model.every(function(i) {
 				return (i.attributes.id != newCourse.attributes.courseId)
@@ -157,7 +155,24 @@ $(function() {
 			this.model.create(newReminder);
 
 		},
-});
+	});
+
+	window.courseSelectView = Backbone.View.extend({
+		el: $(".courseSelector"),
+		initialize: function() {
+			this.render();
+			this.listenTo(this.model, 'add', this.render);
+			this.listenTo(this.model, 'remove', this.render);
+		},
+		render: function() {
+			this.$el.empty();
+			var obj = this.model.models;
+			for(i in obj) {
+				var course = obj[i].attributes;
+				this.$el.append("<option value='"+course.id+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
+			}
+		}
+	})
 
 	/// main view ///
 

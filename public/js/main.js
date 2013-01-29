@@ -21,6 +21,7 @@ $(function() {
                 success: function(){
                     new CourseListView({model: courseList});
                     new addCourseModal({model: courseList});
+                    new courseSelectView({model: courseList});
                 }
             });
 
