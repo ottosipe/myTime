@@ -160,7 +160,7 @@ class Reminders(webapp2.RequestHandler):
       title = postData['title'],
       completed = False,
       date =  postData['date'],
-      #course = postData['course'],
+      course = postData['course'],
       note = postData['note'],
       id = int(time.time()),
     )]
