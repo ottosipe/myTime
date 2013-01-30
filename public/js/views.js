@@ -120,7 +120,7 @@ $(function() {
 		events: {
 			"click .add": "submit",
 			"keyup #searchCode": "searchCode",
-			"keypress #searchNum": "searchNum"
+			"keyup #searchNum": "searchNum"
 		},
 		el: $("#addCourse"),
 		submit: function(e) {
@@ -149,12 +149,13 @@ $(function() {
 		},
 		searchCode: function(e) {
 			var key = e.currentTarget.value;
-			this.data.apiCodes.find(key);
+			this.data.apiCodes.find(key, 'code');
 			this.data.render_codes();
-			console.log(this.data.apiCodes)
 		},
 		searchNum: function(e) {
-			console.log(this.data)
+			var key = e.currentTarget.value;
+			this.data.apiNumbers.find(key, 'number');
+			this.data.render_numbers();
 		}
 
 	});
@@ -305,8 +306,10 @@ $(function() {
 		render_numbers: function() {
 			$(".numSelector").empty();
 			for (var i = 0; i < this.apiNumbers.length; i++) {
-				var html = this.apiNumTemp(this.apiNumbers.models[i].toJSON());
-				$(".numSelector").append(html);
+				if(this.apiNumbers.models[i].get("show")) {
+					var html = this.apiNumTemp(this.apiNumbers.models[i].toJSON());
+					$(".numSelector").append(html);
+				}
 			}
 			this.fetch_sections();
 			$(".numSelector").removeAttr("disabled");

@@ -100,13 +100,14 @@ $(function() {
 	    		show: true
 	    	}
 	    }),
-	    find: function(key) {
+	    find: function(key, type) {
+	    	key = key.toUpperCase();
 	    	for (i in this.models) {
-	    		var code = this.models[i].get('code');
-	    		if(code.indexOf(key) == -1) {
+	    		var check = this.models[i].get(type).toString();
+	    		if(check.indexOf(key) == -1) {
 	    			this.models[i].set({show: false}, {silent: true});
 	    		} else {
-	    			console.log(this.models[i].get('code'))
+	    			this.models[i].set({show: true}, {silent: true});
 	    		}
 	    		
 	    	}
