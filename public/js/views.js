@@ -149,7 +149,9 @@ $(function() {
 		},
 		searchCode: function(e) {
 			var key = e.currentTarget.value;
-			console.log(this.data.model)
+			this.data.apiCodes.find(key);
+			this.data.render_codes();
+			console.log(this.data.apiCodes)
 		},
 		searchNum: function(e) {
 			console.log(this.data)
@@ -259,12 +261,9 @@ $(function() {
 		},
 		el: $("#addCourse"),
 		initialize: function() {
-			this.apiCodeTemp = _.template($("#code-select-template").html());
-			this.apiNumTemp = _.template($("#num-select-template").html());
-			this.apiSectTemp = _.template($("#sect-select-template").html());
 			
+			// models
 			this.apiCodes = new (APICollection.extend({url: "/codes"}));
-			
 			this.apiNumbers = new (APICollection.extend(
 			{url: 
 				function(){return "/numbers/" + $(".selector .codeSelector").val();}
@@ -275,16 +274,27 @@ $(function() {
 				}
 			} ));
 
+			// render events
 			this.listenTo(this.apiNumbers, "sync", this.render_numbers);
 			this.listenTo(this.apiCodes, "sync", this.render_codes);
 			this.listenTo(this.apiSections, "sync", this.render_sections);
 
+			// template handles
+			this.apiCodeTemp = _.template($("#code-select-template").html());
+			this.apiNumTemp = _.template($("#num-select-template").html());
+			this.apiSectTemp = _.template($("#sect-select-template").html());
+
+			// start the fun
 			this.apiCodes.fetch();
 		},
 		render_codes: function() {
+			$(".codeSelector").empty();
 			for (var i = 0; i < this.apiCodes.length; i++) {
-				var html = this.apiCodeTemp(this.apiCodes.models[i].toJSON());
-				$(".codeSelector").append(html)
+				// pass one big obj to template instead ***
+				if(this.apiCodes.models[i].get("show")) {
+					var html = this.apiCodeTemp(this.apiCodes.models[i].toJSON());
+					$(".codeSelector").append(html)
+				}
 			}
 			this.fetch_numbers();
 			$(".codeSelector").removeAttr("disabled")

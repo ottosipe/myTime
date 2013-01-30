@@ -95,7 +95,23 @@ $(function() {
 	/// other API collections ///
 
 	window.APICollection = Backbone.Collection.extend({
-	    model: Backbone.Model
+	    model: Backbone.Model.extend({
+	    	defaults: {
+	    		show: true
+	    	}
+	    }),
+	    find: function(key) {
+	    	for (i in this.models) {
+	    		var code = this.models[i].get('code');
+	    		if(code.indexOf(key) == -1) {
+	    			this.models[i].set({show: false}, {silent: true});
+	    		} else {
+	    			console.log(this.models[i].get('code'))
+	    		}
+	    		
+	    	}
+	    	this.trigger("change")
+	    }
 	});
 
 
