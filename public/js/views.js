@@ -39,7 +39,7 @@ $(function() {
 		    	var course = query[0].attributes;
 		    	obj.coursename = course.code + " " + course.number;
 		    } else {
-		    	obj.coursename = "-- class deleted --"
+		    	obj.coursename = ""
 		    }
 			
 			var row = this.template(obj);
@@ -139,7 +139,6 @@ $(function() {
 
 			this.model.create(newCourse);
 			// need to save id from courseID***
-			// perhaps timestamp id and course id??
 			window.location.hash = "";
 
 		},
@@ -167,6 +166,7 @@ $(function() {
 			$(".reminderTag .btn").click(function() {
 				$("[name='type']", this.el).val($(this).attr("value"));
 			})
+			
 		}, 
 		submit: function(e) {
 			e.preventDefault();
@@ -195,14 +195,14 @@ $(function() {
 			this.listenTo(this.model, 'remove', this.render);
 		},
 		render: function() {
-			this.$el.empty();
+			this.$el.html("<option value=''> -- Course -- </option>");
 			var obj = this.model.models;
 			for(i in obj) {
 				var course = obj[i].attributes;
 				this.$el.append("<option value='"+course.id+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
 			}
 		}
-	})
+	});
 
 	/// main view ///
 

@@ -50,7 +50,7 @@ class Courses(webapp2.RequestHandler):
 
     logging.warning(response)
 
-    student.courses += [models.Course(
+    newCourse = models.Course(
       id = info["courseId"],
       code = info["code"],
       number = info["number"],
@@ -62,10 +62,13 @@ class Courses(webapp2.RequestHandler):
       location = info["location"],
       instructor = info["instructor"],
       eventid = eventid
-    )]
+    )
+
+    student.courses += [newCourse]
     
     student.put()
-    self.response.out.write("Added "+info["code"]+" "+str(info["number"]))
+    # respond with changes so backbone knows the id
+    self.response.out.write(json.dumps(newCourse.to_dict())) 
   
   def get(self):
     User = users.get_current_user()
@@ -133,14 +136,14 @@ class EditCourse(webapp2.RequestHandler):
             code = info["code"],
             number = info["number"],
             section = info["section"],
-	    type = info["type"],
+            type = info["type"],
             title = info["title"],
             days = info["days"],
             time = info["time"],
             location = info["location"],
-	    instructor = info["instructor"],
-	    eventid = course.eventid
-	  )]
+            instructor = info["instructor"],
+            eventid = course.eventid
+          )]
 
       # after for loop is done, set student's courses to the newCourses (including edited course)
       student.courses = newCourses

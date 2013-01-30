@@ -7,7 +7,6 @@ $(function() {
 	window.Course = Backbone.Model.extend({
 		urlRoot: "/courses",
 		defaults: {
-			courseId: null,
 			code: "",
 			number: null,
 			section: null,
@@ -21,7 +20,15 @@ $(function() {
 			instructor: "",
 			email: "",
 			link: ""
-		}
+		},
+		validate: function(attrs, options) {
+		// add elsewhere
+		 /*one.on("invalid", function(model, error) {
+		  alert(model.get("title") + " " + error);
+		});*/
+			//console.log(attrs, options)
+			return false;
+		 }
 	});
 
 	window.Reminder = Backbone.Model.extend({
@@ -64,7 +71,7 @@ $(function() {
 
 	window.CourseCollection = Backbone.Collection.extend({
 	    model: Course,
-	    url: "/courses",
+	    url: "/courses"
 	});
 
 	window.ReminderCollection = Backbone.Collection.extend({
