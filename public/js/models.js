@@ -95,8 +95,7 @@ $(function() {
 	/// other API collections ///
 
 	window.APICollection = Backbone.Collection.extend({
-	    model: Backbone.Model,
-		url: "/codes"
+	    model: Backbone.Model
 	});
 
 

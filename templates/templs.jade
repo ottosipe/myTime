@@ -10,7 +10,7 @@
         span.pull-right
           .dateLabel <%= date %>
           .btn-group
-            button.btn.completeRemind(data-id!='<%= id %>')
+            button.btn.complete
               i(class!="<% if(completed) print("icon-check"); else print("icon-ok"); %>")
             button.btn.dropdown-toggle(data-toggle='dropdown')
               span.caret

@@ -6,9 +6,6 @@ $(function() {
 	  	className: "entry",
 		tagName: "div",
 		template: _.template(""), // overriden
-		events: {
-			"click .delete": "delete"
-		},
 		initialize: function() {
 			this.listenTo(this.model, "change", this.render);	
 			this.listenTo(this.model, 'destroy', this.remove);
@@ -25,10 +22,17 @@ $(function() {
 	});
 
 	window.CourseView = GenericView.extend({
+		events: {
+			"click .delete": "delete"
+		},
 		template: _.template( $('#course-template').html() ),
 	});
 
 	window.ReminderView = GenericView.extend({
+	    events: {
+	    	"click .delete": "delete",
+			"click .complete": "complete"
+		},
 	    template: _.template( $('#reminder-template').html() ),
 	    render: function() {
 	    	var obj = this.model.attributes;
@@ -45,6 +49,9 @@ $(function() {
 			var row = this.template(obj);
 			this.$el.html(row);
 			return this;
+		},
+		complete: function() {
+			this.model.toggle()
 		}
 	});
 
@@ -56,9 +63,6 @@ $(function() {
 	/// list views ///
 
 	window.GenericListView = Backbone.View.extend({
-		events: {
-			"click": "test"
-		},
 		initialize: function() {
 			this.render();
 //			this.listenTo(this.model, "change", this.render);
@@ -75,9 +79,6 @@ $(function() {
 	            if(i+1 != this.model.models.length) this.$el.append("<hr>")
 	        }
 			return this;
-		},
-		test: function() {
-			console.log(this.model)
 		}
 	});
 
@@ -118,7 +119,7 @@ $(function() {
 	window.addCourseModal = GenericModalView.extend({
 		events: {
 			"click .add": "submit",
-			"keypress #searchCode": "searchCode",
+			"keyup #searchCode": "searchCode",
 			"keypress #searchNum": "searchNum"
 		},
 		el: $("#addCourse"),
@@ -146,10 +147,11 @@ $(function() {
 			// kick off the API fetch
 			this.data = new CodeDataView({model: new APICollection()});
 		},
-		searchCode: function() {
-			console.log(this.data)
+		searchCode: function(e) {
+			var key = e.currentTarget.value;
+			console.log(this.data.model)
 		},
-		searchNum: function() {
+		searchNum: function(e) {
 			console.log(this.data)
 		}
 
@@ -251,75 +253,79 @@ $(function() {
 
 	window.CodeDataView = Backbone.View.extend({
 		events: {
-			"change .deptSelector":"render_numbers",
-			"change .numSelector":"render_sections", 
-			"change .sectSelector": "render_info"
+			"change .codeSelector": "fetch_numbers",
+			"change .numSelector": "fetch_sections", 
+			"change .sectSelector": "fetch_info"
 		},
 		el: $("#addCourse"),
 		initialize: function() {
-			this.render_codes();
+			this.apiCodeTemp = _.template($("#code-select-template").html());
+			this.apiNumTemp = _.template($("#num-select-template").html());
+			this.apiSectTemp = _.template($("#sect-select-template").html());
+			
+			this.apiCodes = new (APICollection.extend({url: "/codes"}));
+			
+			this.apiNumbers = new (APICollection.extend(
+			{url: 
+				function(){return "/numbers/" + $(".selector .codeSelector").val();}
+			}));
+			this.apiSections = new (APICollection.extend(
+			{ url:
+				function() {return "/sections/" + $(".codeSelector").val() +"/"+ $(".numSelector").val();
+				}
+			} ));
+
+			this.listenTo(this.apiNumbers, "sync", this.render_numbers);
+			this.listenTo(this.apiCodes, "sync", this.render_codes);
+			this.listenTo(this.apiSections, "sync", this.render_sections);
+
+			this.apiCodes.fetch();
 		},
 		render_codes: function() {
-			var that = this;
-			var template = _.template($("#code-select-template").html());
-			this.model.fetch({
-				success: function(model) {
-					for (var i = 0; i < model.length; i++) {
-						var html = template(model.models[i].toJSON());
-						$(".deptSelector").append(html)
-					}
-					that.render_numbers();
-					$(".deptSelector").removeAttr("disabled")
-				}
-			});
+			for (var i = 0; i < this.apiCodes.length; i++) {
+				var html = this.apiCodeTemp(this.apiCodes.models[i].toJSON());
+				$(".codeSelector").append(html)
+			}
+			this.fetch_numbers();
+			$(".codeSelector").removeAttr("disabled")
+		},
+		fetch_numbers: function() {
+			this.apiNumbers.fetch();
 		},
 		render_numbers: function() {
-			var url = "/numbers/" + $(".selector .deptSelector").val()
-			var numbs = new (APICollection.extend({url:url}));
-			var that = this;
-			var template = _.template($("#num-select-template").html());
-			numbs.fetch({
-				success: function(model) {
-					$(".numSelector").empty();
-					for (var i = 0; i < model.length; i++) {
-						var html = template(model.models[i].toJSON());
-						$(".numSelector").append(html);
-					}
-					that.render_sections();
-					$(".numSelector").removeAttr("disabled");
-				}
-			});
+			$(".numSelector").empty();
+			for (var i = 0; i < this.apiNumbers.length; i++) {
+				var html = this.apiNumTemp(this.apiNumbers.models[i].toJSON());
+				$(".numSelector").append(html);
+			}
+			this.fetch_sections();
+			$(".numSelector").removeAttr("disabled");
+		
 		}, 
-		render_sections: function() {
-			var url = "/sections/" + 
-				$(".deptSelector").val() +"/"+ 
-				$(".numSelector").val();
-			var sects = new (APICollection.extend({url:url}));
-			var that = this;
-			var template = _.template($("#sect-select-template").html());
-			sects.fetch({
-				success: function(model) {
-
-					that.allSections = model.models;
-					
-					$(".sectSelector").empty();
-					var types = model.pluck("type");
-					var types = _.uniq(types);
-					_.each(types, function(type){
-
-						var subSet = model.where({type:type});
-						$(".sectSelector").append("<select name='section'></select>")
-							for (var i = 0; i < subSet.length; i++) {
-								var html = template(subSet[i].toJSON());
-								$(".sectSelector select:last").append(html);
-							}
-					})
-					that.render_info();
-					$(".sectSelector").removeAttr("disabled");
-				}
-			});
+		fetch_sections: function() {
+			this.apiSections.fetch();
 		},
-		render_info: function() {
+		render_sections: function(){
+
+			this.allSections = this.apiSections.models;
+			
+			$(".sectSelector").empty();
+			var types = this.apiSections.pluck("type");
+			var types = _.uniq(types);
+			var that = this;
+			_.each(types, function(type){
+
+				var subSet = that.apiSections.where({type:type});
+				$(".sectSelector").append("<select name='section'></select>")
+					for (var i = 0; i < subSet.length; i++) {
+						var html = that.apiSectTemp(subSet[i].toJSON());
+						$(".sectSelector select:last").append(html);
+					}
+			})
+			this.fetch_info();
+			$(".sectSelector").removeAttr("disabled");
+		},
+		fetch_info: function() {
 			for (i in this.allSections) {
 
 				var section = this.allSections[i].attributes;
