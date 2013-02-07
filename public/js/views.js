@@ -82,31 +82,25 @@ $(function() {
 	            if(i+1 != this.model.models.length) this.$el.append("<hr>")
 	        }
 			return this;
+		},
+		alert: function() {
+			this.$el.parent().find(".alert").show();
 		}
 	});
 
 	window.CourseListView = GenericListView.extend({
 		el: $("#courseList"),
 		viewType: CourseView,
-		alert: function() {
-			console.log("course")
-		}
 	});
 
 	window.ReminderListView = GenericListView.extend({
 		el: $("#remindList"),
-		viewType: ReminderView,
-		alert: function() {
-			console.log("reminder")
-		}
+		viewType: ReminderView
 	});
 
 	window.AnnounceListView = GenericListView.extend({
 		el: $("#announceList"),
-		viewType: AnnounceView,
-		alert: function() {
-			console.log("announce")
-		}
+		viewType: AnnounceView
 	});
 
 
@@ -210,13 +204,14 @@ $(function() {
 			this.render();
 			this.listenTo(this.model, 'add', this.render);
 			this.listenTo(this.model, 'remove', this.render);
+			this.listenTo(this.model, 'change', this.render);
 		},
 		render: function() {
 			this.$el.html("<option value=''> -- Course -- </option>");
 			var obj = this.model.models;
 			for(i in obj) {
 				var course = obj[i].attributes;
-				this.$el.append("<option value='"+(course.id || course.courseId)+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
+				this.$el.append("<option value='"+course.id+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
 			}
 		}
 	});
