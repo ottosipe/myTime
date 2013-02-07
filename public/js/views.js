@@ -140,24 +140,31 @@ $(function() {
 		},
 		el: $("#addCourse"),
 		edit: function(e) {
-			console.log($(e.currentTarget).attr("name"));
+			var name = $(e.currentTarget).attr("name");
+			var value = $(e.currentTarget).val();
+			if(name) {
+				console.log(name, value);
+				this.data.currentSections[0].set(name, value);
+				console.log(this.data.currentSections[0].attributes);
+			}
 		},
 		next: function(e) {
 			e.preventDefault();
-			this.newCourse = this.data.currentSections;
+
 			$(".page2 .sections", this.el).empty()
-			_.each(this.newCourse, function(course) {
+			_.each(this.data.currentSections, function(course) {
 				$(".page2 .sections", this.el).append('<a href="#" class="btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
 				console.log(course)
 			})
 			
 
-/*			$("[name='days']", this.el).val(this.newCourse.get('days'));
+			this.newCourse = this.data.currentSections[0];
+			$("[name='days']", this.el).val(this.newCourse.get('days'));
 			$("[name='time']", this.el).val(this.newCourse.get('time'));
+			$("[name='title']", this.el).val(this.newCourse.get('title'));
 			$("[name='location']", this.el).val(this.newCourse.get('location'));
 			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
 
-*/
 			$(".page1", this.el).hide();
 			$(".page2", this.el).show();
 			$(".next", this.el).hide();

@@ -178,7 +178,7 @@ class Reminders(webapp2.RequestHandler):
 
       output = []
       for x in student.reminders:
-        if(self.request.get('showAll') == "true" or x.completed == False):
+        #if(self.request.get('showAll') == "true" or x.completed == False):
           output.append(x.to_dict());
 
       self.response.out.write(json.dumps(output))
@@ -201,13 +201,26 @@ class EditReminder(webapp2.RequestHandler):
       self.response.out.write("['auth':'fail']");
 
   # toggle completed state
-  def put(self):
+  def put(self, idArg):
     User = users.get_current_user()
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      logging.warning(student)
+      newReminds = []
       for x in student.reminders:
-        if x.id == int(self.request.get('id')):
-          x.completed = not x.completed
+        if x.id == int(idArg):
+          newData = json.loads(self.request.body)
+          x.type = newData['type']
+          x.title = newData['title']
+          x.completed = newData['completed']
+          x.date =  newData['date']
+          x.course = newData['course']
+          x.note = newData['note']
+        newReminds.append(x)
+      #reminders = student.reminders.query(student.reminders.id == int(idArg)).fetch(1)[0]
+      logging.warning(newReminds)
+      student.reminders = newReminds
+      logging.warning(student)
       student.put()
       self.response.out.write("completed reminders")
     else: 

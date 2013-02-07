@@ -6,7 +6,7 @@ $(function() {
     		""					: "home",
     		"editAccount" 		: "editAccount",
     		"addCourse"			: "addCourse",
-    		"editCourse/:id"	: "editCourse",
+    		"editCourse"	    : "editCourse",
     		"addReminder"		: "addReminder",
     		"editReminder/:id"	: "editReminder",
             "welcome"           : "welcome",
