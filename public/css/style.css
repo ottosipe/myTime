@@ -12,6 +12,10 @@ body {
     height: 100%;
 }
 
+.center {
+    text-align: center;
+}
+
 .strike {
     text-decoration: line-through;
     color: gray;

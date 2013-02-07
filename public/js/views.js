@@ -9,11 +9,12 @@ $(function() {
 		initialize: function() {
 			this.listenTo(this.model, "change", this.render);	
 			this.listenTo(this.model, 'destroy', this.remove);
-			//this.listenTo(this.model, 'visible', this.toggleVisible);
 		},
 		render: function() {
+			console.log('test')
 			var row = this.template(this.model.attributes);
 			this.$el.html(row);
+			console.log(this.model.get('title'))
 			return this;
 		},
 		delete: function(e) {
@@ -23,9 +24,13 @@ $(function() {
 
 	window.CourseView = GenericView.extend({
 		events: {
-			"click .delete": "delete"
+			"click .delete": "delete",
+			"hover":"hover"
 		},
 		template: _.template( $('#course-template').html() ),
+		hover:function() {
+			console.log(this.model.get('id')) // trigger reminder highlight here ***
+		}
 	});
 
 	window.ReminderView = GenericView.extend({
@@ -61,20 +66,17 @@ $(function() {
 
 
 	/// list views ///
-
 	window.GenericListView = Backbone.View.extend({
 		initialize: function() {
 			this.render();
-//			this.listenTo(this.model, "change", this.render);
 			this.listenTo(this.model, "add", this.render);
 			this.listenTo(this.model, "remove", this.render);
 		},
 		viewType: null,
 		render: function() {
+			this.alert();
 			this.$el.empty();
-			if(!this.model.models.length) {
-				this.alert();
-			}
+			console.log("render")
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -84,7 +86,12 @@ $(function() {
 			return this;
 		},
 		alert: function() {
-			this.$el.parent().find(".alert").show();
+			if(!this.model.models.length) {
+				this.$el.parent().find(".alert").show();
+			} else {
+				this.$el.parent().find(".alert").hide();
+			}
+			
 		}
 	});
 
@@ -125,26 +132,61 @@ $(function() {
 	window.addCourseModal = GenericModalView.extend({
 		events: {
 			"click .add": "submit",
+			"click .next": "next",
+			"click .back": "back",
 			"keyup #searchCode": "searchCode",
-			"keyup #searchNum": "searchNum"
+			"keyup #searchNum": "searchNum",
+			"change input": "edit"
 		},
 		el: $("#addCourse"),
+		edit: function(e) {
+			console.log($(e.currentTarget).attr("name"));
+		},
+		next: function(e) {
+			e.preventDefault();
+			this.newCourse = this.data.currentSections;
+			$(".page2 .sections", this.el).empty()
+			_.each(this.newCourse, function(course) {
+				$(".page2 .sections", this.el).append('<a href="#" class="btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
+				console.log(course)
+			})
+			
+
+/*			$("[name='days']", this.el).val(this.newCourse.get('days'));
+			$("[name='time']", this.el).val(this.newCourse.get('time'));
+			$("[name='location']", this.el).val(this.newCourse.get('location'));
+			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
+
+*/
+			$(".page1", this.el).hide();
+			$(".page2", this.el).show();
+			$(".next", this.el).hide();
+			$(".next-btns", this.el).show();
+		},
+		back: function(e) {
+			e.preventDefault();
+			$(".page1", this.el).show();
+			$(".page2", this.el).hide();
+			$(".next", this.el).show();
+			$(".next-btns", this.el).hide();
+		},
 		submit: function(e) {
 			e.preventDefault();
-			//$(".add", this.el).button('loading');
-			var newCourse = this.data.currentSection;
-			newCourse.set({courseId: newCourse.id});
-			newCourse.set({id: null}); // explicitly say isNew() = false
+			$(".add", this.el).button('loading');
 
+			this.newCourse = this.data.currentSections[0];
+			this.newCourse.set({courseId: this.newCourse.id});
+			this.newCourse.set({id: null});// so isNew is true...
+			var that = this;
 			var foundDups = this.model.every(function(i) {
-				return (i.attributes.id != newCourse.attributes.courseId)
+				return (i.attributes.id != that.newCourse.attributes.courseId)
 			})
 			if(!foundDups) {
 				this.alert("Yo, I hear you like class. So I put a class in your class so you can class while you're in class. Dawg."); // do fancier alert here
 				return;
 			}
 
-			this.model.create(newCourse);
+			this.model.create(this.newCourse);
 			// need to save id from courseID***
 			window.location.hash = "";
 
@@ -276,11 +318,12 @@ $(function() {
 			{url: 
 				function(){return "/numbers/" + $(".selector .codeSelector").val();}
 			}));
-			this.apiSections = new (APICollection.extend(
-			{ url:
-				function() {return "/sections/" + $(".codeSelector").val() +"/"+ $(".numSelector").val();
-				}
-			} ));
+			this.apiSections = new (APICollection.extend({ 
+			url: function() {
+				return "/sections/" + $(".codeSelector").val() +"/"+ $(".numSelector").val();
+			},
+			model: Course 
+			}));
 
 			// render events
 			this.listenTo(this.apiNumbers, "sync", this.render_numbers);
@@ -326,8 +369,6 @@ $(function() {
 			this.apiSections.fetch();
 		},
 		render_sections: function(){
-
-			this.allSections = this.apiSections.models;
 			
 			$(".sectSelector").empty();
 			var types = this.apiSections.pluck("type");
@@ -346,20 +387,17 @@ $(function() {
 			$(".sectSelector").removeAttr("disabled");
 		},
 		fetch_info: function() {
-			for (i in this.allSections) {
+			this.currentSections = [];
 
-				var section = this.allSections[i].attributes;
-				if(section.section == $("[name='section']:first").val()) {
-					delete this.currentSection;
-					this.currentSection = new Course(section);
-				}
-			}
-			var section = this.currentSection.attributes;
-			$("[name='days']", this.el).html(section.days);
-			$("[name='time']", this.el).html(section.time);
-			$("[name='location']", this.el).html(section.location);
-			$("[name='instructor']", this.el).html(section.instructor);
-
+			var that = this;
+			var sects = $("[name='section']").each(function(i, sel) {
+				console.log(i, $(sel).val())
+				
+				that.currentSections[i] = 
+				that.apiSections.where({
+					id:parseInt($(sel).val())
+				})[0];
+			});
 		}
 	});
 });

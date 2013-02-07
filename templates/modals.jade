@@ -1,15 +1,6 @@
 {% autoescape off %}
 
-
-//- opens the welcome modal only if user is new
-
-// new user modal
-if(noob)
-  script 
-    $(function(){
-      $('#welcome').modal(); // fix this shit ***
-    });
-form#welcome.modal.hide
+form#welcome.modal.hide // figure out way to open this ***
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
         h3 Welcome, #{name}
@@ -66,60 +57,50 @@ form#editAccount.modal.hide.form-horizontal
 form#addCourse.modal.hide.form-horizontal
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 Add Courses
+        h3 Add Course
 
       .modal-body
         .alert.hide
           button.close(type='button') ×
           .msg
 
-        .row-fluid
+        .row-fluid.page1
           .span7.selector
               select.codeSelector(disabled="true", name="code")
-              input#searchCode(type="text", placeholder="subject").input-mini
+              input#searchCode(type="text", placeholder="subject", tabindex=1, autofocus="true").input-mini
               select.numSelector(disabled="true", name="number")
-              input#searchNum(type="text", placeholder="number").input-mini
+              input#searchNum(type="text", placeholder="number", tabindex=2).input-mini
               
           .span5.selector
             .sectSelector
               //-button.btn
                 i.icon-plus
 
-
-    .modal-footer
-      button.btn.btn-info.pull-left(data-dismiss='modal') Done
-      button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Edit/Add
-
-// edit class modal
-form#editCourse.modal.hide.form-horizontal
-    .modal-header
-        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 Edit Courses
-
-      .modal-body
-        .alert.hide
-          button.close(type='button') ×
-          .msg
-
-        .row-fluid
-          .span6.selector
-              input(type="text", name="dept", placeholder="code").input-mini
-              input(type="text", name="number", placeholder="number").input-mini
-              input(type="text", name="startTime", placeholder="start time").input-mini
-              input(type="text", name="endTime", placeholder="end time").input-mini
-              input(type="text", name="instructor", placeholder="instructor")
-              input(type="text", name="days", placeholder="days").input-mini
-              
-          .span6.selector
-              input(type="text", name="coursePage", placeholder="course page")
-              input(type="text", name="instructorEmail", placeholder="email")
+        .page2.hide
+          .center
+            .btn-group.sections
+          hr
+          .row-fluid
+            .span6.selector
+                input(type="text", name="dept", placeholder="code").input-mini
+                input(type="text", name="number", placeholder="number").input-mini
+                input(type="text", name="startTime", placeholder="start time").input-mini
+                input(type="text", name="endTime", placeholder="end time").input-mini
+                input(type="text", name="instructor", placeholder="instructor")
+                input(type="text", name="days", placeholder="days").input-mini
+                
+            .span6.selector
+                input(type="text", name="coursePage", placeholder="course page")
+                input(type="text", name="instructorEmail", placeholder="email")
 
 
     .modal-footer
-      button.btn.btn-info.pull-left(data-dismiss='modal') Done
-      button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Add
-      
-
+      button.btn.pull-left(data-dismiss='modal') Done
+      button.btn.btn-warning.next Next
+      .next-btns.hide
+        button.btn.back Back
+        button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Save
+   
 // add assignment modal
 form#addReminder.modal.hide
     .modal-header
