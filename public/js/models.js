@@ -16,8 +16,8 @@ $(function() {
 			end: "",
 			location: "",
 			instructor: "",
-			prof_email: "",
-			site_link: ""
+			prof_email: "ottosipe@gmail.com",
+			site_link: "http://google.com"
 		},
 		validate: function(attrs, options) {
 		// add elsewhere

@@ -216,7 +216,7 @@ $(function() {
 			var obj = this.model.models;
 			for(i in obj) {
 				var course = obj[i].attributes;
-				this.$el.append("<option value='"+course.id+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
+				this.$el.append("<option value='"+(course.id || course.courseId)+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
 			}
 		}
 	});
