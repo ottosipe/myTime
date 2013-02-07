@@ -88,6 +88,35 @@ form#addCourse.modal.hide.form-horizontal
 
     .modal-footer
       button.btn.btn-info.pull-left(data-dismiss='modal') Done
+      button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Edit/Add
+
+// edit class modal
+form#editCourse.modal.hide.form-horizontal
+    .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h3 Edit Courses
+
+      .modal-body
+        .alert.hide
+          button.close(type='button') ×
+          .msg
+
+        .row-fluid
+          .span6.selector
+              input(type="text", name="dept", placeholder="code").input-mini
+              input(type="text", name="number", placeholder="number").input-mini
+              input(type="text", name="startTime", placeholder="start time").input-mini
+              input(type="text", name="endTime", placeholder="end time").input-mini
+              input(type="text", name="instructor", placeholder="instructor")
+              input(type="text", name="days", placeholder="days").input-mini
+              
+          .span6.selector
+              input(type="text", name="coursePage", placeholder="course page")
+              input(type="text", name="instructorEmail", placeholder="email")
+
+
+    .modal-footer
+      button.btn.btn-info.pull-left(data-dismiss='modal') Done
       button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Add
       
 
