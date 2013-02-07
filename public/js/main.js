@@ -62,7 +62,7 @@ $(function() {
         },
 
         editCourse: function(id) {
-            $("#editCourse").modal();
+            $("#addCourse").modal(); // do fancyness here ****
         },
 
         addReminder: function() {
