@@ -1,6 +1,4 @@
 
-var app = app || {};
-
 $(function() {
 	/// models ///
 
@@ -18,8 +16,8 @@ $(function() {
 			end: "",
 			location: "",
 			instructor: "",
-			email: "",
-			link: ""
+			prof_email: "",
+			site_link: ""
 		},
 		validate: function(attrs, options) {
 		// add elsewhere

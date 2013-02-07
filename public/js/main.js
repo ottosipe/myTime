@@ -22,16 +22,20 @@ $(function() {
                     new CourseListView({model: courseList});
                     new addCourseModal({model: courseList});
                     new courseSelectView({model: courseList});
+
+
+                    window.remindList = new ReminderCollection();
+                    remindList.fetch({
+                        success: function(){
+                            new ReminderListView({model: remindList});
+                            new addReminderModal({model: remindList});
+                        }
+                    });
+
                 }
             });
 
-            window.remindList = new ReminderCollection();
-            remindList.fetch({
-                success: function(){
-                    new ReminderListView({model: remindList});
-                    new addReminderModal({model: remindList});
-                }
-            });
+            
 
             window.announceList = new AnnouncementCollection();
             announceList.fetch({

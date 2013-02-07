@@ -13,6 +13,8 @@ class Course(ndb.Model):
   location = ndb.StringProperty()
   instructor = ndb.StringProperty()
   eventid = ndb.StringProperty()
+  prof_email = ndb.StringProperty()
+  site_link = ndb.StringProperty()
 
 class Reminder(ndb.Model):
   id = ndb.IntegerProperty()

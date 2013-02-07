@@ -72,6 +72,9 @@ $(function() {
 		viewType: null,
 		render: function() {
 			this.$el.empty();
+			if(!this.model.models.length) {
+				this.alert();
+			}
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -84,17 +87,26 @@ $(function() {
 
 	window.CourseListView = GenericListView.extend({
 		el: $("#courseList"),
-		viewType: CourseView
+		viewType: CourseView,
+		alert: function() {
+			console.log("course")
+		}
 	});
 
 	window.ReminderListView = GenericListView.extend({
 		el: $("#remindList"),
-		viewType: ReminderView
+		viewType: ReminderView,
+		alert: function() {
+			console.log("reminder")
+		}
 	});
 
 	window.AnnounceListView = GenericListView.extend({
 		el: $("#announceList"),
-		viewType: AnnounceView
+		viewType: AnnounceView,
+		alert: function() {
+			console.log("announce")
+		}
 	});
 
 

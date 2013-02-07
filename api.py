@@ -61,6 +61,8 @@ class Courses(webapp2.RequestHandler):
       time = info["time"],
       location = info["location"],
       instructor = info["instructor"],
+      prof_email = info["prof_email"],
+      site_link = info["site_link"],
       eventid = eventid
     )
 
