@@ -3,14 +3,14 @@
   script#reminder-template(type="template")
     .row-fluid
       div(class!="span9 <% if(completed) print("strike") %>")
-        .courseLabel <%= /*course.code +' '+ course.number +' '+*/ type %>
+        .courseLabel <%= coursename + " " + type %>
         h4.listTitle <%= title %>
         .noteLabel <%= note %>
       .span3
         span.pull-right
           .dateLabel <%= date %>
           .btn-group
-            button.btn.completeRemind(data-id!='<%= id %>')
+            button.btn.complete
               i(class!="<% if(completed) print("icon-check"); else print("icon-ok"); %>")
             button.btn.dropdown-toggle(data-toggle='dropdown')
               span.caret

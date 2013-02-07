@@ -1,13 +1,10 @@
 
-var app = app || {};
-
 $(function() {
 	/// models ///
 
 	window.Course = Backbone.Model.extend({
 		urlRoot: "/courses",
 		defaults: {
-			courseId: null,
 			code: "",
 			number: null,
 			section: null,
@@ -19,9 +16,17 @@ $(function() {
 			end: "",
 			location: "",
 			instructor: "",
-			email: "",
-			link: ""
-		}
+			prof_email: "",
+			site_link: ""
+		},
+		validate: function(attrs, options) {
+		// add elsewhere
+		 /*one.on("invalid", function(model, error) {
+		  alert(model.get("title") + " " + error);
+		});*/
+			//console.log(attrs, options)
+			return false;
+		 }
 	});
 
 	window.Reminder = Backbone.Model.extend({
@@ -64,7 +69,7 @@ $(function() {
 
 	window.CourseCollection = Backbone.Collection.extend({
 	    model: Course,
-	    url: "/courses",
+	    url: "/courses"
 	});
 
 	window.ReminderCollection = Backbone.Collection.extend({
@@ -88,8 +93,24 @@ $(function() {
 	/// other API collections ///
 
 	window.APICollection = Backbone.Collection.extend({
-	    model: Backbone.Model,
-		url: "/codes"
+	    model: Backbone.Model.extend({
+	    	defaults: {
+	    		show: true
+	    	}
+	    }),
+	    find: function(key, type) {
+	    	key = key.toUpperCase();
+	    	for (i in this.models) {
+	    		var check = this.models[i].get(type).toString();
+	    		if(check.indexOf(key) == -1) {
+	    			this.models[i].set({show: false}, {silent: true});
+	    		} else {
+	    			this.models[i].set({show: true}, {silent: true});
+	    		}
+	    		
+	    	}
+	    	this.trigger("change")
+	    }
 	});
 
 
