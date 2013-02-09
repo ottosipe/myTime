@@ -153,7 +153,7 @@ $(function() {
 				$(".page2 .sect-nav", this.el).append('<a href="#" class="btn sect-btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
 			});
 
-			this.switchEdit();
+			this.switchEdit(null);
 			$(".page1", this.el).hide("slide");
 			$(".page2", this.el).show("slide");
 			$(".next", this.el).hide();
@@ -187,19 +187,23 @@ $(function() {
 			e.preventDefault();
 			$(".add", this.el).button('loading');
 
-			this.newCourse = this.data.currentSections.first();
-			this.newCourse.set({courseId: this.newCourse.id});
-			this.newCourse.set({id: null});// so isNew is true...
 			var that = this;
-			var foundDups = this.model.every(function(i) {
-				return (i.attributes.id != that.newCourse.attributes.courseId)
-			})
-			if(!foundDups) {
-				this.alert("Yo, I hear you like class. So I put a class in your class so you can class while you're in class. Dawg."); // do fancier alert here
-				return;
-			}
+			this.data.currentSections.each(function(sect) {
+				console.log(sect)
+				sect.set({courseId: sect.id});
+				sect.set({id: null});// so isNew is true...
 
-			this.model.create(this.newCourse);
+				var foundDups = that.model.every(function(i) {
+					return (i.attributes.id != sect.attributes.courseId)
+				})
+				if(!foundDups) { // may not work in loop ***
+					that.alert("Yo, I hear you like class. So I put a class in your class so you can class while you're in class. Dawg."); // do fancier alert here
+					return;
+				}
+
+				that.model.create(sect);
+			}) 
+
 			// need to save id from courseID***
 			window.location.hash = "";
 
