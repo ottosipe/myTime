@@ -27,7 +27,7 @@ $(function() {
 		},
 		template: _.template( $('#course-template').html() ),
 		hover:function() {
-			console.log(this.model.get('id')) // trigger reminder highlight here ***
+			//console.log(this.model.get('id')) // trigger reminder highlight here ***
 		}
 	});
 
@@ -39,7 +39,7 @@ $(function() {
 	    template: _.template( $('#reminder-template').html() ),
 	    render: function() {
 	    	var obj = this.model.attributes;
-	    	console.log(this.model.attributes.course)
+
 	    	var query = window.courseList.where({id:this.model.attributes.course});
 	    	// may need to also query courseId!!!
 	    	if (query.length > 0) {
@@ -141,26 +141,19 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log(name, value);
+				console.log("Changed", name, value);
 				this.data.currentSections.first().set(name, value);
-				console.log(this.data.currentSections.first().attributes);
 			}
 		},
 		next: function(e) {
 			e.preventDefault();
 
-			$(".page2 .sect-nav", this.el).empty()
+			$(".page2 .sect-nav", this.el).empty();
 			this.data.currentSections.each(function(course) {
-				$(".page2 .sect-nav", this.el).append('<a href="#" class="btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
-			})
-			
-			this.newCourse = this.data.currentSections.first();
-			$("[name='days']", this.el).val(this.newCourse.get('days'));
-			$("[name='time']", this.el).val(this.newCourse.get('time'));
-			$("[name='title']", this.el).val(this.newCourse.get('title'));
-			$("[name='location']", this.el).val(this.newCourse.get('location'));
-			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
+				$(".page2 .sect-nav", this.el).append('<a href="#" class="btn sect-btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
+			});
 
+			this.switchEdit();
 			$(".page1", this.el).hide("slide");
 			$(".page2", this.el).show("slide");
 			$(".next", this.el).hide();
@@ -174,10 +167,21 @@ $(function() {
 			$(".next-btns", this.el).hide();
 		},
 		switchEdit: function(e) {
-			e.preventDefault();
-			var classId = $(e.currentTarget).attr("data-id");
+			var classId;
+			if(e) { 
+				e.preventDefault();
+				classId = $(e.currentTarget).attr("data-id");
+			} else {
+				classId = $(".sect-btn:first").attr("data-id");
+			}
+			this.newCourse = this.data.currentSections.where({ id: parseInt(classId) })[0];
 
-			console.log("switch to", classId);
+			$("[name='days']", this.el).val(this.newCourse.get('days'));
+			$("[name='time']", this.el).val(this.newCourse.get('time'));
+			$("[name='title']", this.el).val(this.newCourse.get('title'));
+			$("[name='location']", this.el).val(this.newCourse.get('location'));
+			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
+
 		},
 		submit: function(e) {
 			e.preventDefault();
@@ -301,7 +305,6 @@ $(function() {
 			$("#editAccount [type='submit']").button('saving');
 			// switch to a model ***
 			$.post('/user', $("#editAccount").serialize(), function(data) {
-				console.log(data);
 				$("#username").html( $("#editAccount [name='name']").val() )
 				$("#editAccount [type='submit']").button('reset');
 
@@ -409,7 +412,6 @@ $(function() {
 					})[0]
 				);
 			});
-			console.log(that.currentSections)
 		}
 	});
 });
