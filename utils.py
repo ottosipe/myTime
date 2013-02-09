@@ -43,7 +43,7 @@ def createEvent(info):
         classDayNums.append(0)
         if dayOfWeek == 0: classOnFirstDay = True
       elif char == 'T':
-        if i < (len(classDaysInfo) - 1) && classDaysInfo[i+1] == 'H':
+        if i < (len(classDaysInfo) - 1) and classDaysInfo[i+1] == 'H':
           # Thursday
           classDays += "TH,"
           classDayNums.append(3)

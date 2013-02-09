@@ -149,7 +149,7 @@ $(function() {
 		next: function(e) {
 			e.preventDefault();
 
-			$(".page2 .sections", this.el).empty()
+			$(".page2 .sect-nav", this.el).empty()
 			this.data.currentSections.each(function(course) {
 				$(".page2 .sect-nav", this.el).append('<a href="#" class="btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
 			})
@@ -183,7 +183,7 @@ $(function() {
 			e.preventDefault();
 			$(".add", this.el).button('loading');
 
-			this.newCourse = this.data.currentSections[0];
+			this.newCourse = this.data.currentSections.first();
 			this.newCourse.set({courseId: this.newCourse.id});
 			this.newCourse.set({id: null});// so isNew is true...
 			var that = this;
