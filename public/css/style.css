@@ -144,6 +144,15 @@ hr {
 .dateLabel {
     margin: 0 2px;
 }
+
+.reminderHead {
+    background-color: #c0e1f2;
+}
+
+.reminderBody {
+    background-color: #e2eff5;
+}
+
 .reminderTag {
     margin-bottom:20px;
 }

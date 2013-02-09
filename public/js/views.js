@@ -11,10 +11,8 @@ $(function() {
 			this.listenTo(this.model, 'destroy', this.remove);
 		},
 		render: function() {
-			console.log('test')
 			var row = this.template(this.model.attributes);
 			this.$el.html(row);
-			console.log(this.model.get('title'))
 			return this;
 		},
 		delete: function(e) {
@@ -76,7 +74,6 @@ $(function() {
 		render: function() {
 			this.alert();
 			this.$el.empty();
-			console.log("render")
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            this.$el.append( viewType.render().el );
@@ -136,7 +133,8 @@ $(function() {
 			"click .back": "back",
 			"keyup #searchCode": "searchCode",
 			"keyup #searchNum": "searchNum",
-			"change input": "edit"
+			"change input": "edit",
+			"click .sect-nav .btn": "switchEdit"
 		},
 		el: $("#addCourse"),
 		edit: function(e) {
@@ -144,38 +142,42 @@ $(function() {
 			var value = $(e.currentTarget).val();
 			if(name) {
 				console.log(name, value);
-				this.data.currentSections[0].set(name, value);
-				console.log(this.data.currentSections[0].attributes);
+				this.data.currentSections.first().set(name, value);
+				console.log(this.data.currentSections.first().attributes);
 			}
 		},
 		next: function(e) {
 			e.preventDefault();
 
 			$(".page2 .sections", this.el).empty()
-			_.each(this.data.currentSections, function(course) {
-				$(".page2 .sections", this.el).append('<a href="#" class="btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
-				console.log(course)
+			this.data.currentSections.each(function(course) {
+				$(".page2 .sect-nav", this.el).append('<a href="#" class="btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
 			})
 			
-
-			this.newCourse = this.data.currentSections[0];
+			this.newCourse = this.data.currentSections.first();
 			$("[name='days']", this.el).val(this.newCourse.get('days'));
 			$("[name='time']", this.el).val(this.newCourse.get('time'));
 			$("[name='title']", this.el).val(this.newCourse.get('title'));
 			$("[name='location']", this.el).val(this.newCourse.get('location'));
 			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
 
-			$(".page1", this.el).hide();
-			$(".page2", this.el).show();
+			$(".page1", this.el).hide("slide");
+			$(".page2", this.el).show("slide");
 			$(".next", this.el).hide();
 			$(".next-btns", this.el).show();
 		},
 		back: function(e) {
 			e.preventDefault();
-			$(".page1", this.el).show();
-			$(".page2", this.el).hide();
+			$(".page1", this.el).show("slide");
+			$(".page2", this.el).hide("slide");
 			$(".next", this.el).show();
 			$(".next-btns", this.el).hide();
+		},
+		switchEdit: function(e) {
+			e.preventDefault();
+			var classId = $(e.currentTarget).attr("data-id");
+
+			console.log("switch to", classId);
 		},
 		submit: function(e) {
 			e.preventDefault();
@@ -294,10 +296,10 @@ $(function() {
 			window.location.hash = e.currentTarget.hash;
 		},
 		saveAcct: function(e) {
-			console.log('test')
 			e.preventDefault();
 			// check this >>
 			$("#editAccount [type='submit']").button('saving');
+			// switch to a model ***
 			$.post('/user', $("#editAccount").serialize(), function(data) {
 				console.log(data);
 				$("#username").html( $("#editAccount [name='name']").val() )
@@ -378,6 +380,8 @@ $(function() {
 		render_sections: function(){
 			
 			$(".sectSelector").empty();
+			// add loading state here ***
+
 			var types = this.apiSections.pluck("type");
 			var types = _.uniq(types);
 			var that = this;
@@ -394,17 +398,18 @@ $(function() {
 			$(".sectSelector").removeAttr("disabled");
 		},
 		fetch_info: function() {
-			this.currentSections = [];
+			this.currentSections = new CourseCollection();
 
 			var that = this;
 			var sects = $("[name='section']").each(function(i, sel) {
-				console.log(i, $(sel).val())
 				
-				that.currentSections[i] = 
-				that.apiSections.where({
-					id:parseInt($(sel).val())
-				})[0];
+				that.currentSections.add( 
+					that.apiSections.where({
+						id:parseInt($(sel).val())
+					})[0]
+				);
 			});
+			console.log(that.currentSections)
 		}
 	});
 });
