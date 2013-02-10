@@ -23,13 +23,12 @@ def createEvent(info):
     endTime = info["end_time"]
 
     startHour = int(startTime[0:2])
-    if (startTime[:-2] == "PM") {
+    if (startTime[:-2] == "PM"):
       startHour += 12
-    }
+      
     endHour = int(endTime[0:2])
-    if (endTime[:-2] == "PM") {
+    if (endTime[:-2] == "PM"):
       endHour += 12
-    }
 
     classStartTime = datetime.datetime(int(startDate[6:]), int(startDate[0:2]), int(startDate[3:5]),
       startHour, int(startTime[3:5]), 0)
@@ -118,7 +117,7 @@ def createEvent(info):
       'event': event,
       'days': classDays
     }
-    
+
     return courseInfo
 
 def createCal(datestring):

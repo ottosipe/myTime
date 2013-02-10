@@ -43,7 +43,9 @@ class Courses(webapp2.RequestHandler):
     else:
       logging.warning('student id is something else, it is %s' % student.calID)
 
-    event = utils.createEvent(info)
+    courseInfo = utils.createEvent(info)
+    logging.warning(courseInfo)
+    event = courseInfo.event
     request = service.events().insert(calendarId=student.calID, body=event)
     response = request.execute(http=decorator.http())
     eventid = response["id"]
@@ -57,8 +59,9 @@ class Courses(webapp2.RequestHandler):
       section = info["section"],
       type = info["type"],
       title = info["title"],
-      days = info["days"],
-      time = info["time"],
+      days = event.days,
+      start_time = info["start_time"],
+      end_time = info["end_time"],
       location = info["location"],
       instructor = info["instructor"],
       prof_email = info["prof_email"],

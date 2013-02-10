@@ -20,6 +20,21 @@ $(function() {
 			site_link: ""
 		},
 		validate: function(attrs, options) {
+			// check time
+			/*var split = attrs.time.indexOf("-");
+			var startTime = attrs.time.substring(0, split);
+			var endTime = attrs.time.substring(split + 1, attrs.time.length - 2);
+			console.log(startTime + " and end time is " + endTime)
+
+			var timePatt1 = /^1[0-2]:*[0-5][0-9]$/i;
+			var timePatt2 = /[0-9]:*[0-5][0-9]$/i;
+
+			// validate the time syntactically
+			if (startTime.match(timePatt1) == null && startTime.match(timePatt2) == null) {
+				return "times are syntatically wrong";
+			}*/
+
+
 		// add elsewhere
 		 /*one.on("invalid", function(model, error) {
 		  alert(model.get("title") + " " + error);

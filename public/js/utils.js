@@ -66,12 +66,11 @@ $(function() {
 						// tuesday
 						days.push("TU");
 					}
-				} else if (c === 'WE') {
-					days.push("W");
-				} else if (c === 'FR') {
-					days.push("F");
+				} else if (c === 'W') {
+					days.push("WE");
+				} else if (c === 'F') {
+					days.push("FF");
 				}
-				i++;
 			}
 
 			return days;

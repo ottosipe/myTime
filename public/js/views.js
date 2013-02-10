@@ -176,8 +176,11 @@ $(function() {
 			}
 			this.newCourse = this.data.currentSections.where({ id: parseInt(classId) })[0];
 
+			var times = window.utils.dateFormat(this.newCourse.get('time'));
+			console.log(times);
 			$("[name='days']", this.el).val(this.newCourse.get('days'));
-			$("[name='time']", this.el).val(this.newCourse.get('time'));
+			$("[name='startTime']", this.el).val(times[0]);
+			$("[name='endTime']", this.el).val(times[1]);
 			$("[name='title']", this.el).val(this.newCourse.get('title'));
 			$("[name='location']", this.el).val(this.newCourse.get('location'));
 			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
