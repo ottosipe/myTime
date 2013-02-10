@@ -98,8 +98,14 @@ $(function() {
 	});
 
 	window.ReminderListView = GenericListView.extend({
+		events: {
+			"click .sort": "sort"
+		},
 		el: $("#remindList"),
-		viewType: ReminderView
+		viewType: ReminderView,
+		sort: function() {
+			console.log('hello')
+		},
 	});
 
 	window.AnnounceListView = GenericListView.extend({

@@ -57,12 +57,12 @@
     option(value!="<%= code %>") <%= subject %>
 
   script#num-select-template(type="template")
-    option(value!="<%= number %>") <%= "("+ number +") " + title %>
+    option(value!="<%= number %>") <%= number +" - " + title %>
 
   script#sect-select-template(type="template")
     option(value!="<%= id %>") <%= section + " " + type %> 
       | <% if(instructor) print(" - "+instructor);%> 
-      | <% if(start_time && days) print(" - "+days+ " "+ start_time );%>
+      | <% if(days) print(" - "+days );%>
 
 
 {% endautoescape %}
