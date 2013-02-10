@@ -134,6 +134,7 @@ $(function() {
 			"keyup #searchCode": "searchCode",
 			"keyup #searchNum": "searchNum",
 			"change input": "edit",
+			"blur input": "edit",
 			"click .sect-nav .btn": "switchEdit"
 		},
 		el: $("#addCourse"),
@@ -142,7 +143,8 @@ $(function() {
 			var value = $(e.currentTarget).val();
 			if(name) {
 				console.log("Changed", name, value);
-				this.data.currentSections.first().set(name, value);
+				this.newCourse.set(name, value);
+				console.log(this.newCourse)
 			}
 		},
 		next: function(e) {
@@ -151,6 +153,13 @@ $(function() {
 			$(".page2 .sect-nav", this.el).empty();
 			this.data.currentSections.each(function(course) {
 				$(".page2 .sect-nav", this.el).append('<a href="#" class="btn sect-btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
+			
+				var times = window.utils.dateFormat(course.get('time'));
+				course.set('start_time', times.start);
+				course.set('end_time', times.end);
+
+				course.set("days", window.utils.daysFormat(course.get('days')))
+
 			});
 
 			this.switchEdit(null);
@@ -176,8 +185,13 @@ $(function() {
 			}
 			this.newCourse = this.data.currentSections.where({ id: parseInt(classId) })[0];
 
+
+
+
 			$("[name='days']", this.el).val(this.newCourse.get('days'));
-			$("[name='time']", this.el).val(this.newCourse.get('time'));
+
+			$("[name='start_time']", this.el).timepicker("setTime",this.newCourse.get('start_time'));
+			$("[name='end_time']", this.el).timepicker("setTime",this.newCourse.get('end_time'));
 			$("[name='title']", this.el).val(this.newCourse.get('title'));
 			$("[name='location']", this.el).val(this.newCourse.get('location'));
 			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
@@ -185,7 +199,6 @@ $(function() {
 		},
 		submit: function(e) {
 			e.preventDefault();
-			$(".add", this.el).button('loading');
 
 			var that = this;
 			this.data.currentSections.each(function(sect) {

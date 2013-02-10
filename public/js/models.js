@@ -11,7 +11,8 @@ $(function() {
 			type: "",
 			title: "",
 			days: "", // these will change
-			time: "",
+			start_time: "",
+			end_time: "",
 			start: "",
 			end: "",
 			location: "",

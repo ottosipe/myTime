@@ -49,7 +49,10 @@ $(function() {
 				endTimeCorrect = endHour + ":" + endMin + " PM";
 			}
 
-			var times = [startTimeCorrect, endTimeCorrect];
+			var times = {
+				start: startTimeCorrect, 
+				end: endTimeCorrect
+			};
 			return times;
 		},
 		daysFormat:function(daysString) {

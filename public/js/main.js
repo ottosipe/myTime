@@ -23,7 +23,6 @@ $(function() {
                     new addCourseModal({model: courseList});
                     new courseSelectView({model: courseList});
 
-
                     window.remindList = new ReminderCollection();
                     remindList.fetch({
                         success: function(){
