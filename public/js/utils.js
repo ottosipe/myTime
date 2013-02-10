@@ -72,7 +72,7 @@ $(function() {
 				} else if (c === 'W') {
 					days.push("WE");
 				} else if (c === 'F') {
-					days.push("FF");
+					days.push("FR");
 				}
 			}
 
