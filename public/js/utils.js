@@ -60,18 +60,18 @@ $(function() {
 			for (var i = 0; i < daysString.length; i++) {
 				var c = daysString[i];
 				if (c === 'M') {
-					days.push("M");
+					days.push("MO");
 				} else if (c === 'T') {
 					if (i != (daysString.length - 1) && days[i+1] === 'H') {
 						// actually thursday
 						days.push("TH");
 					} else {
 						// tuesday
-						days.push("T");
+						days.push("TU");
 					}
-				} else if (c === 'W') {
+				} else if (c === 'WE') {
 					days.push("W");
-				} else if (c === 'F') {
+				} else if (c === 'FR') {
 					days.push("F");
 				}
 			}
