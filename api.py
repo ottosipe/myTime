@@ -96,21 +96,24 @@ class EditCourse(webapp2.RequestHandler):
     newCourses = []
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      courseToDelete = {}
       for x in student.courses:
         if x.id != int(idArg):
           newCourses.append(x)
         else:
-          # delete class from student's classes
-          student.courses = newCourses
-          student.put()
-          self.response.out.write("deleted class")
+          courseToDelete = x
+      # delete class from student's classes
+      student.courses = newCourses
+      student.put()
+      self.response.out.write("deleted class")
 
-          # delete class from google calendar
-          logging.warning("deleting class")
-          request = service.events().delete(calendarId=student.calID, eventId=x.eventid)
-          response = request.execute(http=decorator.http())
-          if response is not None and response != "":
-            logging.warning(response)
+      # delete class from google calendar
+      logging.warning("deleting class")
+      request = service.events().delete(calendarId=student.calID, eventId=courseToDelete.eventid)
+      response = request.execute(http=decorator.http())
+
+      if response is not None and response != "":
+        logging.warning(response)
     else: 
       self.response.out.write("['auth':'fail']");
 
