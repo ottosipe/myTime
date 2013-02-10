@@ -162,6 +162,10 @@ hr {
     text-align: center;
 }
 
+.highlight {
+    color: red;
+}
+
 .date input{
     width: 107px;
     cursor: pointer;

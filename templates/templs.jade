@@ -2,7 +2,7 @@
 .hide
   script#reminder-template(type="template")
     .row-fluid
-      div(class!="span9 <% if(completed) print("strike") %>")
+      div(class!="span9 <% if(completed) print('strike'); if(highlight) print('highlight')%>")
         .courseLabel <%= coursename + " " + type %>
         h4.listTitle <%= title %>
         .noteLabel <%= note %>
@@ -43,8 +43,8 @@
                 i.icon-pencil 
                 span.caret
               ul.dropdown-menu.pull-right
-                //li
-                  a(href='#') Edit Details
+                li
+                  a(href='#editCourse/<%= id %>') Edit Details
                 li
                   a.delete(href='#') Delete
     

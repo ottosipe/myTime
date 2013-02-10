@@ -55,7 +55,8 @@ $(function() {
 			date: "", // switch to timestamp
 			time: "",
 			course: null,
-			note: ""
+			note: "",
+			highlight: false
 		},
 		toggle: function() {
 			this.save({
@@ -95,6 +96,18 @@ $(function() {
 	    completed: function() {
 			return this.filter(function( reminder ) {
 				return reminder.get('completed');
+			});
+		},
+		highlight: function(id) {
+			this.each(function(reminder){
+				if(reminder.get("course") == id) {
+					reminder.set("highlight", true);
+				}
+			})
+		}, 
+		offLight: function() {
+			this.each(function(reminder){
+				reminder.set("highlight", false);
 			});
 		}
 	});

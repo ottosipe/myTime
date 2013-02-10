@@ -23,11 +23,16 @@ $(function() {
 	window.CourseView = GenericView.extend({
 		events: {
 			"click .delete": "delete",
-			"hover":"hover"
+			"mouseenter":"hover",
+			"mouseleave":"offHover"
 		},
 		template: _.template( $('#course-template').html() ),
 		hover:function() {
-			//console.log(this.model.get('id')) // trigger reminder highlight here ***
+			// trigger reminder highlight here ***
+			remindList.highlight(this.model.get('id'));
+		},
+		offHover: function() {
+			remindList.offLight();
 		}
 	});
 
@@ -104,7 +109,7 @@ $(function() {
 		viewType: ReminderView,
 		sort: function() {
 			console.log('hello');
-		},
+		}
 	});
 
 	window.AnnounceListView = GenericListView.extend({
