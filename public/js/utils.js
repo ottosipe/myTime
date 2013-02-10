@@ -71,6 +71,7 @@ $(function() {
 				} else if (c === 'FR') {
 					days.push("F");
 				}
+				i++;
 			}
 
 			return days;
