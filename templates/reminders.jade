@@ -1,6 +1,6 @@
 {% autoescape off %}
 
-.well.well-small.box.reminderBody
+.well.well-small.box#reminderList
   h4.boxTitle.well.reminderHead Tasks and Reminders
 
     a.btn.btn-small.addBtn.btn-success.pull-right(href="#addReminder")
@@ -11,6 +11,6 @@
   .alert.alert-warning.hide
     | Look at your syllabus! Add upcoming exams, projects, and homeworks.
 
-  #remindList
+  .list loading
 
  {% endautoescape %}
