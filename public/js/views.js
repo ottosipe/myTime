@@ -158,7 +158,9 @@ $(function() {
 				course.set('start_time', times.start);
 				course.set('end_time', times.end);
 
-				course.set("days", window.utils.daysFormat(course.get('days')))
+				var days = window.utils.daysFormat(course.get('days'));
+				console.log(days)
+				course.set("days", days.join())
 
 			});
 
