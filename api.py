@@ -45,7 +45,7 @@ class Courses(webapp2.RequestHandler):
 
     courseInfo = utils.createEvent(info)
     logging.warning(courseInfo)
-    event = courseInfo.event
+    event = courseInfo["event"]
     request = service.events().insert(calendarId=student.calID, body=event)
     response = request.execute(http=decorator.http())
     eventid = response["id"]
@@ -59,7 +59,7 @@ class Courses(webapp2.RequestHandler):
       section = info["section"],
       type = info["type"],
       title = info["title"],
-      days = event.days,
+      days = courseInfo["days"],
       start_time = info["start_time"],
       end_time = info["end_time"],
       location = info["location"],

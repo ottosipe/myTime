@@ -62,7 +62,7 @@ $(function() {
 				if (c === 'M') {
 					days.push("MO");
 				} else if (c === 'T') {
-					if (i != (daysString.length - 1) && days[i+1] === 'H') {
+					if (i != (daysString.length - 1) && daysString[i+1] === 'H') {
 						// actually thursday
 						days.push("TH");
 					} else {

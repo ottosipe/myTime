@@ -22,10 +22,13 @@ def createEvent(info):
     startTime = info["start_time"]
     endTime = info["end_time"]
 
+    logging.warning("start time is " + startTime)
+    logging.warning("end time is " + endTime)
+
     startHour = int(startTime[0:2])
     if (startTime[:-2] == "PM"):
       startHour += 12
-      
+
     endHour = int(endTime[0:2])
     if (endTime[:-2] == "PM"):
       endHour += 12
@@ -49,8 +52,9 @@ def createEvent(info):
     classDaysString = ""
     classTime = info["time"]
     i = 0
+    logging.warning(len(classDays))
     for day in classDays:
-      if day == 'M0':
+      if day == 'MO':
         classDayNums.append(0)
         if dayOfWeek == 0: classOnFirstDay = True
       elif day == 'TU':
@@ -62,20 +66,20 @@ def createEvent(info):
       elif day == 'TH':
         classDayNums.append(3)
         if dayOfWeek == 3: classOnFirstDay = True
-      elif char == 'FR':
+      elif day == 'FR':
         classDayNums.append(4)
         if dayOfWeek == 4: classOnFirstDay = True
       else:
         # char is something foreign
         break
       i = i + 1
-      classDaysString += day + ", "
+      classDaysString += day + ","
     if i == 0:
       logging.warning("class days is empty")
       return
 
     # chop off erroneous comma
-    classDaysString = classDaysString[:-2]
+    classDaysString = classDaysString[:-1]
 
     # make first class meeting correct, will break if semester start date
     # and first class meeting date are in different months
@@ -89,7 +93,7 @@ def createEvent(info):
       if diff == 0:
         diff = classDayNums[0] - dayOfWeek + 7
       classStartTime = classStartTime.replace(day = classStartTime.day + diff)
-      classEndTime = classStartTime
+      classEndTime = classEndTime.replace(day=classStartTime.day)
 
     # logging for debugging
     logging.warning("Class Start " + classStartTime.isoformat())
@@ -115,7 +119,7 @@ def createEvent(info):
 
     courseInfo = {
       'event': event,
-      'days': classDays
+      'days': classDaysString
     }
 
     return courseInfo
