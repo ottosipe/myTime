@@ -84,11 +84,10 @@ $(function() {
 		},
 		alert: function() {
 			if(!this.model.models.length) {
-				this.$el.parent().find(".alert").show();
+				$(".alert", this.el).show();
 			} else {
-				this.$el.parent().find(".alert").hide();
+				$(".alert", this.el).hide();
 			}
-			
 		}
 	});
 
@@ -104,7 +103,7 @@ $(function() {
 		el: $("#reminderList"),
 		viewType: ReminderView,
 		sort: function() {
-			console.log('hello')
+			console.log('hello');
 		},
 	});
 
