@@ -26,11 +26,11 @@ def createEvent(info):
     logging.warning("end time is " + endTime)
 
     startHour = int(startTime[0:2])
-    if (startTime[:-2] == "PM"):
+    if (startTime[-2:] == "PM"):
       startHour += 12
 
     endHour = int(endTime[0:2])
-    if (endTime[:-2] == "PM"):
+    if (endTime[-2:] == "PM" and endHour != 12):
       endHour += 12
 
     classStartTime = datetime.datetime(int(startDate[6:]), int(startDate[0:2]), int(startDate[3:5]),
