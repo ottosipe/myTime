@@ -160,7 +160,7 @@ $(function() {
 
 				var days = window.utils.daysFormat(course.get('days'));
 				console.log(days)
-				course.set("days", days.join())
+				course.set("days", days)
 
 			});
 
@@ -190,7 +190,7 @@ $(function() {
 
 
 
-			$("[name='days']", this.el).val(this.newCourse.get('days'));
+			$("[name='days']", this.el).val(this.newCourse.get('days').join());
 
 			$("[name='start_time']", this.el).timepicker("setTime",this.newCourse.get('start_time'));
 			$("[name='end_time']", this.el).timepicker("setTime",this.newCourse.get('end_time'));
