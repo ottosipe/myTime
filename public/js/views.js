@@ -159,7 +159,6 @@ $(function() {
 				course.set('end_time', times.end);
 
 				var days = window.utils.daysFormat(course.get('days'));
-				console.log(days)
 				course.set("days", days)
 
 			});
@@ -188,15 +187,14 @@ $(function() {
 			this.newCourse = this.data.currentSections.where({ id: parseInt(classId) })[0];
 
 
+			for(var i in this.newCourse.attributes) {
+				$("[name='"+i+"']", this.el).val(this.newCourse.get(i));
+			}
 
+			$("[name='start_time']", this.el).timepicker();
+			$("[name='end_time']", this.el).timepicker();
+			
 
-			$("[name='days']", this.el).val(this.newCourse.get('days').join());
-
-			$("[name='start_time']", this.el).timepicker("setTime",this.newCourse.get('start_time'));
-			$("[name='end_time']", this.el).timepicker("setTime",this.newCourse.get('end_time'));
-			$("[name='title']", this.el).val(this.newCourse.get('title'));
-			$("[name='location']", this.el).val(this.newCourse.get('location'));
-			$("[name='instructor']", this.el).val(this.newCourse.get('instructor'));
 
 		},
 		submit: function(e) {

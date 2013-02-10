@@ -26,7 +26,7 @@
         h4.courseTitle <%= code +' '+ number %>
         | <%= title +' ('+ type +')'%>
       .tags
-        span.badge  <%= days +' '+ time %>
+        span.badge  <%= days +' '+ start_time %>
       .row-fluid
         .span7
           | <%= instructor %>
@@ -62,7 +62,7 @@
   script#sect-select-template(type="template")
     option(value!="<%= id %>") <%= section + " " + type %> 
       | <% if(instructor) print(" - "+instructor);%> 
-      | <% if(time && days) print(" - "+days+ " "+time);%>
+      | <% if(start_time && days) print(" - "+days+ " "+ start_time );%>
 
 
 {% endautoescape %}

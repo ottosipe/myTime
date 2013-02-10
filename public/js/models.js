@@ -10,13 +10,13 @@ $(function() {
 			section: null,
 			type: "",
 			title: "",
-			days: "", // these will change
+			days: [], 
 			start_time: "",
 			end_time: "",
 			start: "",
 			end: "",
 			location: "",
-			instructor: "",
+			instructor: "(staff)",
 			prof_email: "",
 			site_link: ""
 		},
