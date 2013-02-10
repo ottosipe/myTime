@@ -73,12 +73,12 @@ $(function() {
 		viewType: null,
 		render: function() {
 			this.alert();
-			this.$el.empty();
+			$(".list", this.el).empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
-	            this.$el.append( viewType.render().el );
+	            $(".list", this.el).append( viewType.render().el );
 	            
-	            if(i+1 != this.model.models.length) this.$el.append("<hr>")
+	            if(i+1 != this.model.models.length) $(".list", this.el).append("<hr>")
 	        }
 			return this;
 		},
@@ -101,7 +101,7 @@ $(function() {
 		events: {
 			"click .sort": "sort"
 		},
-		el: $("#remindList"),
+		el: $("#reminderList"),
 		viewType: ReminderView,
 		sort: function() {
 			console.log('hello')
