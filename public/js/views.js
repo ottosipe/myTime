@@ -248,6 +248,29 @@ $(function() {
 
 	});
 
+	window.editCourseModal = GenericModalView.extend({
+		events: {
+			"click .finishEdit: save",
+			"change input": "edit",
+			"blur input": "edit"
+		},
+		el: $("#editCourse"),
+		edit: function(e) {
+			var name = $(e.currentTarget).attr("name");
+			var value = $(e.currentTarget).val();
+			if(name) {
+				console.log("Changed", name, value);
+				this.model.set(name, value);
+				console.log(this.model)
+			}
+		},
+		save: function(e) {
+			e.preventDefault();
+			this.model.update();
+		}
+
+	});
+
 	window.addReminderModal = GenericModalView.extend({
 		el: $("#addReminder"),
 		initialize: function() {
