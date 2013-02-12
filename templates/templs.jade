@@ -5,21 +5,21 @@
       div(class!="span9 <% if(completed) print('strike'); if(highlight) print('highlight')%>")
         .courseLabel <%= coursename + " " + type %>
         h4.listTitle <%= title %>
+        .dateLabel <%= time %> <%= date %>
         .noteLabel <%= note %>
       .span3
         span.pull-right
-          .dateLabel <%= date %>
           .btn-group
             button.btn.complete
               i(class!="<% if(completed) print("icon-check"); else print("icon-ok"); %>")
             button.btn.dropdown-toggle(data-toggle='dropdown')
               span.caret
             ul.dropdown-menu.pull-right
-              //li
+              li
                 a(href='#') Edit
               li
                 a.delete(href='#') Delete
-    
+        
 
   script#course-template(type="template")
     .entryTitle(data-id!='<%= id %>')

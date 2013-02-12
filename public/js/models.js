@@ -54,6 +54,7 @@ $(function() {
 			completed: false,
 			date: "", // switch to timestamp
 			time: "",
+			time: "",
 			course: null,
 			note: "",
 			highlight: false

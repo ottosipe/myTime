@@ -115,7 +115,7 @@ form#addReminder.modal.hide
 
       .modal-body.reminderInputs
         .alert.hide
-          button.close(type='button', data-dismiss='alert') ×
+          button.close(type='button', data-dismiss='alert') &times;
           .msg
 
         input.typeTag(type='hidden', name="type")
@@ -136,18 +136,24 @@ form#addReminder.modal.hide
               textarea.width100.reminderNote(name="note", placeholder="Note")
           .span5 
 
+            
             .control-group
-              select.input-medium.courseSelector(name="course")
-            .control-group
-              .input-prepend.date
+              .input-append.bootstrap-timepicker.datetime
+                input(type="text", name="time", placeholder="Time")
+                span.add-on
+                  i.icon-time
+              .input-prepend.date.datetime
                 span.add-on
                   i.icon-calendar
                 input(type='text', name="date", placeholder="Date", readonly)
+              
+            .control-group
+              select.input-medium.courseSelector(name="course")
                 
           
     .modal-footer
 
-      input.btn.pull-left(type="reset", id="rstRemindBtn") Reset
+      input.btn.pull-left(type="reset") Reset
       button.btn.btn-success.add(type='submit', data-loading-text="Working...") Add
 
 {% endautoescape %}

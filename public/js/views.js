@@ -282,6 +282,7 @@ $(function() {
 	window.addReminderModal = GenericModalView.extend({
 		el: $("#addReminder"),
 		initialize: function() {
+			$("[name='time']", this.el).timepicker({defaultTime:false});
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
 				todayHighlight: true,
@@ -294,13 +295,17 @@ $(function() {
 		}, 
 		submit: function(e) {
 			e.preventDefault();
+			if(!$("[name='title']", this.el).val()) {
+				$("[name='title']", this.el).addClass("error")
+				return;
+			}
 
 			var newReminder = new Reminder( {
 				type: $("[name='type']", this.el).val(),
 				title: $("[name='title']", this.el).val(),
 				completed: false,
 				date: $("[name='date']", this.el).val(), // change to utc
-				time: "", // add selector
+				time: $("[name='time']", this.el).val(),
 				course: parseInt($("[name='course']", this.el).val()),
 				note: $("[name='note']", this.el).val()
 			});

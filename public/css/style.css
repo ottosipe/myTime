@@ -145,6 +145,10 @@ hr {
     margin: 0 2px;
 }
 
+input.error  {
+    border: 1px solid red;
+}
+
 .reminderHead {
     background-color: #c0e1f2;
 }
@@ -166,9 +170,10 @@ hr {
     color: red;
 }
 
-.date input{
+.datetime input{
     width: 107px;
     cursor: pointer;
+    background: none;
 }
 
 .date span i {
