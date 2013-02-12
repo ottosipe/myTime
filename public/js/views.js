@@ -148,7 +148,6 @@ $(function() {
 			"click .back": "back",
 			"keyup #searchCode": "searchCode",
 			"keyup #searchNum": "searchNum",
-			"change input": "edit",
 			"blur input": "edit",
 			"click .sect-nav .btn": "switchEdit"
 		},
@@ -187,6 +186,7 @@ $(function() {
 		back: function(e) {
 			e.preventDefault();
 			$(".page1", this.el).show("slide");
+			$(".modalHeader", this.el).html("Add Course");
 			$(".page2", this.el).hide("slide");
 			$(".next", this.el).show();
 			$(".next-btns", this.el).hide();
@@ -208,9 +208,8 @@ $(function() {
 
 			$("[name='start_time']", this.el).timepicker();
 			$("[name='end_time']", this.el).timepicker();
-			
-
-
+			$(".modalHeader", this.el).html("Edit Course -- " + this.newCourse.get("code")+
+				" "+this.newCourse.get("number")+" "+this.newCourse.get("type"));
 		},
 		submit: function(e) {
 			e.preventDefault();
@@ -256,12 +255,21 @@ $(function() {
 	window.editCourseModal = GenericModalView.extend({
 		events: {
 			"click .finishEdit": "save",
-			"change input": "edit",
 			"blur input": "edit"
 		},
 		el: $("#editCourse"),
 		initialize: function() {
-			console.log(this.model)
+			console.log(this.model);
+
+			$(".modalHeader", this.el).html("Edit Course -- " + this.model.get("code")+" "+this.model.get("number"));
+
+			for(var i in this.model.attributes) {
+				$("[name='"+i+"']", this.el).val(this.model.get(i));
+			}
+
+			$("[name='start_time']", this.el).timepicker();
+			$("[name='end_time']", this.el).timepicker();
+
 		},
 		edit: function(e) {
 			var name = $(e.currentTarget).attr("name");
