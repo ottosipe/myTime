@@ -109,7 +109,47 @@ form#addCourse.modal.hide.form-horizontal
       .next-btns.hide
         button.btn.back Back
         button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Save
-   
+
+// edit course modal
+form#editCourse.modal.hide.form-horizontal
+    .modal-header
+        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+        h3 Add Course
+
+      .modal-body
+        .alert.hide
+          button.close(type='button') ×
+          .msg
+        .center
+          .btn-group.sect-nav
+        hr
+        .row-fluid
+          .span6.selector
+              
+              .form-inline
+                .input-append.bootstrap-timepicker
+                  input(type="text", name="start_time", placeholder="start time").input-mini
+                  span.add-on
+                    i.icon-time
+                .input-append.bootstrap-timepicker
+                  input(type="text", name="end_time", placeholder="end time").input-mini
+                  span.add-on
+                    i.icon-time
+              
+              input(type="text", name="days", placeholder="days").input-mini
+              
+              input(type="text", name="title", placeholder="title")
+              input(type="text", name="instructor", placeholder="instructor")
+              input(type="text", name="location", placeholder="location")
+              
+          .span6.selector
+              input(type="text", name="site_link", placeholder="course page")
+              input(type="text", name="prof_email", placeholder="email")
+
+    .modal-footer
+      button.btn.pull-left(data-dismiss='modal') Cancel
+      button.btn.btn-success.finishEdit(type='submit', data-loading-text="Waiting...") Save
+
 // add assignment modal
 form#addReminder.modal.hide
     .modal-header
