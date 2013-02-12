@@ -280,6 +280,9 @@ $(function() {
 		},
 	});
 
+
+	// view for course selectors //
+
 	window.courseSelectView = Backbone.View.extend({
 		el: $(".courseSelector"),
 		initialize: function() {
@@ -295,6 +298,17 @@ $(function() {
 				var course = obj[i].attributes;
 				this.$el.append("<option value='"+course.id+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
 			}
+		}
+	});
+
+
+	// view for edit course //
+
+	window.editCourseModal = addCourseModal.extend({
+	
+		initialize: function() {
+			// kick off the API fetch
+			
 		}
 	});
 
