@@ -60,8 +60,12 @@ $(function() {
             $("#addCourse").modal();
         },
 
-        editCourse: function(id) {
-            $("#addCourse").modal(); // do fancyness here ****
+        editCourse: function(idArg) {
+            console.log(idArg)
+            if(idArg == null) return;
+            new editCourseModal({model: window.courseList.where({id:idArg})[0]});
+            $("#editCourse").modal(); // do fancyness here ****
+
         },
 
         addReminder: function() {

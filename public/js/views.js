@@ -23,10 +23,15 @@ $(function() {
 	window.CourseView = GenericView.extend({
 		events: {
 			"click .delete": "delete",
+			"click .edit": "edit",
 			"mouseenter":"hover",
 			"mouseleave":"offHover"
 		},
 		template: _.template( $('#course-template').html() ),
+		edit: function() {
+			console.log("edit", this.model)
+			window.location.hash = "#editCourse/"+this.model.id;
+		},
 		hover:function() {
 			// trigger reminder highlight here ***
 			remindList.highlight(this.model.get('id'));
@@ -298,17 +303,6 @@ $(function() {
 				var course = obj[i].attributes;
 				this.$el.append("<option value='"+course.id+"'>"+course.code+" "+course.number+" - "+course.type+"</option>")
 			}
-		}
-	});
-
-
-	// view for edit course //
-
-	window.editCourseModal = addCourseModal.extend({
-	
-		initialize: function() {
-			// kick off the API fetch
-			
 		}
 	});
 

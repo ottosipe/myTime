@@ -1,0 +1,25 @@
+{% autoescape off %}
+
+.span6.selector
+    
+    .form-inline
+      .input-append.bootstrap-timepicker
+        input(type="text", name="start_time", placeholder="start time").input-mini
+        span.add-on
+          i.icon-time
+      .input-append.bootstrap-timepicker
+        input(type="text", name="end_time", placeholder="end time").input-mini
+        span.add-on
+          i.icon-time
+    
+    input(type="text", name="days", placeholder="days").input-mini
+    
+    input(type="text", name="title", placeholder="title")
+    input(type="text", name="instructor", placeholder="instructor")
+    input(type="text", name="location", placeholder="location")
+    
+.span6.selector
+    input(type="text", name="site_link", placeholder="course page")
+    input(type="text", name="prof_email", placeholder="email")
+
+{% endautoescape %}
