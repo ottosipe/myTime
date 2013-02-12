@@ -255,11 +255,14 @@ $(function() {
 
 	window.editCourseModal = GenericModalView.extend({
 		events: {
-			"click .finishEdit: save",
+			"click .finishEdit": "save",
 			"change input": "edit",
 			"blur input": "edit"
 		},
 		el: $("#editCourse"),
+		initialize: function() {
+			console.log(this.model)
+		},
 		edit: function(e) {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();

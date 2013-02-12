@@ -63,7 +63,9 @@ $(function() {
         editCourse: function(idArg) {
             console.log(idArg)
             if(idArg == null) return;
-            new editCourseModal({model: window.courseList.where({id:idArg})[0]});
+            if(!window.courseList.length) window.location.hash = "";
+            var mod = window.courseList.where({id: parseInt(idArg)})[0];
+            new editCourseModal({model: mod});
             $("#editCourse").modal(); // do fancyness here ****
 
         },
