@@ -308,12 +308,19 @@ $(function() {
 				return;
 			}
 
+
+			var time = $("[name='time']", this.el).val();
+			if(time && time[0] == "0") time = time.substr(1);
+			console.log(time);
+
+			// switch to working model owned by view *****
+			// add a change function like in add/edit course
 			var newReminder = new Reminder( {
 				type: $("[name='type']", this.el).val(),
 				title: $("[name='title']", this.el).val(),
 				completed: false,
 				date: $("[name='date']", this.el).val(), // change to utc
-				time: $("[name='time']", this.el).val(),
+				time: time,
 				course: parseInt($("[name='course']", this.el).val()),
 				note: $("[name='note']", this.el).val()
 			});
