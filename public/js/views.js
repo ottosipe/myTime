@@ -176,7 +176,12 @@ $(function() {
 				course.set("days", days)
 
 			});
+			if(this.data.currentSections.length == 1) {
+				$(".sect-nav", this.el).parent().hide();
+			} else {
 
+				$(".sect-nav", this.el).parent().show();
+			}
 			this.switchEdit(null);
 			$(".page1", this.el).hide("slide");
 			$(".page2", this.el).show("slide");

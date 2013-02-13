@@ -35,10 +35,14 @@
         .span5
           .pull-right.editBtns
             .btn-group
+              <% if(prof_email) { %> 
               a.btn(role='button', href!="mailto:<%= prof_email %>")
                 i.icon-envelope
+              <% } %>
+              <% if(site_link) { %> 
               a.btn(role='button', href!="<%= site_link %>", target='_blank')
                 i.icon-globe
+              <% } %>
               a.btn.dropdown-toggle(data-toggle='dropdown')
                 i.icon-pencil 
                 span.caret
