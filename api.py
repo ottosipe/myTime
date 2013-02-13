@@ -130,7 +130,8 @@ class EditCourse(webapp2.RequestHandler):
         else:
           # update class in google calendar
           logging.warning("updating class")
-          event = utils.createEvent(course)
+          event = utils.createEvent(info)
+          event['sequence'] = course.eventseq
           logging.warning(event)
           logging.warning(event["event"])
           request = service.events().update(calendarId=student.calID,

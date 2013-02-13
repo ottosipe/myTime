@@ -122,11 +122,6 @@ def createEvent(info):
       ]
     }
 
-    try :
-      event['sequence'] = info["eventseq"]
-    except Exception :
-      pass
-
     courseInfo = {
       'event': event,
       'days': classDaysString
