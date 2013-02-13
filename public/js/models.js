@@ -21,6 +21,15 @@ $(function() {
 			prof_email: "",
 			site_link: ""
 		},
+		check: function() {
+			if(this.get("site_link") && this.get("site_link") != "") {
+				var link = this.get("site_link");
+				if(link.indexOf("http") == -1) {
+					this.set("site_link", "http://"+link);
+				}
+			}
+			return true;
+		},
 		initialize: function() {
 			if(typeof this.get("days") == "string") {
 				var days = window.utils.daysFormat(this.get('days'));

@@ -198,7 +198,6 @@ $(function() {
 			}
 			this.newCourse = this.data.currentSections.where({ id: parseInt(classId) })[0];
 
-
 			for(var i in this.newCourse.attributes) {
 				if(this.newCourse.get(i) !== "")
 					$("[name='"+i+"']", this.el).val(this.newCourse.get(i));
@@ -219,6 +218,8 @@ $(function() {
 
 			// check to see if either time is empty 
 			// or class length 0 -- show error ***
+			// add link checking // append http if not there
+
 
 			var arr = [];
 			$(".days-pick .btn", this.el).each(function( index ) {
@@ -243,8 +244,8 @@ $(function() {
 					return;
 				}
 
-				console.log(sect)
 				// save that shit
+				sect.check(); // fix and check simple errors
 				that.model.create(sect);
 			}) 
 
