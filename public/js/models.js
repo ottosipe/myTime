@@ -28,12 +28,10 @@ $(function() {
 			}
 
 			if(this.get("time") && typeof this.get("time") != "") {
-				console.log(this.get("time"))
 				var times = window.utils.dateFormat(this.get('time'));
 				this.set('start_time', times.start);
 				this.set('end_time', times.end);
 				this.set("time","");
-				console.log(times)
 			}
 		}
 	});

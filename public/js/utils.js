@@ -86,7 +86,6 @@ $(function() {
 				}
 			}
 
-			console.log("days is " + days);
 			return days;
 		}
 	}; 

@@ -8,15 +8,12 @@
     input(type="text", name="location", placeholder="Location").input-small
   
   .course-time
-    input.typeTag(type='hidden', name="days")
-    .btn-group(data-toggle="buttons-checkbox")
-      a.btn.btn-small(value="MO") MO
-      a.btn.btn-small(value="TU") TU
-      a.btn.btn-small(value="WE") WE
-      a.btn.btn-small(value="TH") TH
-      a.btn.btn-small(value="FR") FR
-      //-a.btn..btn-small(value="SA") SA
-      //-a.btn..btn-small(value="SU") SU
+    .days-pick.btn-group(data-toggle="buttons-checkbox")
+      a.btn.btn-small(day="MO") MO
+      a.btn.btn-small(day="TU") TU
+      a.btn.btn-small(day="WE") WE
+      a.btn.btn-small(day="TH") TH
+      a.btn.btn-small(day="FR") FR
 
     .input-append.bootstrap-timepicker
       input(type="text", name="start_time", placeholder="Start Time").input-mini
@@ -27,14 +24,6 @@
       span.add-on
         i.icon-time
     
-
-  //-input(type="text", name="days", placeholder="days").input-mini
-
-
-
-
-
-
   input(type="text", name="site_link", placeholder="Course Page")
   input(type="email", name="prof_email", placeholder="Email").input-medium
 

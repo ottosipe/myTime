@@ -158,7 +158,6 @@ $(function() {
 			if(name) {
 				console.log("Changed", name, value);
 				this.newCourse.set(name, value);
-				console.log(this.newCourse)
 			}
 		},
 		next: function(e) {
@@ -204,6 +203,12 @@ $(function() {
 				$("[name='"+i+"']", this.el).val(this.newCourse.get(i));
 			}
 
+			// add day buttons
+			for(var i in this.newCourse.attributes.days) {
+				console.log($('[day="'+i+'"]', this.el))
+				$('[day="'+this.newCourse.attributes.days[i]+'"]', this.el).addClass("active");
+			}
+
 			$("[name='start_time']", this.el).timepicker();
 			$("[name='end_time']", this.el).timepicker();
 			$(".modalHeader", this.el).html("Edit Course -- " + this.newCourse.get("code")+
@@ -211,6 +216,14 @@ $(function() {
 		},
 		submit: function(e) {
 			e.preventDefault();
+
+			var arr = [];
+			$(".days-pick .btn", this.el).each(function( index ) {
+				if($(this).hasClass("active")) {
+					arr.push($(this).attr("day"));
+				}
+			});
+			this.newCourse.set("days",arr);
 
 			var that = this;
 			this.data.currentSections.each(function(sect) {
@@ -265,6 +278,12 @@ $(function() {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
 			}
 
+			$(".btn",this.el).removeClass("active");
+			for(var i in this.model.attributes.days) {
+				console.log($('[day="'+i+'"]', this.el))
+				$('[day="'+this.model.attributes.days[i]+'"]', this.el).addClass("active");
+			}
+
 			$("[name='start_time']", this.el).timepicker();
 			$("[name='end_time']", this.el).timepicker();
 
@@ -279,6 +298,15 @@ $(function() {
 			}
 		},
 		save: function(e) {
+
+			var arr = [];
+			$(".days-pick .btn", this.el).each(function( index ) {
+				if($(this).hasClass("active")) {
+					arr.push($(this).attr("day"));
+				}
+			});
+			this.model.set("days",arr);
+
 			e.preventDefault();
 			this.model.save();
 			window.location.hash = "";
