@@ -23,21 +23,17 @@ $(function() {
 	window.CourseView = GenericView.extend({
 		events: {
 			"click .delete": "delete",
-			"click .edit": "edit",
-			"mouseenter":"hover",
-			"mouseleave":"offHover"
+			"click .reminds": "showReminders"
 		},
 		template: _.template( $('#course-template').html() ),
-		edit: function() {
-			console.log("edit", this.model)
-			window.location.hash = "#editCourse/"+this.model.id;
-		},
-		hover:function() {
-			// trigger reminder highlight here ***
-			remindList.highlight(this.model.get('id'));
-		},
-		offHover: function() {
-			remindList.offLight();
+		showReminders:function(e) {
+			$(".reminds").removeClass("active");
+			if($(e.currentTarget).hasClass("active")) {
+				remindList.showAll();
+			} else {
+				remindList.courseFilter(this.model.get('id'));
+			}
+			
 		}
 	});
 
@@ -48,8 +44,8 @@ $(function() {
 		},
 	    template: _.template( $('#reminder-template').html() ),
 	    render: function() {
-	    	var obj = this.model.attributes;
 
+	    	var obj = this.model.attributes;
 	    	var query = window.courseList.where({id:this.model.attributes.course});
 	    	// may need to also query courseId!!!
 	    	if (query.length > 0) {
@@ -82,7 +78,7 @@ $(function() {
 		},
 		viewType: null,
 		render: function() {
-			this.alert();
+			this.alert(); // show alert if empty
 			$(".list", this.el).empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
@@ -113,7 +109,9 @@ $(function() {
 		el: $("#reminderList"),
 		viewType: ReminderView,
 		sort: function() {
-			console.log('hello');
+			// force all to show and remove btn classes
+			remindList.showAll();
+			$(".reminds").removeClass("active")
 		}
 	});
 
@@ -149,6 +147,7 @@ $(function() {
 			"keyup #searchCode": "searchCode",
 			"keyup #searchNum": "searchNum",
 			"blur input": "edit",
+			"change input": "edit",
 			"click .sect-nav .btn": "switchEdit"
 		},
 		el: $("#addCourse"),
@@ -158,6 +157,18 @@ $(function() {
 			if(name) {
 				console.log("Changed", name, value);
 				this.newCourse.set(name, value);
+			}
+		},
+		saveDays: function() {
+			if (this.newCourse) {
+				var arr = [];
+				$(".days-pick .btn", this.el).each(function( index ) {
+					if($(this).hasClass("active")) {
+						arr.push($(this).attr("day"));
+					}
+				});
+				this.newCourse.set("days",arr);
+				console.log(arr)
 			}
 		},
 		next: function(e) {
@@ -189,6 +200,9 @@ $(function() {
 			$(".next-btns", this.el).hide();
 		},
 		switchEdit: function(e) {
+
+			this.saveDays();
+
 			var classId;
 			if(e) { 
 				e.preventDefault();
@@ -198,16 +212,19 @@ $(function() {
 			}
 			this.newCourse = this.data.currentSections.where({ id: parseInt(classId) })[0];
 
-
 			for(var i in this.newCourse.attributes) {
 				if(this.newCourse.get(i) !== "")
 					$("[name='"+i+"']", this.el).val(this.newCourse.get(i));
 			}
 
 			// add day buttons
+			$(".days-pick .btn", this.el).removeClass("active");
 			for(var i in this.newCourse.attributes.days) {
 				$('[day="'+this.newCourse.attributes.days[i]+'"]', this.el).addClass("active");
 			}
+
+
+			this.saveDays();
 
 			$("[name='start_time']", this.el).timepicker({defaultTime: false});
 			$("[name='end_time']", this.el).timepicker({defaultTime: false});
@@ -219,14 +236,9 @@ $(function() {
 
 			// check to see if either time is empty 
 			// or class length 0 -- show error ***
+			// add link checking // append http if not there
 
-			var arr = [];
-			$(".days-pick .btn", this.el).each(function( index ) {
-				if($(this).hasClass("active")) {
-					arr.push($(this).attr("day"));
-				}
-			});
-			this.newCourse.set("days",arr);
+			this.saveDays();
 
 			var that = this;
 			this.data.currentSections.each(function(sect) {
@@ -244,6 +256,7 @@ $(function() {
 				}
 
 				// save that shit
+				sect.fix(); // fix and check simple errors
 				that.model.create(sect);
 			}) 
 
@@ -273,11 +286,11 @@ $(function() {
 	window.editCourseModal = GenericModalView.extend({
 		events: {
 			"click .finishEdit": "save",
-			"blur input": "edit"
+			"blur input": "edit",
+			"change input": "edit"
 		},
 		el: $("#editCourse"),
 		initialize: function() {
-			console.log(this.model);
 
 			$(".modalHeader", this.el).html("Edit Course -- " + this.model.get("code")+" "+this.model.get("number"));
 

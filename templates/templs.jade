@@ -1,8 +1,9 @@
 {% autoescape off %}
 .hide
   script#reminder-template(type="template")
+    <% if (!hide) { %>
     .row-fluid
-      div(class!="span9 <% if(completed) print('strike'); if(highlight) print('highlight')%>")
+      div(class!="span9 <% if(completed) print('strike'); %>")
         .courseLabel <%= coursename + " " + type %>
         h4.listTitle <%= title %>
         .dateLabel <%= time %> <%= date %>
@@ -16,10 +17,11 @@
               span.caret
             ul.dropdown-menu.pull-right
               li
-                a(href='#editReminder/<%= id %>') Edit Details
+                a.edit(href='#editReminder/<%= id %>') Edit Details
+
               li
                 a.delete(href='#') Delete
-        
+    <% } %>
 
   script#course-template(type="template")
     .entryTitle(data-id!='<%= id %>')
@@ -51,7 +53,8 @@
                   a(href='#editCourse/<%= id %>') Edit Details
                 li
                   a.delete(href='#') Delete
-    
+            button.btn.reminds(data-toggle="button")
+              i.icon-check
 
   script#announce-template(type="template")
       h4.listTitle <%= title %>
@@ -66,7 +69,7 @@
   script#sect-select-template(type="template")
     option(value!="<%= id %>") <%= section + " " + type %> 
       | <% if(instructor) print(" - "+instructor);%> 
-      | <% if(days) print(" - "+days );%>
+      | <% if(days) print(" - "+days+ " - " +start_time );%>
 
 
 {% endautoescape %}

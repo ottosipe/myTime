@@ -21,6 +21,15 @@ $(function() {
 			prof_email: "",
 			site_link: ""
 		},
+		fix: function() {
+			if(this.get("site_link") && this.get("site_link") != "") {
+				var link = this.get("site_link");
+				if(link.indexOf("http") == -1) {
+					this.set("site_link", "http://"+link);
+				}
+			}
+			return true;
+		},
 		initialize: function() {
 			if(typeof this.get("days") == "string") {
 				var days = window.utils.daysFormat(this.get('days'));
@@ -33,8 +42,6 @@ $(function() {
 				this.set('end_time', times.end);
 				this.set("time","");
 			}
-
-			console.log(this.get("days"))
 		}
 	});
 
@@ -50,7 +57,7 @@ $(function() {
 			time: "",
 			course: null,
 			note: "",
-			highlight: false
+			hide: false
 		},
 		toggle: function() {
 			this.save({
@@ -92,16 +99,18 @@ $(function() {
 				return reminder.get('completed');
 			});
 		},
-		highlight: function(id) {
+		courseFilter: function(id) {
 			this.each(function(reminder){
 				if(reminder.get("course") == id) {
-					reminder.set("highlight", true);
+					reminder.set("hide", false);
+				} else {
+					reminder.set("hide", true)
 				}
-			})
-		}, 
-		offLight: function() {
+			});
+		},
+		showAll: function() {
 			this.each(function(reminder){
-				reminder.set("highlight", false);
+				reminder.set("hide", false);
 			});
 		}
 	});
