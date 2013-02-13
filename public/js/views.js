@@ -269,7 +269,7 @@ $(function() {
 			"blur input": "edit"
 		},
 		el: $("#editCourse"),
-		initialize: function() {
+		setup: function() {
 			console.log(this.model);
 
 			$(".modalHeader", this.el).html("Edit Course -- " + this.model.get("code")+" "+this.model.get("number"));
@@ -309,6 +309,7 @@ $(function() {
 
 			e.preventDefault();
 			this.model.save();
+			this.undelegateEvents(); // fix this by 
 			window.location.hash = "";
 		}
 
