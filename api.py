@@ -148,7 +148,6 @@ class EditCourse(webapp2.RequestHandler):
             type = info["type"],
             title = info["title"],
             days = info["days"],
-            #time = info["time"],
             start = info["start"],
             end = info["end"],
             start_time = info["start_time"],
