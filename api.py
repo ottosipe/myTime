@@ -175,7 +175,7 @@ class Reminders(webapp2.RequestHandler):
     postData = json.loads(self.request.body)
     logging.warning(postData)
    
-    newReminder = [models.Reminder(
+    newReminder = models.Reminder(
       type = postData['type'],
       title = postData['title'],
       completed = False,
@@ -184,7 +184,7 @@ class Reminders(webapp2.RequestHandler):
       course = postData['course'],
       note = postData['note'],
       id = int(time.time()),
-    )]
+    )
     student.reminders += newReminder
     student.put()
 
