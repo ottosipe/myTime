@@ -30,8 +30,10 @@ $(function() {
 			$(".reminds").removeClass("active");
 			if($(e.currentTarget).hasClass("active")) {
 				remindList.showAll();
+				$(".viewAll").hide();
 			} else {
 				remindList.courseFilter(this.model.get('id'));
+				$(".viewAll").show();
 			}
 			
 		}
@@ -104,14 +106,15 @@ $(function() {
 
 	window.ReminderListView = GenericListView.extend({
 		events: {
-			"click .sort": "sort"
+			"click .viewAll": "all"
 		},
 		el: $("#reminderList"),
 		viewType: ReminderView,
-		sort: function() {
+		all: function() {
 			// force all to show and remove btn classes
 			remindList.showAll();
-			$(".reminds").removeClass("active")
+			$(".reminds").removeClass("active");
+			$(".viewAll").hide();
 		}
 	});
 
@@ -256,7 +259,7 @@ $(function() {
 				}
 
 				// save that shit
-				sect.fix(); // fix and check simple errors
+				sect.checker(); // fix and check simple errors
 				that.model.create(sect);
 			}) 
 
@@ -318,6 +321,7 @@ $(function() {
 			}
 		},
 		save: function(e) {
+			e.preventDefault();
 
 			var arr = [];
 			$(".days-pick .btn", this.el).each(function( index ) {
@@ -326,8 +330,8 @@ $(function() {
 				}
 			});
 			this.model.set("days",arr);
+			this.model.checker(); 
 
-			e.preventDefault();
 			this.model.save();
 			this.undelegateEvents(); 
 			window.location.hash = "";
@@ -383,13 +387,22 @@ $(function() {
 
 	window.editReminderModal = GenericModalView.extend({
 		events: {
-			"click .finishRemind": "save",
+			"click .save": "save",
 			"blur input": "edit",
-			"change input,textarea": "edit",
+			"change input,textarea,select": "edit"
 		},
 		el: $("#editReminder"),
 		initialize: function() {
-			console.log(this.model)
+
+			// set tag active
+
+			var type = this.model.get("type");
+			$(".reminderTag a").removeClass("active")
+			$(".reminderTag a", this.el).each(function( index ) {
+				if($(this).attr("value") == type) {
+					$(this).addClass("active");
+				}
+			});
 
 			for(var i in this.model.attributes) {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
@@ -401,7 +414,6 @@ $(function() {
 				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
 				autoclose:true
 			});
-			//$(".date").datepicker('update', this.model.get("date")); //set date range
 			$(".reminderTag .btn").click(function() {
 				$("[name='type']", this.el).val($(this).attr("value"));
 			});
@@ -411,9 +423,7 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log("Changed", name, value);
 				this.model.set(name, value);
-				console.log(this.model)
 			}
 		},
 		save: function(e) {
@@ -428,26 +438,10 @@ $(function() {
 			if(time && time[0] == "0") time = time.substr(1);
 			console.log(time);
 
-			// switch to working model owned by view *****
-			// add a change function like in add/edit course
-			/*var newReminder = new Reminder( {
-				type: $("[name='type']", this.el).val(),
-				title: $("[name='title']", this.el).val(),
-				completed: false,
-				date: $("[name='date']", this.el).val(), // change to utc
-				time: time,
-				course: parseInt($("[name='course']", this.el).val()),
-				note: $("[name='note']", this.el).val()
-			});*/
-
+			this.model.set("type", $("[name='type']", this.el).val());
+			this.undelegateEvents();
 			this.model.save();
-
-			e.preventDefault();
-			this.model.save();
-			this.undelegateEvents(); 
 			window.location.hash = "";
-
-			//this.model.create(newReminder);
 
 		},
 	});

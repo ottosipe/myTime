@@ -21,13 +21,15 @@ $(function() {
 			prof_email: "",
 			site_link: ""
 		},
-		fix: function() {
+		checker: function() {
+			console.log('hello')
 			if(this.get("site_link") && this.get("site_link") != "") {
 				var link = this.get("site_link");
 				if(link.indexOf("http") == -1) {
 					this.set("site_link", "http://"+link);
 				}
 			}
+			console.log(this.get("site_link"))
 			return true;
 		},
 		initialize: function() {
