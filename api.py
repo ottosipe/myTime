@@ -188,7 +188,7 @@ class Reminders(webapp2.RequestHandler):
     student.reminders += newReminder
     student.put()
 
-    self.response.out.write(newReminder)
+    self.response.out.write(json.dumps(newReminder))
   
   def get(self):
     User = users.get_current_user()
