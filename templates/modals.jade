@@ -61,30 +61,27 @@ form#addCourse.modal.hide.form-horizontal
 
       .modal-body
         .alert.hide
-          button.close(type='button') ×
+          button.close(type='button') &times;
           .msg
 
         .row-fluid.page1
           .span7.selector
               input#searchCode(type="text", placeholder="subject", tabindex=1, autofocus="true").input-mini
               select.codeSelector(disabled="true", name="code")
+              br
               input#searchNum(type="text", placeholder="number", tabindex=2).input-mini
               select.numSelector(disabled="true", name="number")
               
           .span5.selector
             .sectSelector
-              //-button.btn
-                i.icon-plus
 
         .page2.hide
           .center
             .btn-group.sect-nav
-          hr
-          .row-fluid
-            include course_form
+            hr
+          include course_form
 
     .modal-footer
-      button.btn.pull-left(data-dismiss='modal') Done
       button.btn.btn-warning.next Next
       .next-btns.hide
         button.btn.back Back
@@ -100,8 +97,7 @@ form#editCourse.modal.hide.form-horizontal
         .alert.hide
           button.close(type='button') ×
           .msg
-        .row-fluid
-          include course_form
+        include course_form
 
     .modal-footer
       button.btn.pull-left(data-dismiss='modal') Cancel

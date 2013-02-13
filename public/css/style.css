@@ -94,8 +94,12 @@ hr {
 
 /*Modals*/
 
-.selector select {
+.selector select,input,.add-on {
     margin: 2px 0;
+}
+
+.selector {
+    text-align: center;
 }
 
 .infoBox {
@@ -170,6 +174,14 @@ input.error  {
     color: red;
 }
 
+[name="title"] {
+    font-weight: 700;
+}
+
+.course-time {
+    margin: 15px 0px;
+}
+
 .datetime input{
     width: 107px;
     cursor: pointer;
@@ -179,6 +191,7 @@ input.error  {
 .date span i {
     margin: 3px 0px 0px 2px;
 }
+
 .width100 {
     width: 100%;
 }

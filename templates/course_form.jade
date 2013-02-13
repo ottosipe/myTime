@@ -1,25 +1,41 @@
 {% autoescape off %}
 
-.span6.selector
+.selector
+
+  input(type="text", name="title", placeholder="Title")
+  .form-inline
+    input(type="text", name="instructor", placeholder="Instructor").input-medium
+    input(type="text", name="location", placeholder="Location").input-small
+  
+  .course-time
+    input.typeTag(type='hidden', name="days")
+    .btn-group(data-toggle="buttons-checkbox")
+      a.btn.btn-small(value="MO") MO
+      a.btn.btn-small(value="TU") TU
+      a.btn.btn-small(value="WE") WE
+      a.btn.btn-small(value="TH") TH
+      a.btn.btn-small(value="FR") FR
+      //-a.btn..btn-small(value="SA") SA
+      //-a.btn..btn-small(value="SU") SU
+
+    .input-append.bootstrap-timepicker
+      input(type="text", name="start_time", placeholder="Start Time").input-mini
+      span.add-on
+        i.icon-time
+    .input-append.bootstrap-timepicker
+      input(type="text", name="end_time", placeholder="End Time").input-mini
+      span.add-on
+        i.icon-time
     
-    .form-inline
-      .input-append.bootstrap-timepicker
-        input(type="text", name="start_time", placeholder="start time").input-mini
-        span.add-on
-          i.icon-time
-      .input-append.bootstrap-timepicker
-        input(type="text", name="end_time", placeholder="end time").input-mini
-        span.add-on
-          i.icon-time
-    
-    input(type="text", name="days", placeholder="days").input-mini
-    
-    input(type="text", name="title", placeholder="title")
-    input(type="text", name="instructor", placeholder="instructor")
-    input(type="text", name="location", placeholder="location")
-    
-.span6.selector
-    input(type="text", name="site_link", placeholder="course page")
-    input(type="text", name="prof_email", placeholder="email")
+
+  //-input(type="text", name="days", placeholder="days").input-mini
+
+
+
+
+
+
+  input(type="text", name="site_link", placeholder="Course Page")
+  input(type="email", name="prof_email", placeholder="Email").input-medium
 
 {% endautoescape %}
