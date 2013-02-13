@@ -291,6 +291,7 @@ $(function() {
 	window.addReminderModal = GenericModalView.extend({
 		el: $("#addReminder"),
 		initialize: function() {
+			$("[name='time']", this.el).timepicker({defaultTime:false});
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
 				todayHighlight: true,
@@ -303,13 +304,24 @@ $(function() {
 		}, 
 		submit: function(e) {
 			e.preventDefault();
+			if(!$("[name='title']", this.el).val()) {
+				$("[name='title']", this.el).addClass("error")
+				return;
+			}
 
+
+			var time = $("[name='time']", this.el).val();
+			if(time && time[0] == "0") time = time.substr(1);
+			console.log(time);
+
+			// switch to working model owned by view *****
+			// add a change function like in add/edit course
 			var newReminder = new Reminder( {
 				type: $("[name='type']", this.el).val(),
 				title: $("[name='title']", this.el).val(),
 				completed: false,
 				date: $("[name='date']", this.el).val(), // change to utc
-				time: "", // add selector
+				time: time,
 				course: parseInt($("[name='course']", this.el).val()),
 				note: $("[name='note']", this.el).val()
 			});
