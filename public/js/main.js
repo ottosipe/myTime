@@ -28,6 +28,7 @@ $(function() {
                         success: function(){
                             new ReminderListView({model: remindList});
                             new addReminderModal({model: remindList});
+                            // declare edit view here ***??
                         }
                     });
 
@@ -56,11 +57,12 @@ $(function() {
         },
 
         editCourse: function(idArg) {
+            // *** make this into one modal which changes it's model ****
             if(idArg == null) return;
             if(!window.courseList.length) window.location.hash = "";
             var mod = window.courseList.where({id: parseInt(idArg)})[0];
             new editCourseModal({model: mod});
-            $("#editCourse").modal(); // do fancyness here ****
+            $("#editCourse").modal();
         },
 
         addReminder: function() {

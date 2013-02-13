@@ -200,22 +200,25 @@ $(function() {
 
 
 			for(var i in this.newCourse.attributes) {
-				$("[name='"+i+"']", this.el).val(this.newCourse.get(i));
+				if(this.newCourse.get(i) !== "")
+					$("[name='"+i+"']", this.el).val(this.newCourse.get(i));
 			}
 
 			// add day buttons
 			for(var i in this.newCourse.attributes.days) {
-				console.log($('[day="'+i+'"]', this.el))
 				$('[day="'+this.newCourse.attributes.days[i]+'"]', this.el).addClass("active");
 			}
 
-			$("[name='start_time']", this.el).timepicker();
-			$("[name='end_time']", this.el).timepicker();
+			$("[name='start_time']", this.el).timepicker({defaultTime: false});
+			$("[name='end_time']", this.el).timepicker({defaultTime: false});
 			$(".modalHeader", this.el).html("Edit Course -- " + this.newCourse.get("code")+
 				" "+this.newCourse.get("number")+" "+this.newCourse.get("type"));
 		},
 		submit: function(e) {
 			e.preventDefault();
+
+			// check to see if either time is empty 
+			// or class length 0 -- show error ***
 
 			var arr = [];
 			$(".days-pick .btn", this.el).each(function( index ) {
@@ -227,22 +230,27 @@ $(function() {
 
 			var that = this;
 			this.data.currentSections.each(function(sect) {
-				console.log(sect)
 				sect.set({courseId: sect.id});
-				sect.set({id: null});// so isNew is true...
+				sect.set({id: null}); // so isNew is true...
 
+
+				// may not work in loop *** !!!! 
 				var foundDups = that.model.every(function(i) {
 					return (i.attributes.id != sect.attributes.courseId)
-				})
-				if(!foundDups) { // may not work in loop ***
-					that.alert("Yo, I hear you like class. So I put a class in your class so you can class while you're in class. Dawg."); // do fancier alert here
+				});
+				if(!foundDups) { 
+					that.alert("Duplicate class."); // do fancier alert here
 					return;
 				}
 
+				console.log(sect)
+				// save that shit
 				that.model.create(sect);
 			}) 
 
-			// need to save id from courseID***
+			$(".sectSelector", this.el).empty();
+			$(".reset", this.el).trigger("click");
+			$(".back", this.el).trigger("click");
 			window.location.hash = "";
 
 		},
@@ -309,7 +317,7 @@ $(function() {
 
 			e.preventDefault();
 			this.model.save();
-			this.undelegateEvents(); // fix this by 
+			this.undelegateEvents(); 
 			window.location.hash = "";
 		}
 
@@ -514,11 +522,12 @@ $(function() {
 
 			var that = this;
 			var sects = $("[name='section']").each(function(i, sel) {
-				
+				var obj = that.apiSections.where({
+					id:parseInt($(sel).val())
+				})[0];
+				if(obj)	obj.initialize();
 				that.currentSections.add( 
-					that.apiSections.where({
-						id:parseInt($(sel).val())
-					})[0]
+					obj
 				);
 			});
 		}
