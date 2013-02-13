@@ -326,8 +326,10 @@ $(function() {
 		el: $("#addReminder"),
 		initialize: function() {
 			$("[name='time']", this.el).timepicker({defaultTime:false});
+			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
+				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
 				todayHighlight: true,
 				autoclose:true
 			}); //set date range
@@ -335,7 +337,7 @@ $(function() {
 				$("[name='type']", this.el).val($(this).attr("value"));
 			})
 			
-		}, 
+		},
 		submit: function(e) {
 			e.preventDefault();
 			if(!$("[name='title']", this.el).val()) {
@@ -366,6 +368,76 @@ $(function() {
 		},
 	});
 
+	window.editReminderModal = GenericModalView.extend({
+		events: {
+			"click .finishRemind": "save",
+			"blur input": "edit",
+			"change input,textarea": "edit",
+		},
+		el: $("#editReminder"),
+		initialize: function() {
+			console.log(this.model)
+
+			for(var i in this.model.attributes) {
+				$("[name='"+i+"']", this.el).val(this.model.get(i));
+			}
+			$("[name='time']", this.el).timepicker({defaultTime:false});
+			var today = new Date();
+			$(".date").datepicker({
+				format: 'mm/dd/yy',
+				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
+				autoclose:true
+			});
+			//$(".date").datepicker('update', this.model.get("date")); //set date range
+			$(".reminderTag .btn").click(function() {
+				$("[name='type']", this.el).val($(this).attr("value"));
+			});
+			
+		},
+		edit: function(e) {
+			var name = $(e.currentTarget).attr("name");
+			var value = $(e.currentTarget).val();
+			if(name) {
+				console.log("Changed", name, value);
+				this.model.set(name, value);
+				console.log(this.model)
+			}
+		},
+		save: function(e) {
+			e.preventDefault();
+			if(!$("[name='title']", this.el).val()) {
+				$("[name='title']", this.el).addClass("error")
+				return;
+			}
+
+
+			var time = $("[name='time']", this.el).val();
+			if(time && time[0] == "0") time = time.substr(1);
+			console.log(time);
+
+			// switch to working model owned by view *****
+			// add a change function like in add/edit course
+			/*var newReminder = new Reminder( {
+				type: $("[name='type']", this.el).val(),
+				title: $("[name='title']", this.el).val(),
+				completed: false,
+				date: $("[name='date']", this.el).val(), // change to utc
+				time: time,
+				course: parseInt($("[name='course']", this.el).val()),
+				note: $("[name='note']", this.el).val()
+			});*/
+
+			this.model.save();
+
+			e.preventDefault();
+			this.model.save();
+			this.undelegateEvents(); 
+			window.location.hash = "";
+
+			//this.model.create(newReminder);
+
+		},
+	});
 
 	// view for course selectors //
 

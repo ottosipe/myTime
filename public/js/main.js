@@ -57,7 +57,7 @@ $(function() {
         },
 
         editCourse: function(idArg) {
-            // *** make this into one modal which changes it's model ****
+            // *** make this into one modal which changes its model ****
             if(idArg == null) return;
             if(!window.courseList.length) window.location.hash = "";
             var mod = window.courseList.where({id: parseInt(idArg)})[0];
@@ -69,7 +69,12 @@ $(function() {
             $("#addReminder").modal();
         },
 
-        editReminder: function(id) {
+        editReminder: function(idArg) {
+            // *** make this into one modal which changes its model ***
+            if (idArg == null) return;
+            if(!window.remindList.length) window.location.hash = "";
+            var mod = window.remindList.where({id: parseInt(idArg)})[0];
+            new editReminderModal({model: mod});
             $("#editReminder").modal();
         },
 

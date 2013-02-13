@@ -114,43 +114,26 @@ form#addReminder.modal.hide
         .alert.hide
           button.close(type='button', data-dismiss='alert') &times;
           .msg
-
-        input.typeTag(type='hidden', name="type")
-        .reminderTag.btn-group(data-toggle="buttons-radio")
-          a.btn.active(value="") None
-          a.btn(value="Homework") Homework
-          a.btn(value="Project") Project
-          a.btn(value="Exam") Exam
-          a.btn(value="Goal") Goal
-          a.btn(value="To Do") To Do
-
-        
-        .row-fluid
-          .span7
-            .control-group
-              input.width100.reminderTitle(type='text', name="title", placeholder="Title")
-            .control-group
-              textarea.width100.reminderNote(name="note", placeholder="Note")
-          .span5 
-
-            
-            .control-group
-              .input-append.bootstrap-timepicker.datetime
-                input(type="text", name="time", placeholder="Time")
-                span.add-on
-                  i.icon-time
-              .input-prepend.date.datetime
-                span.add-on
-                  i.icon-calendar
-                input(type='text', name="date", placeholder="Date", readonly)
-              
-            .control-group
-              select.input-medium.courseSelector(name="course")
-                
+        include reminder_form        
           
     .modal-footer
 
       input.btn.pull-left(type="reset") Reset
       button.btn.btn-success.add(type='submit', data-loading-text="Working...") Add
+
+form#editReminder.modal.hide
+    .modal-header
+      button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+      h3 Edit Reminder
+
+      .modal-body.reminderInputs
+        .alert.hide
+          button.close(type='button', data-dismiss='alert') &times;
+          .msg
+        include reminder_form
+
+      .modal-footer
+
+        button.btn.btn-success.finishRemind(type='sbumit', data-loading-text="Working...") Save
 
 {% endautoescape %}
