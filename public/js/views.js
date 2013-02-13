@@ -387,13 +387,22 @@ $(function() {
 
 	window.editReminderModal = GenericModalView.extend({
 		events: {
-			"click .finishRemind": "save",
+			"click .save": "save",
 			"blur input": "edit",
-			"change input,textarea,select": "edit",
+			"change input,textarea,select": "edit"
 		},
 		el: $("#editReminder"),
 		initialize: function() {
-			console.log(this.model)
+
+			// set tag active
+
+			var type = this.model.get("type");
+			$(".reminderTag a").removeClass("active")
+			$(".reminderTag a", this.el).each(function( index ) {
+				if($(this).attr("value") == type) {
+					$(this).addClass("active");
+				}
+			});
 
 			for(var i in this.model.attributes) {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
@@ -405,7 +414,6 @@ $(function() {
 				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
 				autoclose:true
 			});
-			//$(".date").datepicker('update', this.model.get("date")); //set date range
 			$(".reminderTag .btn").click(function() {
 				$("[name='type']", this.el).val($(this).attr("value"));
 			});
@@ -415,9 +423,7 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log("Changed", name, value);
 				this.model.set(name, value);
-				console.log(this.model)
 			}
 		},
 		save: function(e) {
@@ -432,26 +438,10 @@ $(function() {
 			if(time && time[0] == "0") time = time.substr(1);
 			console.log(time);
 
-			// switch to working model owned by view *****
-			// add a change function like in add/edit course
-			/*var newReminder = new Reminder( {
-				type: $("[name='type']", this.el).val(),
-				title: $("[name='title']", this.el).val(),
-				completed: false,
-				date: $("[name='date']", this.el).val(), // change to utc
-				time: time,
-				course: parseInt($("[name='course']", this.el).val()),
-				note: $("[name='note']", this.el).val()
-			});*/
-
-			this.model.save();
-
-			e.preventDefault();
-			this.model.save();
+			this.model.set("type", $("[name='type']", this.el).val());
 			this.undelegateEvents();
+			this.model.save();
 			window.location.hash = "";
-
-			//this.model.create(newReminder);
 
 		},
 	});
