@@ -269,7 +269,7 @@ $(function() {
 			"blur input": "edit"
 		},
 		el: $("#editCourse"),
-		setup: function() {
+		initialize: function() {
 			console.log(this.model);
 
 			$(".modalHeader", this.el).html("Edit Course -- " + this.model.get("code")+" "+this.model.get("number"));
