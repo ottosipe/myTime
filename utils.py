@@ -10,7 +10,10 @@ import time
 def createEvent(info):
     logging.warning(info)
 
-    # change time format from TTH 1-230 to 2011-06-03T10:00:00.000-07:00
+    if not isinstance(info, dict):
+      info = info.to_dict()
+
+    # change time format i.e. 9:00 AM -> 2011-06-03T09:00:00.000-05:00
     startDate = info["start"]
     endDate = info["end"]
 
@@ -82,6 +85,7 @@ def createEvent(info):
 
     # chop off erroneous comma
     classDaysString = classDaysString[:-1]
+    logging.warning("class days string is " + classDaysString)
 
     # make first class meeting correct, will break if semester start date
     # and first class meeting date are in different months
@@ -101,11 +105,10 @@ def createEvent(info):
     logging.warning("Class Start " + classStartTime.isoformat())
     logging.warning("Class End " + classEndTime.isoformat())
 
-
     # create the calendar event
     event = {
       'summary': str(info["code"]) + " " + str(info["number"]) + ": " + info["title"],
-      'location': info['location'],
+      'location': info["location"],
       'start': {
         'dateTime': classStartTime.isoformat() + '.000-05:00',
         'timeZone': 'America/New_York'
@@ -118,6 +121,11 @@ def createEvent(info):
         'RRULE:FREQ=WEEKLY;BYDAY=' + classDaysString + ';UNTIL=' + classEndDate.strftime("%Y%m%dT") + '235900Z',
       ]
     }
+
+    try :
+      event['sequence'] = info["eventseq"]
+    except Exception :
+      pass
 
     courseInfo = {
       'event': event,

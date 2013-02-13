@@ -239,6 +239,7 @@ $(function() {
 					return;
 				}
 
+				console
 				that.model.create(sect);
 			}) 
 

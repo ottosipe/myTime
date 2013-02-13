@@ -44,7 +44,6 @@ class Courses(webapp2.RequestHandler):
     event = courseInfo["event"]
     request = service.events().insert(calendarId=student.calID, body=event)
     response = request.execute(http=decorator.http())
-    eventid = response["id"]
 
     logging.warning(response)
 
@@ -64,7 +63,8 @@ class Courses(webapp2.RequestHandler):
       instructor = info["instructor"],
       prof_email = info["prof_email"],
       site_link = info["site_link"],
-      eventid = eventid
+      eventid = response["id"],
+      eventseq = response["sequence"]
     )
 
     student.courses += [newCourse]
@@ -130,14 +130,16 @@ class EditCourse(webapp2.RequestHandler):
         else:
           # update class in google calendar
           logging.warning("updating class")
-          event = utils.createEvent(info)
+          event = utils.createEvent(course)
           logging.warning(event)
           logging.warning(event["event"])
           request = service.events().update(calendarId=student.calID,
               eventId=course.eventid, body=event["event"])
+          logging.warning(course.eventid + " " + student.calID)
           response = request.execute(http=decorator.http())
           logging.warning(response)
 
+          logging.warning("event id is " + course.eventid)
           # create new course (really the edited course that will replace the old one)
           # and add it to the newCourses
           newCourses += [models.Course(
@@ -154,7 +156,8 @@ class EditCourse(webapp2.RequestHandler):
             end_time = info["end_time"],
             location = info["location"],
             instructor = info["instructor"],
-            eventid = course.eventid
+            eventid = course.eventid,
+            eventseq = response["sequence"]
           )]
 
       # after for loop is done, set student's courses to the newCourses (including edited course)
