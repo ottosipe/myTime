@@ -23,21 +23,17 @@ $(function() {
 	window.CourseView = GenericView.extend({
 		events: {
 			"click .delete": "delete",
-			"click .edit": "edit",
-			"mouseenter":"hover",
-			"mouseleave":"offHover"
+			"click .reminds": "showReminders"
 		},
 		template: _.template( $('#course-template').html() ),
-		edit: function() {
-			console.log("edit", this.model)
-			window.location.hash = "#editCourse/"+this.model.id;
-		},
-		hover:function() {
-			// trigger reminder highlight here ***
-			remindList.highlight(this.model.get('id'));
-		},
-		offHover: function() {
-			remindList.offLight();
+		showReminders:function(e) {
+			$(".reminds").removeClass("active");
+			if($(e.currentTarget).hasClass("active")) {
+				remindList.showAll();
+			} else {
+				remindList.courseFilter(this.model.get('id'));
+			}
+			
 		}
 	});
 
@@ -48,8 +44,8 @@ $(function() {
 		},
 	    template: _.template( $('#reminder-template').html() ),
 	    render: function() {
-	    	var obj = this.model.attributes;
 
+	    	var obj = this.model.attributes;
 	    	var query = window.courseList.where({id:this.model.attributes.course});
 	    	// may need to also query courseId!!!
 	    	if (query.length > 0) {
@@ -82,7 +78,7 @@ $(function() {
 		},
 		viewType: null,
 		render: function() {
-			this.alert();
+			this.alert(); // show alert if empty
 			$(".list", this.el).empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
@@ -113,7 +109,9 @@ $(function() {
 		el: $("#reminderList"),
 		viewType: ReminderView,
 		sort: function() {
-			console.log('hello');
+			// force all to show and remove btn classes
+			remindList.showAll();
+			$(".reminds").removeClass("active")
 		}
 	});
 
@@ -245,7 +243,7 @@ $(function() {
 				}
 
 				// save that shit
-				sect.check(); // fix and check simple errors
+				sect.fix(); // fix and check simple errors
 				that.model.create(sect);
 			}) 
 
@@ -279,7 +277,6 @@ $(function() {
 		},
 		el: $("#editCourse"),
 		initialize: function() {
-			console.log(this.model);
 
 			$(".modalHeader", this.el).html("Edit Course -- " + this.model.get("code")+" "+this.model.get("number"));
 

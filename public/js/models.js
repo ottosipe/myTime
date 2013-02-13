@@ -21,7 +21,7 @@ $(function() {
 			prof_email: "",
 			site_link: ""
 		},
-		check: function() {
+		fix: function() {
 			if(this.get("site_link") && this.get("site_link") != "") {
 				var link = this.get("site_link");
 				if(link.indexOf("http") == -1) {
@@ -57,7 +57,7 @@ $(function() {
 			time: "",
 			course: null,
 			note: "",
-			highlight: false
+			hide: false
 		},
 		toggle: function() {
 			this.save({
@@ -99,16 +99,18 @@ $(function() {
 				return reminder.get('completed');
 			});
 		},
-		highlight: function(id) {
+		courseFilter: function(id) {
 			this.each(function(reminder){
 				if(reminder.get("course") == id) {
-					reminder.set("highlight", true);
+					reminder.set("hide", false);
+				} else {
+					reminder.set("hide", true)
 				}
-			})
-		}, 
-		offLight: function() {
+			});
+		},
+		showAll: function() {
 			this.each(function(reminder){
-				reminder.set("highlight", false);
+				reminder.set("hide", false);
 			});
 		}
 	});
