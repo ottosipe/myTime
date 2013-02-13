@@ -59,10 +59,13 @@ $(function() {
         editCourse: function(idArg) {
             // *** make this into one modal which changes its model ****
             if(idArg == null) return;
-            if(!window.courseList.length) window.location.hash = "";
-            var mod = window.courseList.where({id: parseInt(idArg)})[0];
-            new editCourseModal({model: mod});
-            $("#editCourse").modal();
+            if(window.courseList.length) {
+                var mod = window.courseList.where({id: parseInt(idArg)})[0];
+                new editCourseModal({model: mod});
+                $("#editCourse").modal();
+            } else {
+                window.location.hash = "";
+            }
         },
 
         addReminder: function() {
@@ -72,10 +75,13 @@ $(function() {
         editReminder: function(idArg) {
             // *** make this into one modal which changes its model ***
             if (idArg == null) return;
-            if(!window.remindList.length) window.location.hash = "";
-            var mod = window.remindList.where({id: parseInt(idArg)})[0];
-            new editReminderModal({model: mod});
-            $("#editReminder").modal();
+            if(window.remindList) {
+                var mod = window.remindList.where({id: parseInt(idArg)})[0];
+                new editReminderModal({model: mod});
+                $("#editReminder").modal();
+            } else {
+              window.location.hash = "";   
+            }
         },
 
         welcome: function() {

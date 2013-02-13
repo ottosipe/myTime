@@ -102,6 +102,10 @@ hr {
     text-align: center;
 }
 
+.selector .title {
+    min-width: 258px;
+}
+
 .infoBox {
 }
 

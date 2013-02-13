@@ -30,8 +30,10 @@ $(function() {
 			$(".reminds").removeClass("active");
 			if($(e.currentTarget).hasClass("active")) {
 				remindList.showAll();
+				$(".viewAll").hide();
 			} else {
 				remindList.courseFilter(this.model.get('id'));
+				$(".viewAll").show();
 			}
 			
 		}
@@ -104,14 +106,15 @@ $(function() {
 
 	window.ReminderListView = GenericListView.extend({
 		events: {
-			"click .sort": "sort"
+			"click .viewAll": "all"
 		},
 		el: $("#reminderList"),
 		viewType: ReminderView,
-		sort: function() {
+		all: function() {
 			// force all to show and remove btn classes
 			remindList.showAll();
-			$(".reminds").removeClass("active")
+			$(".reminds").removeClass("active");
+			$(".viewAll").hide();
 		}
 	});
 
@@ -256,7 +259,7 @@ $(function() {
 				}
 
 				// save that shit
-				sect.fix(); // fix and check simple errors
+				sect.checker(); // fix and check simple errors
 				that.model.create(sect);
 			}) 
 
@@ -318,6 +321,7 @@ $(function() {
 			}
 		},
 		save: function(e) {
+			e.preventDefault();
 
 			var arr = [];
 			$(".days-pick .btn", this.el).each(function( index ) {
@@ -326,8 +330,8 @@ $(function() {
 				}
 			});
 			this.model.set("days",arr);
+			this.model.checker(); 
 
-			e.preventDefault();
 			this.model.save();
 			this.undelegateEvents(); 
 			window.location.hash = "";
@@ -385,7 +389,7 @@ $(function() {
 		events: {
 			"click .finishRemind": "save",
 			"blur input": "edit",
-			"change input,textarea": "edit",
+			"change input,textarea,select": "edit",
 		},
 		el: $("#editReminder"),
 		initialize: function() {
@@ -444,7 +448,7 @@ $(function() {
 
 			e.preventDefault();
 			this.model.save();
-			this.undelegateEvents(); 
+			this.undelegateEvents();
 			window.location.hash = "";
 
 			//this.model.create(newReminder);

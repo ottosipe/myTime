@@ -185,7 +185,7 @@ class Reminders(webapp2.RequestHandler):
       note = postData['note'],
       id = int(time.time()),
     )
-    student.reminders += newReminder
+    student.reminders += [newReminder]
     student.put()
 
     self.response.out.write(json.dumps(newReminder.to_dict()))
@@ -233,7 +233,7 @@ class EditReminder(webapp2.RequestHandler):
           x.title = newData['title']
           x.completed = newData['completed']
           x.date =  newData['date']
-          x.course = newData['course']
+          x.course = int(newData['course'])
           x.note = newData['note']
         newReminds.append(x)
       #reminders = student.reminders.query(student.reminders.id == int(idArg)).fetch(1)[0]
