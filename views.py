@@ -4,11 +4,13 @@ import jade
 import json
 import logging
 import models
+import utils
 
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 
 from oauth_decorator import decorator
+from oauth_decorator import service
 
 class MainPage(jade.jadeHandler):
   @decorator.oauth_required
@@ -39,6 +41,18 @@ class MainPage(jade.jadeHandler):
           name = studentName,
           calID = ""
         )
+
+        # create the courses calendar
+        if student.calID is None or student.calID == "":
+          logging.warning('student calID is empty')
+          calendar = utils.createCal()
+
+          request = service.calendars().insert(body=calendar)
+          created_cal = request.execute(http=decorator.http())
+          student.calID = created_cal["id"]
+        else:
+          logging.warning('student cal id already exists, it is %s' % student.calID)
+
         logging.warning(student)
         student.put()
         isNoob = 1;

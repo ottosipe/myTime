@@ -11,6 +11,8 @@ class Course(ndb.Model):
   days = ndb.StringProperty()
   start_time = ndb.StringProperty()
   end_time = ndb.StringProperty()
+  start = ndb.StringProperty()
+  end = ndb.StringProperty()
   location = ndb.StringProperty()
   instructor = ndb.StringProperty()
   eventid = ndb.StringProperty()
