@@ -168,13 +168,6 @@ $(function() {
 			this.data.currentSections.each(function(course) {
 				$(".page2 .sect-nav", this.el).append('<a href="#" class="btn sect-btn" data-id="'+course.get('id')+'">'+course.get('type')+'</a>')
 			
-				var times = window.utils.dateFormat(course.get('time'));
-				course.set('start_time', times.start);
-				course.set('end_time', times.end);
-
-				var days = window.utils.daysFormat(course.get('days'));
-				course.set("days", days)
-
 			});
 			if(this.data.currentSections.length == 1) {
 				$(".sect-nav", this.el).parent().hide();
