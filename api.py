@@ -130,12 +130,12 @@ class EditCourse(webapp2.RequestHandler):
         else:
           # update class in google calendar
           logging.warning("updating class")
-          event = utils.createEvent(info)
+          eventInfo = utils.createEvent(info)
+          event = eventInfo["event"]
           event['sequence'] = course.eventseq
           logging.warning(event)
-          logging.warning(event["event"])
           request = service.events().update(calendarId=student.calID,
-              eventId=course.eventid, body=event["event"])
+              eventId=course.eventid, body=event)
           logging.warning(course.eventid + " " + student.calID)
           response = request.execute(http=decorator.http())
           logging.warning(response)
@@ -150,13 +150,15 @@ class EditCourse(webapp2.RequestHandler):
             section = info["section"],
             type = info["type"],
             title = info["title"],
-            days = event["days"],
+            days = eventInfo["days"],
             start = info["start"],
             end = info["end"],
             start_time = info["start_time"],
             end_time = info["end_time"],
             location = info["location"],
             instructor = info["instructor"],
+            site_link = info["site_link"],
+            prof_email = info["prof_email"],
             eventid = course.eventid,
             eventseq = response["sequence"]
           )]
