@@ -231,9 +231,9 @@ class EditReminder(webapp2.RequestHandler):
       for x in student.reminders:
         if x.id == int(idArg):
           course = 0
+          newData = json.loads(self.request.body)
           if (newData['course']):
             course = int(newData['course'])
-          newData = json.loads(self.request.body)
           x.type = newData['type']
           x.title = newData['title']
           x.completed = newData['completed']
