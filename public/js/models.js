@@ -42,8 +42,6 @@ $(function() {
 				this.set('end_time', times.end);
 				this.set("time","");
 			}
-
-			console.log(this.get("days"))
 		}
 	});
 

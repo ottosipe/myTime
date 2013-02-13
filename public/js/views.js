@@ -147,6 +147,7 @@ $(function() {
 			"keyup #searchCode": "searchCode",
 			"keyup #searchNum": "searchNum",
 			"blur input": "edit",
+			"change input": "edit",
 			"click .sect-nav .btn": "switchEdit"
 		},
 		el: $("#addCourse"),
@@ -156,6 +157,18 @@ $(function() {
 			if(name) {
 				console.log("Changed", name, value);
 				this.newCourse.set(name, value);
+			}
+		},
+		saveDays: function() {
+			if (this.newCourse) {
+				var arr = [];
+				$(".days-pick .btn", this.el).each(function( index ) {
+					if($(this).hasClass("active")) {
+						arr.push($(this).attr("day"));
+					}
+				});
+				this.newCourse.set("days",arr);
+				console.log(arr)
 			}
 		},
 		next: function(e) {
@@ -187,6 +200,9 @@ $(function() {
 			$(".next-btns", this.el).hide();
 		},
 		switchEdit: function(e) {
+
+			this.saveDays();
+
 			var classId;
 			if(e) { 
 				e.preventDefault();
@@ -202,9 +218,13 @@ $(function() {
 			}
 
 			// add day buttons
+			$(".days-pick .btn", this.el).removeClass("active");
 			for(var i in this.newCourse.attributes.days) {
 				$('[day="'+this.newCourse.attributes.days[i]+'"]', this.el).addClass("active");
 			}
+
+
+			this.saveDays();
 
 			$("[name='start_time']", this.el).timepicker({defaultTime: false});
 			$("[name='end_time']", this.el).timepicker({defaultTime: false});
@@ -218,14 +238,7 @@ $(function() {
 			// or class length 0 -- show error ***
 			// add link checking // append http if not there
 
-
-			var arr = [];
-			$(".days-pick .btn", this.el).each(function( index ) {
-				if($(this).hasClass("active")) {
-					arr.push($(this).attr("day"));
-				}
-			});
-			this.newCourse.set("days",arr);
+			this.saveDays();
 
 			var that = this;
 			this.data.currentSections.each(function(sect) {
@@ -273,7 +286,8 @@ $(function() {
 	window.editCourseModal = GenericModalView.extend({
 		events: {
 			"click .finishEdit": "save",
-			"blur input": "edit"
+			"blur input": "edit",
+			"change input": "edit"
 		},
 		el: $("#editCourse"),
 		initialize: function() {

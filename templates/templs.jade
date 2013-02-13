@@ -68,7 +68,7 @@
   script#sect-select-template(type="template")
     option(value!="<%= id %>") <%= section + " " + type %> 
       | <% if(instructor) print(" - "+instructor);%> 
-      | <% if(days) print(" - "+days );%>
+      | <% if(days) print(" - "+days+ " - " +start_time );%>
 
 
 {% endautoescape %}
