@@ -27,7 +27,7 @@ $(function() {
 				this.set("days", days);
 			}
 
-			if(this.get("time") && typeof this.get("time") != "") {
+			if(this.get("time") && this.get("time") != "" && this.get("time") != "ARR") {
 				var times = window.utils.dateFormat(this.get('time'));
 				this.set('start_time', times.start);
 				this.set('end_time', times.end);

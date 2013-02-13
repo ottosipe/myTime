@@ -84,8 +84,9 @@ form#addCourse.modal.hide.form-horizontal
     .modal-footer
       button.btn.btn-warning.next Next
       .next-btns.hide
-        button.btn.back Back
-        button.btn.btn-success.add(type='submit', data-loading-text="Waiting...") Save
+        input.reset(type="reset").hide
+        input.btn.btn-success.add(type='submit', value="Save", data-loading-text="Waiting...")
+        button.btn.back.pull-left Back
 
 // edit course modal
 form#editCourse.modal.hide.form-horizontal

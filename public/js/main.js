@@ -28,13 +28,12 @@ $(function() {
                         success: function(){
                             new ReminderListView({model: remindList});
                             new addReminderModal({model: remindList});
+                            // declare edit view here ***??
                         }
                     });
 
                 }
             });
-
-            
 
             window.announceList = new AnnouncementCollection();
             announceList.fetch({
@@ -42,10 +41,7 @@ $(function() {
                     new AnnounceListView({model: announceList});
                 }
             });
-
-
         },
-
         home: function() {
             $(".modal").modal("hide");
             $("a[href='#home']").tab('show');
@@ -61,13 +57,12 @@ $(function() {
         },
 
         editCourse: function(idArg) {
-            console.log(idArg)
+            // *** make this into one modal which changes it's model ****
             if(idArg == null) return;
             if(!window.courseList.length) window.location.hash = "";
             var mod = window.courseList.where({id: parseInt(idArg)})[0];
             new editCourseModal({model: mod});
-            $("#editCourse").modal(); // do fancyness here ****
-
+            $("#editCourse").modal();
         },
 
         addReminder: function() {
