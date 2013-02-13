@@ -23,6 +23,7 @@ class MainPage(jade.jadeHandler):
     if User:
       isNoob = 0;
       std_query = models.Student.query(models.Student.user == User).fetch(1)
+      student = {}
       if(std_query == []): 
 
         try:
@@ -41,17 +42,6 @@ class MainPage(jade.jadeHandler):
           name = studentName,
           calID = ""
         )
-
-        # create the courses calendar
-        if student.calID is None or student.calID == "":
-          logging.warning('student calID is empty')
-          calendar = utils.createCal()
-
-          request = service.calendars().insert(body=calendar)
-          created_cal = request.execute(http=decorator.http())
-          student.calID = created_cal["id"]
-        else:
-          logging.warning('student cal id already exists, it is %s' % student.calID)
 
         logging.warning(student)
         student.put()
@@ -73,6 +63,19 @@ class MainPage(jade.jadeHandler):
       }
 
       self.render_response('index.jade', **context)
+
+      # create the courses calendar asynchronously
+      if student.calID is None or student.calID == "":
+        logging.warning('student calID is empty')
+        calendar = utils.createCal()
+
+        request = service.calendars().insert(body=calendar)
+        created_cal = request.execute(http=decorator.http())
+        student.calID = created_cal["id"]
+      else:
+        logging.warning('student cal id already exists, it is %s' % student.calID)
+
+      student.put()
     else: 
       self.redirect(users.create_login_url(self.request.uri))
 

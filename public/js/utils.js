@@ -57,25 +57,36 @@ $(function() {
 		},
 		daysFormat:function(daysString) {
 			var days = [];
-			for (var i = 0; i < daysString.length; i++) {
-				var c = daysString[i];
-				if (c === 'M') {
-					days.push("MO");
-				} else if (c === 'T') {
-					if (i != (daysString.length - 1) && daysString[i+1] === 'H') {
-						// actually thursday
-						days.push("TH");
-					} else {
-						// tuesday
-						days.push("TU");
+			if (daysString.length == 2 && (daysString == "MO" ||
+										   daysString == "TU" ||
+										   daysString == "WE" ||
+										   daysString == "TH" ||
+										   daysString == "FR")) {
+				days.push(daysString);
+			} else if (daysString.indexOf(',') != -1) {
+				days = daysString.split(',');
+			} else {
+				for (var i = 0; i < daysString.length; i++) {
+					var c = daysString[i];
+					if (c === 'M') {
+						days.push("MO");
+					} else if (c === 'T') {
+						if (i != (daysString.length - 1) && daysString[i+1] === 'H') {
+							// actually thursday
+							days.push("TH");
+						} else {
+							// tuesday
+							days.push("TU");
+						}
+					} else if (c === 'W') {
+						days.push("WE");
+					} else if (c === 'F') {
+						days.push("FR");
 					}
-				} else if (c === 'W') {
-					days.push("WE");
-				} else if (c === 'F') {
-					days.push("FR");
 				}
 			}
 
+			console.log("days is " + days);
 			return days;
 		}
 	}; 
