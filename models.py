@@ -16,6 +16,7 @@ class Course(ndb.Model):
   location = ndb.StringProperty()
   instructor = ndb.StringProperty()
   eventid = ndb.StringProperty()
+  eventseq = ndb.IntegerProperty()
   prof_email = ndb.StringProperty()
   site_link = ndb.StringProperty()
 
