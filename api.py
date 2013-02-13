@@ -230,12 +230,16 @@ class EditReminder(webapp2.RequestHandler):
       newReminds = []
       for x in student.reminders:
         if x.id == int(idArg):
+          course = 0
+          if (newData['course']):
+            course = int(newData['course'])
           newData = json.loads(self.request.body)
           x.type = newData['type']
           x.title = newData['title']
           x.completed = newData['completed']
           x.date =  newData['date']
-          x.course = int(newData['course'])
+
+          x.course = course
           x.note = newData['note']
         newReminds.append(x)
       #reminders = student.reminders.query(student.reminders.id == int(idArg)).fetch(1)[0]
