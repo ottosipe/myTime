@@ -50,7 +50,6 @@ def createEvent(info):
 
     classDayNums = []
     classDaysString = ""
-    classTime = info["time"]
     i = 0
     logging.warning(len(classDays))
     for day in classDays:
@@ -76,7 +75,10 @@ def createEvent(info):
       classDaysString += day + ","
     if i == 0:
       logging.warning("class days is empty")
-      return
+      # ONLY FOR DEBUG
+      classDaysString = "FR,"
+      classDayNums.append(4)
+      # return
 
     # chop off erroneous comma
     classDaysString = classDaysString[:-1]
@@ -124,20 +126,22 @@ def createEvent(info):
 
     return courseInfo
 
-def createCal(datestring):
+def createCal():
 
     # determine semester
     semester = ""
-    month = int(datestring[:2])
-    if month == 1:
+    today = datetime.date.today()
+    month = today.month
+    if month == 11 or month == 12 or month == 1 or month == 2 or month == 3:
       semester = "W"
-    elif month == 9:
+    elif month >= 6 and month <= 10:
       semester = "F"
-    elif month == 5:
+    elif month == 4 or month == 5:
       semester = "SP"
     else:
+      # will never trigger right now
       semester = "SU"
-    semester += datestring[8:] # 01/23/2012 -> <W,F,SP,SU>12
+    semester += (str(today.year))[2:] # 01/23/2012 -> <W,F,SP,SU>12
 
     # create the courses calendar
     calendar = {

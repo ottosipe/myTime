@@ -35,11 +35,7 @@ class Courses(webapp2.RequestHandler):
     # create the courses calendar if it doesn't already exist
     if student.calID is None or student.calID == "":
       logging.warning('student calID is in fact empty')
-      calendar = utils.createCal(info['start'])
-
-      request = service.calendars().insert(body=calendar)
-      created_cal = request.execute(http=decorator.http())
-      student.calID = created_cal["id"]
+      self.response.out.write("student calendar is empty in api, not adding course")
     else:
       logging.warning('student id is something else, it is %s' % student.calID)
 
@@ -62,6 +58,8 @@ class Courses(webapp2.RequestHandler):
       days = courseInfo["days"],
       start_time = info["start_time"],
       end_time = info["end_time"],
+      start = info["start"],
+      end = info["end"],
       location = info["location"],
       instructor = info["instructor"],
       prof_email = info["prof_email"],
@@ -88,6 +86,7 @@ class Courses(webapp2.RequestHandler):
       self.response.out.write(json.dumps(output))
     else: 
       self.response.out.write("['auth':'fail']");
+
 
 class EditCourse(webapp2.RequestHandler):
   @decorator.oauth_required
@@ -118,36 +117,42 @@ class EditCourse(webapp2.RequestHandler):
       self.response.out.write("['auth':'fail']");
 
   @decorator.oauth_required
-  def put(self):
+  def put(self, idArg):
     User = users.get_current_user()
     newCourses = []
     if User:
       student = models.Student.query(models.Student.user == User).fetch(1)[0]
-      info = self.request.body
-      courseId = info['courseId']
+      info = json.loads(self.request.body)
+      courseId = info["id"]
       for course in student.courses:
         if course.id != int(courseId):
-          newCourses.append(x)
+          newCourses.append(course)
         else:
           # update class in google calendar
           logging.warning("updating class")
           event = utils.createEvent(info)
+          logging.warning(event)
+          logging.warning(event["event"])
           request = service.events().update(calendarId=student.calID,
-              eventId=course.eventid, body=event)
+              eventId=course.eventid, body=event["event"])
           response = request.execute(http=decorator.http())
           logging.warning(response)
 
           # create new course (really the edited course that will replace the old one)
           # and add it to the newCourses
           newCourses += [models.Course(
-            id = info["courseId"],
+            id = info["id"],
             code = info["code"],
             number = info["number"],
             section = info["section"],
             type = info["type"],
             title = info["title"],
             days = info["days"],
-            time = info["time"],
+            #time = info["time"],
+            start = info["start"],
+            end = info["end"],
+            start_time = info["start_time"],
+            end_time = info["end_time"],
             location = info["location"],
             instructor = info["instructor"],
             eventid = course.eventid
@@ -155,6 +160,7 @@ class EditCourse(webapp2.RequestHandler):
 
       # after for loop is done, set student's courses to the newCourses (including edited course)
       student.courses = newCourses
+      student.put()
     else:
       self.response.out.write("['auth':'fail']")
 

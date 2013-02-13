@@ -287,7 +287,8 @@ $(function() {
 		},
 		save: function(e) {
 			e.preventDefault();
-			this.model.update();
+			this.model.save();
+			window.location.hash = "";
 		}
 
 	});
