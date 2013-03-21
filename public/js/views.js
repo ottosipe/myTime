@@ -127,12 +127,6 @@ $(function() {
 	/// modal views ///
 
 	window.GenericModalView = Backbone.View.extend({
-		events: {
-			"click .add": "submit"
-		},
-		submit: function(e) {
-			//MT
-		},
 		alert: function(msg) {
 			$(".alert .msg", this.el).html(msg)
 			$(".alert", this.el).show();
@@ -343,7 +337,8 @@ $(function() {
 		events: {
 			"click .showNote": "showNote",
 			"click .showStartTime": "showStartTime",
-			"click .showEndTime": "showEndTime"
+			"click .showEndTime": "showEndTime",
+			"click .add": "submit"
 		},
 		showNote: function() {
 			$(".note", this.el).show();

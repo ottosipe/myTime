@@ -12,6 +12,10 @@ body {
     height: 100%;
 }
 
+.left {
+    text-align: left;
+}
+
 .center {
     text-align: center;
 }
@@ -94,6 +98,15 @@ hr {
 
 /*Modals*/
 
+.courseSelector {
+    margin-left: 11px;
+    margin-top: 2px;
+    width: 100%;
+}
+
+.sectSelector {
+    margin-left: -18px;
+}
 .selector select,input,.add-on {
     margin: 2px 0;
 }
@@ -185,9 +198,13 @@ input.error  {
 .course-time {
     margin: 15px 0px;
 }
+.datetime .add-on {
+    width: 20px;
+    padding-left: 7px;
+}
 
 .datetime input{
-    width: 107px;
+    width: 90px;
     cursor: pointer;
     background: none;
 }
@@ -198,4 +215,8 @@ input.error  {
 
 .width100 {
     width: 100%;
+}
+
+a {
+    cursor: pointer;
 }
