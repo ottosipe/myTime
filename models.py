@@ -2,7 +2,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 def student_key(user):
-  return db.Key.from_path('Student', user)
+  return db.Key.from_path('Student', user.user_id())
 
 class Course(db.Model):
   id = db.IntegerProperty()  

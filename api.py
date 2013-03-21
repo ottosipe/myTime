@@ -12,6 +12,8 @@ from google.appengine.api import users
 from google.appengine.api import urlfetch
 from google.appengine.api import mail
 
+from google.appengine.ext import db
+
 from oauth_decorator import service
 from oauth_decorator import decorator
 
@@ -23,9 +25,9 @@ class Courses(webapp2.RequestHandler):
  
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
       courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(info["courseId"])])
+        [models.student_key(User), int(info["courseId"])]).fetch(None)
 
       if courses.len > 0:
         self.response.write("already in this course")
@@ -77,7 +79,7 @@ class Courses(webapp2.RequestHandler):
   def get(self):
     User = users.get_current_user()
     if User:
-      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1", models.student_key(User))
+      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1", models.student_key(User)).fetch(None)
 
       output = []
       for x in courses:
@@ -94,9 +96,9 @@ class EditCourse(webapp2.RequestHandler):
     User = users.get_current_user() # dont do this so often ***
     newCourses = []
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
       courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(idArg)])
+        [models.student_key(User), int(idArg)]).fetch(None)
 
       if courses.len != 1 :
         self.response.out.write("couldn't find class to delete")
@@ -123,9 +125,9 @@ class EditCourse(webapp2.RequestHandler):
   def put(self, idArg):
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
       courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(idArg)])
+        [models.student_key(User), int(idArg)]).fetch(None)
 
       if courses.len != 1 :
         self.response.out.write("couldnt find class to edit")
@@ -175,7 +177,7 @@ class Reminders(webapp2.RequestHandler):
     
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
 
       postData = json.loads(self.request.body)
       logging.warning(postData)
@@ -215,7 +217,7 @@ class Reminders(webapp2.RequestHandler):
   def get(self):
     User = users.get_current_user()
     if User:
-      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1", models.student_key(User))
+      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1", models.student_key(User)).fetch(None)
 
       output = []
       for x in reminders:
@@ -231,9 +233,9 @@ class EditReminder(webapp2.RequestHandler):
   def delete(self, idArg):
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
       reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), idArg])
+        [models.student_key(User), idArg]).fetch(None)
 
       if reminders.len != 1:
         self.response.out.write("failed to find single reminder to delete")
@@ -262,9 +264,9 @@ class EditReminder(webapp2.RequestHandler):
   def put(self, idArg):
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
       reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(idArg)])
+        [models.student_key(User), int(idArg)]).fetch(None)
 
       if reminders.len != 1 :
         self.response.out.write("couldn't find a single reminder to edit")
@@ -325,7 +327,7 @@ class EditReminder(webapp2.RequestHandler):
 
 class Announcements(webapp2.RequestHandler):
   def get(self):
-      announcements = db.GqlQuery("SELECT * FROM Announcements")
+      announcements = db.GqlQuery("SELECT * FROM Announcement").fetch(None)
 
       logging.warning(announcements)
 
@@ -360,7 +362,7 @@ class User(webapp2.RequestHandler):
   def post(self):
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
       student.name = self.request.get('name')
       student.major = self.request.get('major')
       student.advisor_email = self.request.get('advisor_email')

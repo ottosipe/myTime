@@ -9,6 +9,8 @@ import utils
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 
+from google.appengine.ext import db
+
 from oauth_decorator import decorator
 from oauth_decorator import service
 
@@ -22,9 +24,10 @@ class MainPage(jade.jadeHandler):
     # this should be moved to a seperate api and triggered by new users! ***
     if User:
       isNoob = 0;
-      std_query = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)
+      std_query = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(1)
       student = {}
-      if std_query.len == 0 : 
+      
+      if len(std_query) == 0 : 
 
         try:
           url = "https://mcommunity.umich.edu/mcPeopleService/people/" + User.nickname()
