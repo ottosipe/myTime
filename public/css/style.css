@@ -16,6 +16,10 @@ body {
     text-align: left;
 }
 
+.right {
+    text-align: right;
+}
+
 .center {
     text-align: center;
 }
@@ -49,6 +53,11 @@ hr {
     max-width: 940px;
 }
 
+.dropdown-menu {
+    min-width: 0px;
+    text-align: right;
+}
+
 .main {
     background-color: white;
     border-color: #ABA67C;
@@ -63,7 +72,7 @@ hr {
 }
 
 .addBtn {
-    margin-top:-2px;
+    margin-top:-3px;
 }
 
 .content {
@@ -99,7 +108,7 @@ hr {
 /*Modals*/
 
 .courseSelector {
-    margin-left: 11px;
+    margin-left: 14px;
     margin-top: 2px;
     width: 100%;
 }
@@ -147,7 +156,13 @@ hr {
 
 .entry {
     margin:6px;
+    /*padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;*/
 }
+
+/*.entry:last-child {
+    border-bottom: none;
+}*/
 
 .courseLabel {
     font-size: 13px;

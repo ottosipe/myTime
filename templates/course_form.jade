@@ -15,14 +15,16 @@
       a.btn.btn-small(day="TH") TH
       a.btn.btn-small(day="FR") FR
 
-    .input-append.bootstrap-timepicker
+    .input-prepend.bootstrap-timepicker
+      span.add-on
+        i.icon-time
       input(type="text", name="start_time", placeholder="Start Time").input-mini
+
+    .input-prepend.bootstrap-timepicker
       span.add-on
         i.icon-time
-    .input-append.bootstrap-timepicker
       input(type="text", name="end_time", placeholder="End Time").input-mini
-      span.add-on
-        i.icon-time
+      
     
   input(type="text", name="site_link", placeholder="Course Page")
   input(type="email", name="prof_email", placeholder="Email").input-medium

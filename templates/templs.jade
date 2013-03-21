@@ -21,6 +21,9 @@
 
               li
                 a.delete(href='#') Delete
+    <% if (!is_last) { %> 
+    hr
+    <% } %>
     <% } %>
 
   script#course-template(type="template")
@@ -55,6 +58,9 @@
                   a.delete(href='#') Delete
             button.btn.reminds(data-toggle="button")
               i.icon-check
+    <% if (!is_last) { %> 
+    hr
+    <% } %>
 
   script#announce-template(type="template")
       h4.listTitle <%= title %>

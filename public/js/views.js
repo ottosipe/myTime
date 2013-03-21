@@ -11,7 +11,12 @@ $(function() {
 			this.listenTo(this.model, 'destroy', this.remove);
 		},
 		render: function() {
-			var row = this.template(this.model.attributes);
+			var pos = this.model.collection.indexOf(this.model);
+			var obj = this.model.attributes;
+			// check if we're the last object in the list
+			obj.is_last = pos == this.model.collection.models.length - 1;
+
+			var row = this.template(obj);
 			this.$el.html(row);
 			return this;
 		},
@@ -56,7 +61,9 @@ $(function() {
 		    } else {
 		    	obj.coursename = ""
 		    }
-			
+		    var pos = this.model.collection.indexOf(this.model);
+			// check if we're the last object in the list
+			obj.is_last = pos == this.model.collection.models.length - 1;
 			var row = this.template(obj);
 			this.$el.html(row);
 			return this;
@@ -86,7 +93,7 @@ $(function() {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            $(".list", this.el).append( viewType.render().el );
 	            
-	            if(i+1 != this.model.models.length) $(".list", this.el).append("<hr>")
+	            //if(i+1 != this.model.models.length) $(".list", this.el).append("<hr>")
 	        }
 			return this;
 		},
@@ -223,8 +230,18 @@ $(function() {
 
 			this.saveDays();
 
-			$("[name='start_time']", this.el).timepicker({defaultTime: false});
-			$("[name='end_time']", this.el).timepicker({defaultTime: false});
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:"12:00 PM",
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:"1:00 PM",
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
 			$(".modalHeader", this.el).html("Edit Course -- " + this.newCourse.get("code")+
 				" "+this.newCourse.get("number")+" "+this.newCourse.get("type"));
 		},
@@ -301,8 +318,18 @@ $(function() {
 				$('[day="'+this.model.attributes.days[i]+'"]', this.el).addClass("active");
 			}
 
-			$("[name='start_time']", this.el).timepicker();
-			$("[name='end_time']", this.el).timepicker();
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
 
 		},
 		edit: function(e) {
@@ -347,7 +374,7 @@ $(function() {
 		showStartTime: function() {
 			$(".startTime", this.el).show();
 			$(".showStartTime", this.el).hide();
-			$(".showEndTime", this.eld).show();
+			$(".showEndTime", this.el).show();
 			$("[name='start_time']", this.el).timepicker({
 				defaultTime:"12:00 PM",
 				template: false,
@@ -387,7 +414,7 @@ $(function() {
 			}
 
 
-			var time = $("[name='time']", this.el).val();
+			var time = $("[name='start_time']", this.el).val();
 			if(time && time[0] == "0") time = time.substr(1);
 			console.log(time);
 
@@ -431,7 +458,7 @@ $(function() {
 			for(var i in this.model.attributes) {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
 			}
-			$("[name='time']", this.el).timepicker({defaultTime:false});
+
 			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
@@ -441,7 +468,29 @@ $(function() {
 			$(".reminderTag .btn").click(function() {
 				$("[name='type']", this.el).val($(this).attr("value"));
 			});
-			
+
+
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+
+			// make sure to show all timepickers 
+			$(".endTime", this.el).show();
+			$(".startTime", this.el).show();
+			$(".note", this.el).show();
+
+			//hide show links
+			$(".showStartTime", this.el).hide();
+			$(".showNote", this.el).hide();
 		},
 		edit: function(e) {
 			var name = $(e.currentTarget).attr("name");
@@ -457,8 +506,7 @@ $(function() {
 				return;
 			}
 
-
-			var time = $("[name='time']", this.el).val();
+			var time = $("[name='start_time']", this.el).val();
 			if(time && time[0] == "0") time = time.substr(1);
 			console.log(time);
 

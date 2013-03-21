@@ -11,7 +11,7 @@ $(function() {
 			type: "",
 			title: "",
 			days: [], 
-			time: "",
+			time: "", // raw string
 			start_time: "",
 			end_time: "",
 			start: "",
@@ -56,8 +56,8 @@ $(function() {
 			title: "",
 			completed: false,
 			date: "", // switch to timestamp
-			time: "",
-			time: "",
+			start_time: "",
+			end_time: "",
 			course: null,
 			note: "",
 			hide: false
