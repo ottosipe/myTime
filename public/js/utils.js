@@ -87,6 +87,14 @@ $(function() {
 			}
 
 			return days;
+		},
+		getReminderTitle:function(titleString) {
+			var class_title = "";
+			var dash = titleString.indexOf("-");
+			if (dash > 1) {
+				class_title = titleString.substring(0, dash - 1);
+			}
+			return class_title;
 		}
 	}; 
 });

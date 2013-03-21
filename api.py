@@ -20,72 +20,72 @@ from oauth_decorator import decorator
 class Courses(webapp2.RequestHandler):
   @decorator.oauth_required
   def post(self):
-
-    info = json.loads(self.request.body)   
-    logging.warning(info)
  
     User = users.get_current_user()
-    student = models.Student.query(models.Student.user == User).fetch(1)[0]
+    if User:
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
+        [models.student_key(User), int(info["courseId"])])
 
-    for x in student.courses:
-      if x.id == int(info['courseId']):
+      if courses.len > 0:
         self.response.write("already in this course")
         return
 
-    # create the courses calendar if it doesn't already exist
-    if student.calID is None or student.calID == "":
-      logging.warning('student calID is in fact empty')
-      self.response.out.write("student calendar is empty in api, not adding course")
+      info = json.loads(self.request.body)   
+      logging.warning(info)
+
+      # create the courses calendar if it doesn't already exist
+      if student.calID is None or student.calID == "":
+        logging.warning('student calID is in fact empty')
+        self.response.out.write("student calendar is empty in api, not adding course")
+      else:
+        logging.warning('student id is something else, it is %s' % student.calID)
+
+      courseInfo = utils.createClassEvent(info)
+      logging.warning(courseInfo)
+      event = courseInfo["event"]
+      request = service.events().insert(calendarId=student.calID, body=event)
+      response = request.execute(http=decorator.http())
+
+      logging.warning(json.dumps(response))
+
+      newCourse = models.Course(parent=models.student_key(User))
+      newCourse.id = info["courseId"]
+      newCourse.code = info["code"]
+      newCourse.number = info["number"]
+      newCourse.section = info["section"]
+      newCourse.type = info["type"]
+      newCourse.title = info["title"]
+      newCourse.days = courseInfo["days"]
+      newCourse.start_time = info["start_time"]
+      newCourse.end_time = info["end_time"]
+      newCourse.start = info["start"]
+      newCourse.end = info["end"]
+      newCourse.location = info["location"]
+      newCourse.instructor = info["instructor"]
+      newCourse.prof_email = info["prof_email"]
+      newCourse.site_link = info["site_link"]
+      newCourse.eventid = response["id"]
+      newCourse.eventseq = response["sequence"]
+      
+      newCourse.put()
+      # respond with changes so backbone knows the id
+      self.response.out.write(json.dumps(newCourse.to_dict()))
     else:
-      logging.warning('student id is something else, it is %s' % student.calID)
-
-    courseInfo = utils.createEvent(info)
-    logging.warning(courseInfo)
-    event = courseInfo["event"]
-    request = service.events().insert(calendarId=student.calID, body=event)
-    response = request.execute(http=decorator.http())
-
-    logging.warning(response)
-
-    newCourse = models.Course(
-      id = info["courseId"],
-      code = info["code"],
-      number = info["number"],
-      section = info["section"],
-      type = info["type"],
-      title = info["title"],
-      days = courseInfo["days"],
-      start_time = info["start_time"],
-      end_time = info["end_time"],
-      start = info["start"],
-      end = info["end"],
-      location = info["location"],
-      instructor = info["instructor"],
-      prof_email = info["prof_email"],
-      site_link = info["site_link"],
-      eventid = response["id"],
-      eventseq = response["sequence"]
-    )
-
-    student.courses += [newCourse]
-    
-    student.put()
-    # respond with changes so backbone knows the id
-    self.response.out.write(json.dumps(newCourse.to_dict())) 
+      self.response.out.write("['auth':'fail']")
   
   def get(self):
     User = users.get_current_user()
     if User:
-    
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1", models.student_key(User))
 
       output = []
-      for x in student.courses:
+      for x in courses:
         output.append(x.to_dict());
 
       self.response.out.write(json.dumps(output))
     else: 
-      self.response.out.write("['auth':'fail']");
+      self.response.out.write("['auth':'fail']")
 
 
 class EditCourse(webapp2.RequestHandler):
@@ -94,168 +94,238 @@ class EditCourse(webapp2.RequestHandler):
     User = users.get_current_user() # dont do this so often ***
     newCourses = []
     if User:
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
-      courseToDelete = {}
-      for x in student.courses:
-        if x.id != int(idArg):
-          newCourses.append(x)
-        else:
-          courseToDelete = x
-      # delete class from student's classes
-      student.courses = newCourses
-      student.put()
-      self.response.out.write("deleted class")
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
+        [models.student_key(User), int(idArg)])
+
+      if courses.len != 1 :
+        self.response.out.write("couldn't find class to delete")
+        return
+
+      course = courses[0]
+
+      eventid = course.eventid
+      course.delete()
 
       # delete class from google calendar
       logging.warning("deleting class")
-      request = service.events().delete(calendarId=student.calID, eventId=courseToDelete.eventid)
+      request = service.events().delete(calendarId=student.calID, eventId=eventid)
       response = request.execute(http=decorator.http())
 
       if response is not None and response != "":
-        logging.warning(response)
+        logging.warning(json.dumps(response))
+
+      self.response.out.write("deleted class")
     else: 
       self.response.out.write("['auth':'fail']");
 
   @decorator.oauth_required
   def put(self, idArg):
     User = users.get_current_user()
-    newCourses = []
     if User:
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
+        [models.student_key(User), int(idArg)])
+
+      if courses.len != 1 :
+        self.response.out.write("couldnt find class to edit")
+        return
+
+      course = courses[0]
+
       info = json.loads(self.request.body)
-      courseId = info["id"]
-      for course in student.courses:
-        if course.id != int(courseId):
-          newCourses.append(course)
-        else:
-          # update class in google calendar
-          logging.warning("updating class")
-          eventInfo = utils.createEvent(info)
-          event = eventInfo["event"]
-          event['sequence'] = course.eventseq
-          logging.warning(event)
-          request = service.events().update(calendarId=student.calID,
-              eventId=course.eventid, body=event)
-          logging.warning(course.eventid + " " + student.calID)
-          response = request.execute(http=decorator.http())
-          logging.warning(response)
 
-          logging.warning("event id is " + course.eventid)
-          # create new course (really the edited course that will replace the old one)
-          # and add it to the newCourses
-          newCourses += [models.Course(
-            id = info["id"],
-            code = info["code"],
-            number = info["number"],
-            section = info["section"],
-            type = info["type"],
-            title = info["title"],
-            days = eventInfo["days"],
-            start = info["start"],
-            end = info["end"],
-            start_time = info["start_time"],
-            end_time = info["end_time"],
-            location = info["location"],
-            instructor = info["instructor"],
-            site_link = info["site_link"],
-            prof_email = info["prof_email"],
-            eventid = course.eventid,
-            eventseq = response["sequence"]
-          )]
+      # update class in google calendar
+      eventInfo = utils.createClassEvent(info)
+      event = eventInfo["event"]
+      event['sequence'] = course.eventseq
+      logging.warning(event)
+      request = service.events().update(calendarId=student.calID,
+          eventId=course.eventid, body=event)
+      logging.warning(course.eventid + " " + student.calID)
+      response = request.execute(http=decorator.http())
+      logging.warning(json.dumps(response))
 
-      # after for loop is done, set student's courses to the newCourses (including edited course)
-      student.courses = newCourses
-      student.put()
+      # edit the course
+      course.id = info["id"],
+      course.code = info["code"],
+      course.number = info["number"],
+      course.section = info["section"],
+      course.type = info["type"],
+      course.title = info["title"],
+      course.days = eventInfo["days"],
+      course.start = info["start"],
+      course.end = info["end"],
+      course.start_time = info["start_time"],
+      course.end_time = info["end_time"],
+      course.location = info["location"],
+      course.instructor = info["instructor"],
+      course.site_link = info["site_link"],
+      course.prof_email = info["prof_email"],
+      course.eventid = course.eventid,
+      course.eventseq = response["sequence"]
+
+      course.put()
     else:
       self.response.out.write("['auth':'fail']")
 
 class Reminders(webapp2.RequestHandler):
+  @decorator.oauth_required
   def post(self):
     
     User = users.get_current_user()
-    student = models.Student.query(models.Student.user == User).fetch(1)[0]
-    postData = json.loads(self.request.body)
-    logging.warning(postData)
-   
-    newReminder = models.Reminder(
-      type = postData['type'],
-      title = postData['title'],
-      completed = False,
-      date =  postData['date'],
-      time = postData['time'],
-      course = postData['course'],
-      note = postData['note'],
-      id = int(time.time()),
-    )
-    student.reminders += [newReminder]
-    student.put()
+    if User:
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
 
-    self.response.out.write(json.dumps(newReminder.to_dict()))
+      postData = json.loads(self.request.body)
+      logging.warning(postData)
+     
+      newReminder = models.Reminder(parent=models.student_key(User))
+
+      newReminder.type = postData['type']
+      newReminder.title = postData['title']
+      newReminder.completed = False
+      newReminder.date =  postData['date']
+      newReminder.start_time = postData['start_time']
+      newReminder.end_time = postData['end_time']
+      newReminder.course = postData['course']
+      newReminder.note = postData['note']
+      newReminder.id = int(time.time())
+      newReminder.eventid = ""
+      newReminder.eventseq = -1
+
+      if postData['add_to_cal'] == True :
+        event = utils.createReminderEvent(postData)
+        logging.warning(event)
+        request = service.events().insert(calendarId=student.calID, body=event)
+        response = request.execute(http=decorator.http())
+
+        if response is not None and response != "" :
+          logging.warning(json.dumps(response))
+          newReminder.eventid = response["id"]
+          newReminder.eventseq = response["sequence"]
+
+      newReminder.put()
+      logging.warning("added reminder to db")
+
+      self.response.out.write(json.dumps(newReminder.to_dict()))
+    else :
+      self.response.out.write("['auth':'fail']")
   
   def get(self):
     User = users.get_current_user()
     if User:
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1", models.student_key(User))
 
       output = []
-      for x in student.reminders:
+      for x in reminders:
         #if(self.request.get('showAll') == "true" or x.completed == False):
           output.append(x.to_dict());
 
       self.response.out.write(json.dumps(output))
     else: 
-      self.response.out.write("['auth':'fail']");
+      self.response.out.write("['auth':'fail']")
 
 class EditReminder(webapp2.RequestHandler):
+  @decorator.oauth_required
   def delete(self, idArg):
     User = users.get_current_user()
-    newReminds = []
     if User:
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
-      for x in student.reminders:
-        if x.id != int(idArg):
-          newReminds.append(x)
-      student.reminders = newReminds
-      student.put()
-      self.response.out.write("deleted assignment")
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
+        [models.student_key(User), idArg])
+
+      if reminders.len != 1:
+        self.response.out.write("failed to find single reminder to delete")
+        return
+
+      reminder = reminders[0]
+      eventid = reminder.eventid
+
+      reminder.delete()
+
+      if eventid == "" :
+        self.response.out.write("deleted reminder only from db")
+      else :
+        # delete reminder from google calendar
+        logging.warning("about to delete reminder from gcal")
+        request = service.events().delete(calendarId=student.calID, eventId=eventid)
+        response = request.execute(http=decorator.http())
+        if response is not None and response != "":
+          logging.warning(response)
+        self.response.out.write("deleted reminder from db AND gcal")
     else: 
       self.response.out.write("['auth':'fail']");
 
   # toggle completed state
+  @decorator.oauth_required
   def put(self, idArg):
     User = users.get_current_user()
     if User:
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
-      logging.warning(student)
-      newReminds = []
-      for x in student.reminders:
-        if x.id == int(idArg):
-          course = 0
-          newData = json.loads(self.request.body)
-          if (newData['course']):
-            course = int(newData['course'])
-          x.type = newData['type']
-          x.title = newData['title']
-          x.completed = newData['completed']
-          x.date =  newData['date']
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
+      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
+        [models.student_key(User), int(idArg)])
 
-          x.course = course
-          x.note = newData['note']
-        newReminds.append(x)
-      #reminders = student.reminders.query(student.reminders.id == int(idArg)).fetch(1)[0]
-      logging.warning(newReminds)
-      student.reminders = newReminds
-      logging.warning(student)
-      student.put()
+      if reminders.len != 1 :
+        self.response.out.write("couldn't find a single reminder to edit")
+        return
+
+      reminder = reminders[0]
+
+      info = json.loads(self.request.body)
+
+      reminder.course = 0
+      if (info['course']):
+        reminder.course = int(info['course'])
+      reminder.type = info['type']
+      reminder.title = info['title']
+      reminder.completed = info['completed']
+      reminder.date =  info['date']
+      reminder.note = info['note']
+      reminder.start_time = info['start_time']
+      reminder.end_time = info['end_time']
+
+      if info['add_to_cal'] == True :
+        event = utils.createReminderEvent(info)
+        logging.warning(event)
+
+        if reminder.eventid == "" :
+          # reminder was NOT on calendar before, add it
+          request = service.events().insert(calendarId=student.calID, body=event)
+          response = request.execute(http=decorator.http())
+          logging.warning(json.dumps(response))
+          reminder.eventid = response["id"]
+          reminder.eventseq = response["sequence"]
+        else :
+          # reminder was on calendar before, edit it
+          event['sequence'] = reminder.eventseq
+          request = service.events().update(calendarId=student.calID,
+              eventId=reminder.eventid, body=event)
+          response = request.execute(http=decorator.http())
+          logging.warning(json.dumps(response))
+          reminder.eventseq = response["sequence"]
+
+        reminder.put()
+
+      else :
+        if reminder.eventid != "" :
+          # reminder was on calendar before, delete it
+          request = service.events().delete(calendarId=student.calID, eventId=reminder.eventid)
+          response = request.execute(http=decorator.http())
+          logging.warning(response)
+          reminder.delete()
+        else :
+          # reminder was not on cal before, not adding it
+          reminder.put()
+
       self.response.out.write("completed reminders")
     else: 
       self.response.out.write("['auth':'fail']");
 
 
-
 class Announcements(webapp2.RequestHandler):
   def get(self):
-      announcements = models.Announcement.query().fetch()
+      announcements = db.GqlQuery("SELECT * FROM Announcements")
 
       logging.warning(announcements)
 
@@ -290,7 +360,7 @@ class User(webapp2.RequestHandler):
   def post(self):
     User = users.get_current_user()
     if User:
-      student = models.Student.query(models.Student.user == User).fetch(1)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User)[0]
       student.name = self.request.get('name')
       student.major = self.request.get('major')
       student.advisor_email = self.request.get('advisor_email')

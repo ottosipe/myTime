@@ -53,13 +53,15 @@ $(function() {
 			id: null,
 			type: "",
 			title: "",
+			class_title: "",
 			completed: false,
 			date: "", // switch to timestamp
-			time: "",
-			time: "",
+			start_time: "",
+			end_time: "",
 			course: null,
 			note: "",
-			hide: false
+			hide: false,
+			add_to_cal: false,
 		},
 		toggle: function() {
 			this.save({

@@ -342,13 +342,14 @@ $(function() {
 	window.addReminderModal = GenericModalView.extend({
 		el: $("#addReminder"),
 		initialize: function() {
-			$("[name='time']", this.el).timepicker({defaultTime:false});
+			$("[name='start_time']", this.el).timepicker({defaultTime:false});
+			$("[name='end_time']", this.el).timepicker({defaultTime:false});
 			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
 				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
 				todayHighlight: true,
-				autoclose:true
+				autoclose: true
 			}); //set date range
 			$(".reminderTag .btn").click(function() {
 				$("[name='type']", this.el).val($(this).attr("value"));
@@ -362,21 +363,44 @@ $(function() {
 				return;
 			}
 
+			if ($("[name='calAdd']", this.el).checked) {
+				var valid_form = true;
+				if ($("[name='start_time']", this.el).val() == "") {
+					$("[name='start_time']", this.el).addClass("error")
+					valid_form = false;
+				}
+				if ($("[name='end_time']", this.el).val() == "") {
+					$("[name='end_time']", this.el).addClass("error")
+					valid_form = false;
+				}
+				if ($("[name='date']", this.el).val() == "") {
+					$("[name='date']", this.el).addClass("error")
+					valid_form = false;
+				}
+				if (!valid_form) {
+					return;
+				}
+			}
 
-			var time = $("[name='time']", this.el).val();
-			if(time && time[0] == "0") time = time.substr(1);
-			console.log(time);
+			var start_time = $("[name='start_time']", this.el).val();
+			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
+			console.log(start_time);
+
+			var class_title = window.utils.getReminderTitle($("[name='course']", this.el).html());
 
 			// switch to working model owned by view *****
 			// add a change function like in add/edit course
 			var newReminder = new Reminder( {
 				type: $("[name='type']", this.el).val(),
 				title: $("[name='title']", this.el).val(),
+				class_title: class_title,
 				completed: false,
 				date: $("[name='date']", this.el).val(), // change to utc
-				time: time,
+				start_time: start_time,
+				end_time: end_time,
 				course: parseInt($("[name='course']", this.el).val()),
-				note: $("[name='note']", this.el).val()
+				note: $("[name='note']", this.el).val(),
+				add_to_cal: $("[name='calAdd']", this.el).checked
 			});
 
 			window.location.hash="#";
@@ -407,7 +431,8 @@ $(function() {
 			for(var i in this.model.attributes) {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
 			}
-			$("[name='time']", this.el).timepicker({defaultTime:false});
+			$("[name='start_time']", this.el).timepicker({defaultTime:false});
+			$("[name='end_time']", this.el).timepicker({defaultTime:false});
 			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
@@ -433,10 +458,32 @@ $(function() {
 				return;
 			}
 
+			if ($("[name='calAdd']", this.el).checked) {
+				var valid_form = true;
+				if ($("[name='start_time']", this.el).val() == "") {
+					$("[name='start_time']", this.el).addClass("error")
+					valid_form = false;
+				}
+				if ($("[name='end_time']", this.el).val() == "") {
+					$("[name='end_time']", this.el).addClass("error")
+					valid_form = false;
+				}
+				if ($("[name='date']", this.el).val() == "") {
+					$("[name='date']", this.el).addClass("error")
+					valid_form = false;
+				}
+				if (!valid_form) {
+					return;
+				}
+			}
 
-			var time = $("[name='time']", this.el).val();
-			if(time && time[0] == "0") time = time.substr(1);
-			console.log(time);
+			var class_title = window.utils.getReminderTitle($("[name='course']", this.el).html());
+
+			this.model.set("class_title", class_title);
+
+			var start_time = $("[name='start_time']", this.el).val();
+			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
+			console.log(start_time);
 
 			this.model.set("type", $("[name='type']", this.el).val());
 			this.undelegateEvents();

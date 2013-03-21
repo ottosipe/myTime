@@ -7,7 +7,7 @@ import time
 
 # for adding and deleting user specific courses
 
-def createEvent(info):
+def createClassEvent(info):
     logging.warning(info)
 
     if not isinstance(info, dict):
@@ -17,16 +17,8 @@ def createEvent(info):
     startDate = info["start"]
     endDate = info["end"]
 
-    # debugging output
-    logging.warning("Start date is " + startDate)
-    logging.warning("End date is " + endDate)
-    logging.warning("Start month is " + startDate[0:2])
-
     startTime = info["start_time"]
     endTime = info["end_time"]
-
-    logging.warning("start time is " + startTime)
-    logging.warning("end time is " + endTime)
 
     startHour = int(startTime[0:2])
     if (startTime[-2:] == "PM" and startHour != 12):
@@ -129,7 +121,61 @@ def createEvent(info):
 
     return courseInfo
 
+def createReminderEvent(info):
+  # assumes info is well formatted
+
+  logging.warning(info)
+
+  if not isinstance(info, dict):
+      info = info.to_dict()
+
+  date = info["date"]
+  start_time = info["start_time"]
+  end_time = info["end_time"]
+
+  start_colon_index = start_time.find(":")
+  startHour = int(start_time[0:start_colon_index])
+
+  if start_time[-2:] == "PM" and startHour != 12 :
+    startHour += 12
+
+  end_colon_index = end_time.find(":")
+  endHour = int(end_time[0:end_colon_index])
+
+  if end_time[-2:] == "PM" and endHour != 12 :
+    endHour += 12
+
+  startTime = datetime.datetime(int(date[6:]), int(date[0:2]), int(date[3:5]),
+      startHour, int(start_time[(start_colon_index + 1):(start_colon_index + 3)]), 0)
+  endTime = classStartTime.replace(hour=endHour, minute=int(endTime[(end_colon_index + 1):(end_colon_index + 3)]))
+
+  logging.warning(startTime)
+  logging.warning(endTime)
+
+  # create the calendar event
+  event = {
+    'summary': info["class_title"] + ": " + info["title"],
+    'start': {
+      'dateTime': startTime.isoformat() + '.000-05:00',
+      'timeZone': 'America/New_York'
+    },
+    'end': {
+      'dateTime' : endTime.isoformat() + '.000-05:00',
+      'timeZone': 'America/New_York'
+    }
+  }
+
+  return event
+
+
 def createCal():
+
+    calendar = {
+      'summary': 'myTime',
+      'timeZone': 'America/New_York'
+    }
+
+    return calendar
 
     # determine semester
     semester = ""
