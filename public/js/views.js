@@ -11,7 +11,12 @@ $(function() {
 			this.listenTo(this.model, 'destroy', this.remove);
 		},
 		render: function() {
-			var row = this.template(this.model.attributes);
+			var pos = this.model.collection.indexOf(this.model);
+			var obj = this.model.attributes;
+			// check if we're the last object in the list
+			obj.is_last = pos == this.model.collection.models.length - 1;
+
+			var row = this.template(obj);
 			this.$el.html(row);
 			return this;
 		},
@@ -56,7 +61,9 @@ $(function() {
 		    } else {
 		    	obj.coursename = ""
 		    }
-			
+		    var pos = this.model.collection.indexOf(this.model);
+			// check if we're the last object in the list
+			obj.is_last = pos == this.model.collection.models.length - 1;
 			var row = this.template(obj);
 			this.$el.html(row);
 			return this;
@@ -86,7 +93,7 @@ $(function() {
 	            var viewType = new this.viewType({model: this.model.models[i]});
 	            $(".list", this.el).append( viewType.render().el );
 	            
-	            if(i+1 != this.model.models.length) $(".list", this.el).append("<hr>")
+	            //if(i+1 != this.model.models.length) $(".list", this.el).append("<hr>")
 	        }
 			return this;
 		},
@@ -127,12 +134,6 @@ $(function() {
 	/// modal views ///
 
 	window.GenericModalView = Backbone.View.extend({
-		events: {
-			"click .add": "submit"
-		},
-		submit: function(e) {
-			//MT
-		},
 		alert: function(msg) {
 			$(".alert .msg", this.el).html(msg)
 			$(".alert", this.el).show();
@@ -229,8 +230,18 @@ $(function() {
 
 			this.saveDays();
 
-			$("[name='start_time']", this.el).timepicker({defaultTime: false});
-			$("[name='end_time']", this.el).timepicker({defaultTime: false});
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:"12:00 PM",
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:"1:00 PM",
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
 			$(".modalHeader", this.el).html("Edit Course -- " + this.newCourse.get("code")+
 				" "+this.newCourse.get("number")+" "+this.newCourse.get("type"));
 		},
@@ -307,8 +318,18 @@ $(function() {
 				$('[day="'+this.model.attributes.days[i]+'"]', this.el).addClass("active");
 			}
 
-			$("[name='start_time']", this.el).timepicker();
-			$("[name='end_time']", this.el).timepicker();
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
 
 		},
 		edit: function(e) {
@@ -340,10 +361,39 @@ $(function() {
 	});
 
 	window.addReminderModal = GenericModalView.extend({
+		events: {
+			"click .showNote": "showNote",
+			"click .showStartTime": "showStartTime",
+			"click .showEndTime": "showEndTime",
+			"click .add": "submit"
+		},
+		showNote: function() {
+			$(".note", this.el).show();
+			$(".showNote", this.el).hide();
+		},
+		showStartTime: function() {
+			$(".startTime", this.el).show();
+			$(".showStartTime", this.el).hide();
+			$(".showEndTime", this.el).show();
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:"12:00 PM",
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+		},
+		showEndTime: function() {
+			$(".endTime", this.el).show();
+			$(".showEndTime", this.el).hide();
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:$("[name='start_time']", this.el).val(),
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+		},
 		el: $("#addReminder"),
 		initialize: function() {
-			$("[name='start_time']", this.el).timepicker({defaultTime:false});
-			$("[name='end_time']", this.el).timepicker({defaultTime:false});
 			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
@@ -385,6 +435,10 @@ $(function() {
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
 			console.log(start_time);
+
+			var end_time = $("[name='end_time']", this.el).val();
+			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
+			console.log(end_time);
 
 			var class_title = window.utils.getReminderTitle($("[name='course']", this.el).html());
 
@@ -431,8 +485,7 @@ $(function() {
 			for(var i in this.model.attributes) {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
 			}
-			$("[name='start_time']", this.el).timepicker({defaultTime:false});
-			$("[name='end_time']", this.el).timepicker({defaultTime:false});
+
 			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
@@ -442,7 +495,29 @@ $(function() {
 			$(".reminderTag .btn").click(function() {
 				$("[name='type']", this.el).val($(this).attr("value"));
 			});
-			
+
+
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:false,
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+
+			// make sure to show all timepickers 
+			$(".endTime", this.el).show();
+			$(".startTime", this.el).show();
+			$(".note", this.el).show();
+
+			//hide show links
+			$(".showStartTime", this.el).hide();
+			$(".showNote", this.el).hide();
 		},
 		edit: function(e) {
 			var name = $(e.currentTarget).attr("name");
@@ -484,6 +559,11 @@ $(function() {
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
 			console.log(start_time);
+
+			var end_time = $("[name='end_time']", this.el).val();
+			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
+			console.log(end_time);
+
 
 			this.model.set("type", $("[name='type']", this.el).val());
 			this.undelegateEvents();

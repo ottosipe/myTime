@@ -11,7 +11,7 @@ $(function() {
 			type: "",
 			title: "",
 			days: [], 
-			time: "",
+			time: "", // raw string
 			start_time: "",
 			end_time: "",
 			start: "",
@@ -47,6 +47,7 @@ $(function() {
 		}
 	});
 
+	// TODO:  enforce that start time < end time
 	window.Reminder = Backbone.Model.extend({
 		urlRoot: "/reminders",
 		defaults: {

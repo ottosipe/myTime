@@ -1,6 +1,6 @@
 {% autoescape off %}
 
-form#welcome.modal.hide // figure out way to open this ***
+form#welcome.modal.hide
     .modal-header
         button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
         h3 Welcome, #{name}
@@ -9,13 +9,13 @@ form#welcome.modal.hide // figure out way to open this ***
         //-h3 myTime can help you stay organized!
         h4 Get the grades you want, with myTime!
         ul
-          //-li Sync your classes with Google calendar.
+          li Sync your classes with Google calendar.
           li Track important assignments, tests, and classes.
           li Reflect on how you are doing during the semester.
           li Help make sure your priorities are on target. 
     .modal-footer
       //- add data-dismiss='modal',  href="#importClasses"
-      //-a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
+      //a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
       a.btn.btn-success(href="#addCourse", data-dismiss="modal") Get Started 
         
 // account edit modal

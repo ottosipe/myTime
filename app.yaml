@@ -1,8 +1,8 @@
 application: mytime-umich
-version: 1
+version: beta
 runtime: python27
 api_version: 1
-threadsafe: no
+threadsafe: yes
 
 handlers:
 - url: /favicon\.ico

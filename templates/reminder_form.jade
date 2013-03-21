@@ -11,24 +11,40 @@ input.typeTag(type='hidden', name="type")
 
 
 .row-fluid
-  .span7
-    .control-group
-      input.width100.reminderTitle(type='text', name="title", placeholder="Title")
-    .control-group
-      textarea.width100.reminderNote(name="note", placeholder="Note")
-  .span5 
+  .span8
+    .row-fluid
+      .span6
+        .control-group
+          input.width100.reminderTitle(type='text', name="title", placeholder="Title")
+          .left
+            a.showNote Add Note
+      .span6
+        .control-group
+          select.courseSelector(name="course")
 
-    
     .control-group
-      .input-append.bootstrap-timepicker.datetime
-        input(type="text", name="time", placeholder="Time")
-        span.add-on
-          i.icon-time
+      textarea.width100.note.hide(name="note", placeholder="Note")
+  .span4
+    .control-group
       .input-prepend.date.datetime
         span.add-on
           i.icon-calendar
         input(type='text', name="date", placeholder="Date", readonly)
       
-    .control-group
-      select.input-medium.courseSelector(name="course")
+      .input-prepend.bootstrap-timepicker.startTime.datetime.hide
+        span.add-on
+          i.icon-time
+        input(type="text", name="start_time", placeholder="Time")
+        
+
+      .input-prepend.bootstrap-timepicker.endTime.datetime.hide
+        span.add-on
+          i.icon-time
+        input(type="text", name="end_time", placeholder="Time")
+        
+      
+      a.showStartTime Add Time
+      a.showEndTime.hide Add End Time
+
+    
 {% endautoescape %}
