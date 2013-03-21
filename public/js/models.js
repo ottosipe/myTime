@@ -47,6 +47,7 @@ $(function() {
 		}
 	});
 
+	// TODO:  enforce that start time < end time
 	window.Reminder = Backbone.Model.extend({
 		urlRoot: "/reminders",
 		defaults: {

@@ -340,9 +340,38 @@ $(function() {
 	});
 
 	window.addReminderModal = GenericModalView.extend({
+		events: {
+			"click .showNote": "showNote",
+			"click .showStartTime": "showStartTime",
+			"click .showEndTime": "showEndTime"
+		},
+		showNote: function() {
+			$(".note", this.el).show();
+			$(".showNote", this.el).hide();
+		},
+		showStartTime: function() {
+			$(".startTime", this.el).show();
+			$(".showStartTime", this.el).hide();
+			$(".showEndTime", this.eld).show();
+			$("[name='start_time']", this.el).timepicker({
+				defaultTime:"12:00 PM",
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+		},
+		showEndTime: function() {
+			$(".endTime", this.el).show();
+			$(".showEndTime", this.el).hide();
+			$("[name='end_time']", this.el).timepicker({
+				defaultTime:$("[name='start_time']", this.el).val(),
+				template: false,
+                showInputs: false,
+                minuteStep: 5
+			});
+		},
 		el: $("#addReminder"),
 		initialize: function() {
-			$("[name='time']", this.el).timepicker({defaultTime:false});
 			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
