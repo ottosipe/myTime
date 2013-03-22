@@ -99,7 +99,9 @@ $(function() {
 		getTimeMil: function(dateStr, timeStr) {
 			//console.log(dateStr, timeStr);
 
-			if(!dateStr && !timeStr) return -1;
+			if(!dateStr) return -1;
+			// set default time, middle of day
+			//if(!timeStr) timeStr = "12:00 PM";
 
 			var split 	= dateStr.split("/");
 			var month 	= parseInt(split[0]) - 1;
@@ -125,7 +127,7 @@ $(function() {
 		isOverdue:function(dateStr, timeStr) {
 			// check that a string and date are in the past
 			// NOT Y3K friendly :(
-			if(!dateStr || !timeStr) return false;
+			if(!dateStr) return false;
 
 			var check = new Date(utils.getTimeMil(dateStr, timeStr));
 			var now = new Date();
