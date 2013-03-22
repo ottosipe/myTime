@@ -24,10 +24,16 @@ body {
     text-align: center;
 }
 
+.overdue {
+    color: red;
+}
+
 .strike {
     text-decoration: line-through;
     color: gray;
 }
+
+
 
 hr {
     border-top: 1px solid #DDD;

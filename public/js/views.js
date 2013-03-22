@@ -2,6 +2,11 @@
 $(function() {
 	/// item views /// 
 
+	var today = new Date();
+	todayFormat = today.getMonth() + 1 + "/" + today.getDate() + "/" + (today.getFullYear() - 2000);
+	today = new Date(today.getTime() - (24 * 60 * 60 * 1000));
+	var todayStr = today;
+
 	window.GenericView = Backbone.View.extend({
 	  	className: "entry",
 		tagName: "div",
@@ -40,7 +45,6 @@ $(function() {
 				remindList.courseFilter(this.model.get('id'));
 				$(".viewAll").show();
 			}
-			
 		}
 	});
 
@@ -57,13 +61,16 @@ $(function() {
 	    	// may need to also query courseId!!!
 	    	if (query.length > 0) {
 		    	var course = query[0].attributes;
-		    	obj.coursename = course.code + " " + course.number;
+		    	obj.class_title = course.code + " " + course.number;
 		    } else {
-		    	obj.coursename = ""
+		    	obj.class_title = ""
 		    }
+
 		    var pos = this.model.collection.indexOf(this.model);
 			// check if we're the last object in the list
 			obj.is_last = pos == this.model.collection.models.length - 1;
+
+
 			var row = this.template(obj);
 			this.$el.html(row);
 			return this;
@@ -84,6 +91,8 @@ $(function() {
 			this.render();
 			this.listenTo(this.model, "add", this.render);
 			this.listenTo(this.model, "remove", this.render);
+
+			this.listenTo(this.model, "sort", this.render);
 		},
 		viewType: null,
 		render: function() {
@@ -113,7 +122,8 @@ $(function() {
 
 	window.ReminderListView = GenericListView.extend({
 		events: {
-			"click .viewAll": "all"
+			"click .viewAll": "all",
+			"click .sort": "sort"
 		},
 		el: $("#reminderList"),
 		viewType: ReminderView,
@@ -122,6 +132,11 @@ $(function() {
 			remindList.showAll();
 			$(".reminds").removeClass("active");
 			$(".viewAll").hide();
+		},
+		sort: function(e) {
+			var key = $(e.currentTarget).attr("data-key");
+			remindList.sortKey = parseInt(key);
+			remindList.sort();
 		}
 	});
 
@@ -159,7 +174,6 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log("Changed", name, value);
 				this.newCourse.set(name, value);
 			}
 		},
@@ -172,7 +186,6 @@ $(function() {
 					}
 				});
 				this.newCourse.set("days",arr);
-				console.log(arr)
 			}
 		},
 		next: function(e) {
@@ -314,7 +327,6 @@ $(function() {
 
 			$(".btn",this.el).removeClass("active");
 			for(var i in this.model.attributes.days) {
-				console.log($('[day="'+i+'"]', this.el))
 				$('[day="'+this.model.attributes.days[i]+'"]', this.el).addClass("active");
 			}
 
@@ -336,9 +348,7 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log("Changed", name, value);
 				this.model.set(name, value);
-				console.log(this.model)
 			}
 		},
 		save: function(e) {
@@ -408,11 +418,10 @@ $(function() {
 			}
 		},
 		initialize: function() {
-			var today = new Date();
-			$(".date").datepicker({
+			$("[name='date']", this.el).val(todayFormat);
+			$(".date", this.el).datepicker({
 				format: 'mm/dd/yy',
-				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
-				todayHighlight: true,
+				startDate: todayStr,
 				autoclose: true
 			}); //set date range
 			$(".reminderTag .btn").click(function() {
@@ -448,11 +457,11 @@ $(function() {
 
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
-			console.log(start_time);
+			
 
 			var end_time = $("[name='end_time']", this.el).val();
 			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
-			console.log(end_time);
+			
 
 			var class_title = window.utils.getReminderTitle(
 				$("[name='course']", this.el).find(":selected").text());
@@ -512,10 +521,9 @@ $(function() {
 				}
 			}
 
-			var today = new Date();
-			$(".date").datepicker({
+			$(".date", this.el).datepicker({
 				format: 'mm/dd/yy',
-				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
+				startDate: todayStr,
 				autoclose:true
 			});
 			$(".reminderTag .btn").click(function() {
@@ -594,11 +602,9 @@ $(function() {
 
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
-			console.log(start_time);
 
 			var end_time = $("[name='end_time']", this.el).val();
 			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
-			console.log(end_time);
 
 			this.model.set("type", $("[name='type']", this.el).val());
 

@@ -22,14 +22,14 @@ $(function() {
 			site_link: ""
 		},
 		checker: function() {
-			console.log('hello')
+
 			if(this.get("site_link") && this.get("site_link") != "") {
 				var link = this.get("site_link");
 				if(link.indexOf("http") == -1) {
 					this.set("site_link", "http://"+link);
 				}
 			}
-			console.log(this.get("site_link"))
+			
 			return true;
 		},
 		initialize: function() {
@@ -63,7 +63,8 @@ $(function() {
 			note: "",
 			hide: false,
 			add_to_cal: false,
-			is_overdue: false
+			is_overdue: false,
+			time_mills: 0
 		},
 		toggle: function() {
 			this.save({
@@ -71,8 +72,21 @@ $(function() {
 			});
 		},
 		initialize: function() {
-			console.log(this.date, this.end_time)
-			this.is_overdue = utils.isInPast(this.date, this.end_time)
+			this.listenTo(this, "change:date", this.checkOverdue);
+			this.listenTo(this, "change:date", this.setTimeMil);
+
+			this.checkOverdue();
+			this.setTimeMil();
+		},
+		checkOverdue: function() {
+			var time = this.get("start_time");
+			if (this.get("end_time")) time = this.get("end_time");
+			this.set("is_overdue", utils.isOverdue(this.get("date"), time) );
+		},
+		setTimeMil: function() {
+			var mills = utils.getTimeMil(this.get("date"), this.get("start_time"));
+			this.set("time_mills", mills);
+			if(this.collection) this.collection.sort() // may not need this
 		}
 	});
 
@@ -122,6 +136,28 @@ $(function() {
 			this.each(function(reminder){
 				reminder.set("hide", false);
 			});
+		},
+		sortKey: 0,
+		comparator: function(reminder) {
+			/*
+			0 Date 
+	        1 Course
+	        2 Type
+	        3 Completed
+	        */
+
+			switch(this.sortKey) {
+			case 0:
+				return reminder.get("time_mills");
+			case 1:
+				return reminder.get("class_title");
+			case 2:
+				return reminder.get("type");
+			case 3:
+				return reminder.get("completed");
+			default:
+				console.log("something is wrong with sort!")	
+			}
 		}
 	});
 

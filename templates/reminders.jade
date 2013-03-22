@@ -9,10 +9,11 @@
       a.btn.btn-small.dropdown-toggle(data-toggle='dropdown')
         i.icon-list
       ul.dropdown-menu
-        li: a Due Date
-        li: a Course
-        li: a Type
-        li: a Completed
+        li: a.sort(data-key="0") Due Date 
+          //-i.icon-check
+        li: a.sort(data-key="1") Course
+        li: a.sort(data-key="2") Type
+        li: a.sort(data-key="3") Completed
 
      
   .alert.alert-warning.hide
