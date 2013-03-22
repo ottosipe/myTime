@@ -3,9 +3,9 @@ $(function() {
 	/// item views /// 
 
 	var today = new Date();
+	todayFormat = today.getMonth() + 1 + "/" + today.getDate() + "/" + (today.getFullYear() - 2000);
 	today = new Date(today.getTime() - (24 * 60 * 60 * 1000));
 	var todayStr = today;
-	console.log(todayStr)
 
 	window.GenericView = Backbone.View.extend({
 	  	className: "entry",
@@ -97,7 +97,6 @@ $(function() {
 		viewType: null,
 		render: function() {
 			this.alert(); // show alert if empty
-			console.log("render")
 			$(".list", this.el).empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
@@ -175,7 +174,6 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log("Changed", name, value);
 				this.newCourse.set(name, value);
 			}
 		},
@@ -188,7 +186,6 @@ $(function() {
 					}
 				});
 				this.newCourse.set("days",arr);
-				console.log(arr)
 			}
 		},
 		next: function(e) {
@@ -330,7 +327,6 @@ $(function() {
 
 			$(".btn",this.el).removeClass("active");
 			for(var i in this.model.attributes.days) {
-				console.log($('[day="'+i+'"]', this.el))
 				$('[day="'+this.model.attributes.days[i]+'"]', this.el).addClass("active");
 			}
 
@@ -352,9 +348,7 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log("Changed", name, value);
 				this.model.set(name, value);
-				console.log(this.model)
 			}
 		},
 		save: function(e) {
@@ -410,8 +404,8 @@ $(function() {
 		},
 		el: $("#addReminder"),
 		initialize: function() {
-			var today = new Date();
-			$(".date").datepicker({
+			$("[name='date']", this.el).val(todayFormat);
+			$(".date", this.el).datepicker({
 				format: 'mm/dd/yy',
 				startDate: todayStr,
 				autoclose: true
@@ -449,11 +443,11 @@ $(function() {
 
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
-			console.log(start_time);
+			
 
 			var end_time = $("[name='end_time']", this.el).val();
 			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
-			console.log(end_time);
+			
 
 			var class_title = window.utils.getReminderTitle($("[name='course']", this.el).html());
 
@@ -501,7 +495,7 @@ $(function() {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
 			}
 
-			$(".date").datepicker({
+			$(".date", this.el).datepicker({
 				format: 'mm/dd/yy',
 				startDate: todayStr,
 				autoclose:true
@@ -572,11 +566,9 @@ $(function() {
 
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
-			console.log(start_time);
 
 			var end_time = $("[name='end_time']", this.el).val();
 			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
-			console.log(end_time);
 
 
 			this.model.set("type", $("[name='type']", this.el).val());

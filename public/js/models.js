@@ -22,14 +22,14 @@ $(function() {
 			site_link: ""
 		},
 		checker: function() {
-			console.log('hello')
+
 			if(this.get("site_link") && this.get("site_link") != "") {
 				var link = this.get("site_link");
 				if(link.indexOf("http") == -1) {
 					this.set("site_link", "http://"+link);
 				}
 			}
-			console.log(this.get("site_link"))
+			
 			return true;
 		},
 		initialize: function() {
@@ -145,12 +145,11 @@ $(function() {
 	        2 Type
 	        3 Completed
 	        */
-			console.log(this.sortKey)
+
 			switch(this.sortKey) {
 			case 0:
 				return reminder.get("time_mills");
 			case 1:
-				console.log(reminder.get("class_title"))
 				return reminder.get("class_title");
 			case 2:
 				return reminder.get("type");
