@@ -65,6 +65,9 @@
   script#announce-template(type="template")
       h4.listTitle <%= title %>
       .listText <%= text %>
+      <% if (!is_last) { %> 
+      hr
+      <% } %>
 
   script#code-select-template(type="template")
     option(value!="<%= code %>") <%= subject %>
