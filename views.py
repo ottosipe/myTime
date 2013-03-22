@@ -53,7 +53,7 @@ class MainPage(jade.jadeHandler):
       else:
         student = std_query[0]
       
-      logging.warning(student)
+      logging.warning(models.serialize(student))
 
       context = {
           'name': student.name,
