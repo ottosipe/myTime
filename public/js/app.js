@@ -70,6 +70,16 @@ $(document).ready(function(){
 		});
 	});
 
+	$("[name='addCal']").click(function(event){
+		console.log("add to cal clicke");
+
+		$(".startTime.datetime").show();
+		$(".endTime.datetime").show();
+
+		$(".showStartTime").hide();
+		$(".showEndTime").hide();
+	});
+
 	loadAnnouncements();
 
 	$(".date").datepicker({
