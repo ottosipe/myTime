@@ -25,21 +25,28 @@ class Courses(webapp2.RequestHandler):
  
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
-      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(info["courseId"])]).fetch(None)
-
-      if courses.len > 0:
-        self.response.write("already in this course")
-        return
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
 
       info = json.loads(self.request.body)   
       logging.warning(info)
+
+      if student == None :
+        self.response.out.write("student is null")
+        return
+
+      dup_course = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
+        models.student_key(User), int(info["courseId"])).get()
+
+      if dup_course != None :
+        logging.warning("duplicate course")
+        self.response.out.write("already in this course")
+        return
 
       # create the courses calendar if it doesn't already exist
       if student.calID is None or student.calID == "":
         logging.warning('student calID is in fact empty')
         self.response.out.write("student calendar is empty in api, not adding course")
+        return
       else:
         logging.warning('student id is something else, it is %s' % student.calID)
 
@@ -72,18 +79,18 @@ class Courses(webapp2.RequestHandler):
       
       newCourse.put()
       # respond with changes so backbone knows the id
-      self.response.out.write(json.dumps(newCourse.to_dict()))
+      self.response.out.write(json.dumps(models.serialize(newCourse)))
     else:
       self.response.out.write("['auth':'fail']")
   
   def get(self):
     User = users.get_current_user()
     if User:
-      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1", models.student_key(User)).fetch(None)
+      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1", models.student_key(User))
 
       output = []
-      for x in courses:
-        output.append(x.to_dict());
+      for x in courses :
+        output.append(models.serialize(x))
 
       self.response.out.write(json.dumps(output))
     else: 
@@ -94,17 +101,14 @@ class EditCourse(webapp2.RequestHandler):
   @decorator.oauth_required
   def delete(self, idArg):
     User = users.get_current_user() # dont do this so often ***
-    newCourses = []
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
-      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(idArg)]).fetch(None)
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
+      course = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
+        models.student_key(User), int(idArg)).get()
 
-      if courses.len != 1 :
+      if course == None :
         self.response.out.write("couldn't find class to delete")
         return
-
-      course = courses[0]
 
       eventid = course.eventid
       course.delete()
@@ -125,22 +129,20 @@ class EditCourse(webapp2.RequestHandler):
   def put(self, idArg):
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
-      courses = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(idArg)]).fetch(None)
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
+      course = db.GqlQuery("SELECT * FROM Course WHERE ANCESTOR IS :1 AND id = :2",
+        models.student_key(User), int(idArg)).get()
 
-      if courses.len != 1 :
+      if course == None :
         self.response.out.write("couldnt find class to edit")
         return
-
-      course = courses[0]
 
       info = json.loads(self.request.body)
 
       # update class in google calendar
       eventInfo = utils.createClassEvent(info)
       event = eventInfo["event"]
-      event['sequence'] = course.eventseq
+      event["sequence"] = int(course.eventseq)
       logging.warning(event)
       request = service.events().update(calendarId=student.calID,
           eventId=course.eventid, body=event)
@@ -149,22 +151,18 @@ class EditCourse(webapp2.RequestHandler):
       logging.warning(json.dumps(response))
 
       # edit the course
-      course.id = info["id"],
-      course.code = info["code"],
-      course.number = info["number"],
-      course.section = info["section"],
-      course.type = info["type"],
-      course.title = info["title"],
-      course.days = eventInfo["days"],
-      course.start = info["start"],
-      course.end = info["end"],
-      course.start_time = info["start_time"],
-      course.end_time = info["end_time"],
-      course.location = info["location"],
-      course.instructor = info["instructor"],
-      course.site_link = info["site_link"],
-      course.prof_email = info["prof_email"],
-      course.eventid = course.eventid,
+      course.type = info["type"]
+      course.title = info["title"]
+      course.days = eventInfo["days"]
+      course.start = info["start"]
+      course.end = info["end"]
+      course.start_time = info["start_time"]
+      course.end_time = info["end_time"]
+      course.location = info["location"]
+      course.instructor = info["instructor"]
+      course.site_link = info["site_link"]
+      course.prof_email = info["prof_email"]
+      course.eventid = course.eventid
       course.eventseq = response["sequence"]
 
       course.put()
@@ -177,7 +175,7 @@ class Reminders(webapp2.RequestHandler):
     
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
 
       postData = json.loads(self.request.body)
       logging.warning(postData)
@@ -217,10 +215,10 @@ class Reminders(webapp2.RequestHandler):
   def get(self):
     User = users.get_current_user()
     if User:
-      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1", models.student_key(User)).fetch(None)
+      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1", models.student_key(User))
 
       output = []
-      for x in reminders:
+      for x in reminders :
         #if(self.request.get('showAll') == "true" or x.completed == False):
           output.append(x.to_dict());
 
@@ -233,15 +231,14 @@ class EditReminder(webapp2.RequestHandler):
   def delete(self, idArg):
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
-      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), idArg]).fetch(None)
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
+      reminder = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
+        models.student_key(User), idArg).get()
 
-      if reminders.len != 1:
+      if reminder == None :
         self.response.out.write("failed to find single reminder to delete")
         return
 
-      reminder = reminders[0]
       eventid = reminder.eventid
 
       reminder.delete()
@@ -264,15 +261,13 @@ class EditReminder(webapp2.RequestHandler):
   def put(self, idArg):
     User = users.get_current_user()
     if User:
-      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).fetch(None)[0]
-      reminders = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
-        [models.student_key(User), int(idArg)]).fetch(None)
+      student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
+      reminder = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
+        models.student_key(User), int(idArg)).get()
 
-      if reminders.len != 1 :
+      if reminder == None :
         self.response.out.write("couldn't find a single reminder to edit")
         return
-
-      reminder = reminders[0]
 
       info = json.loads(self.request.body)
 
@@ -300,7 +295,7 @@ class EditReminder(webapp2.RequestHandler):
           reminder.eventseq = response["sequence"]
         else :
           # reminder was on calendar before, edit it
-          event['sequence'] = reminder.eventseq
+          event["sequence"] = int(reminder.eventseq)
           request = service.events().update(calendarId=student.calID,
               eventId=reminder.eventid, body=event)
           response = request.execute(http=decorator.http())
@@ -327,12 +322,12 @@ class EditReminder(webapp2.RequestHandler):
 
 class Announcements(webapp2.RequestHandler):
   def get(self):
-      announcements = db.GqlQuery("SELECT * FROM Announcement").fetch(None)
+      announcements = db.GqlQuery("SELECT * FROM Announcement")
 
       logging.warning(announcements)
 
       output = []
-      for x in announcements:
+      for x in announcements :
         output.append(x.to_dict())
 
       self.response.out.write(json.dumps(output))

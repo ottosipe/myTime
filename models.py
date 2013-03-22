@@ -4,6 +4,13 @@ from google.appengine.ext import db
 def student_key(user):
   return db.Key.from_path('Student', user.user_id())
 
+def serialize(object):
+  properties = object.properties().items() 
+  output = {} 
+  for field, value in properties:
+    output[field] = getattr(object, field) 
+  return output
+
 class Course(db.Model):
   id = db.IntegerProperty()  
   code = db.StringProperty()
