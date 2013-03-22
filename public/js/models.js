@@ -79,7 +79,6 @@ $(function() {
 			this.setTimeMil();
 		},
 		checkOverdue: function() {
-			
 			var time = this.get("start_time");
 			if (this.get("end_time")) time = this.get("end_time");
 			this.set("is_overdue", utils.isOverdue(this.get("date"), time) );
@@ -87,6 +86,7 @@ $(function() {
 		setTimeMil: function() {
 			var mills = utils.getTimeMil(this.get("date"), this.get("start_time"));
 			this.set("time_mills", mills);
+			if(this.collection) this.collection.sort() // may not need this
 		}
 	});
 
@@ -137,8 +137,28 @@ $(function() {
 				reminder.set("hide", false);
 			});
 		},
+		sortKey: 0,
 		comparator: function(reminder) {
-		  return reminder.get("time_mills");
+			/*
+			0 Date 
+	        1 Course
+	        2 Type
+	        3 Completed
+	        */
+			console.log(this.sortKey)
+			switch(this.sortKey) {
+			case 0:
+				return reminder.get("time_mills");
+			case 1:
+				console.log(reminder.get("class_title"))
+				return reminder.get("class_title");
+			case 2:
+				return reminder.get("type");
+			case 3:
+				return reminder.get("completed");
+			default:
+				console.log("something is wrong with sort!")	
+			}
 		}
 	});
 

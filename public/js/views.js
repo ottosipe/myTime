@@ -2,6 +2,11 @@
 $(function() {
 	/// item views /// 
 
+	var today = new Date();
+	today = new Date(today.getTime() - (24 * 60 * 60 * 1000));
+	var todayStr = today;
+	console.log(todayStr)
+
 	window.GenericView = Backbone.View.extend({
 	  	className: "entry",
 		tagName: "div",
@@ -56,9 +61,9 @@ $(function() {
 	    	// may need to also query courseId!!!
 	    	if (query.length > 0) {
 		    	var course = query[0].attributes;
-		    	obj.coursename = course.code + " " + course.number;
+		    	obj.class_title = course.code + " " + course.number;
 		    } else {
-		    	obj.coursename = ""
+		    	obj.class_title = ""
 		    }
 
 		    var pos = this.model.collection.indexOf(this.model);
@@ -92,6 +97,7 @@ $(function() {
 		viewType: null,
 		render: function() {
 			this.alert(); // show alert if empty
+			console.log("render")
 			$(".list", this.el).empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var viewType = new this.viewType({model: this.model.models[i]});
@@ -117,7 +123,8 @@ $(function() {
 
 	window.ReminderListView = GenericListView.extend({
 		events: {
-			"click .viewAll": "all"
+			"click .viewAll": "all",
+			"click .sort": "sort"
 		},
 		el: $("#reminderList"),
 		viewType: ReminderView,
@@ -126,6 +133,11 @@ $(function() {
 			remindList.showAll();
 			$(".reminds").removeClass("active");
 			$(".viewAll").hide();
+		},
+		sort: function(e) {
+			var key = $(e.currentTarget).attr("data-key");
+			remindList.sortKey = parseInt(key);
+			remindList.sort();
 		}
 	});
 
@@ -401,8 +413,7 @@ $(function() {
 			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
-				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
-				todayHighlight: true,
+				startDate: todayStr,
 				autoclose: true
 			}); //set date range
 			$(".reminderTag .btn").click(function() {
@@ -490,10 +501,9 @@ $(function() {
 				$("[name='"+i+"']", this.el).val(this.model.get(i));
 			}
 
-			var today = new Date();
 			$(".date").datepicker({
 				format: 'mm/dd/yy',
-				startDate: (parseInt(today.getMonth()) + 1)+"/"+today.getDay()+today.getYear(),
+				startDate: todayStr,
 				autoclose:true
 			});
 			$(".reminderTag .btn").click(function() {
@@ -527,7 +537,6 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
-				console.log(name, value)
 				this.model.set(name, value);
 			}
 		},
