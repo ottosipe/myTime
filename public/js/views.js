@@ -40,7 +40,6 @@ $(function() {
 				remindList.courseFilter(this.model.get('id'));
 				$(".viewAll").show();
 			}
-			
 		}
 	});
 
@@ -61,9 +60,12 @@ $(function() {
 		    } else {
 		    	obj.coursename = ""
 		    }
+
 		    var pos = this.model.collection.indexOf(this.model);
 			// check if we're the last object in the list
 			obj.is_last = pos == this.model.collection.models.length - 1;
+
+
 			var row = this.template(obj);
 			this.$el.html(row);
 			return this;
@@ -84,6 +86,8 @@ $(function() {
 			this.render();
 			this.listenTo(this.model, "add", this.render);
 			this.listenTo(this.model, "remove", this.render);
+
+			this.listenTo(this.model, "sort", this.render);
 		},
 		viewType: null,
 		render: function() {
@@ -523,6 +527,7 @@ $(function() {
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name) {
+				console.log(name, value)
 				this.model.set(name, value);
 			}
 		},

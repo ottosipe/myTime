@@ -96,31 +96,42 @@ $(function() {
 			}
 			return class_title;
 		},
-		isInPast:function(dateStr, timeStr) {
-			// check that a string and date are in the past
-			// NOT Y3K friendly :(
-			if(!dateStr || !timeStr) return false;
-			console.log(dateStr, timeStr);
+		getTimeMil: function(dateStr, timeStr) {
+			//console.log(dateStr, timeStr);
+
+			if(!dateStr && !timeStr) return -1;
+
 			var split 	= dateStr.split("/");
 			var month 	= parseInt(split[0]) - 1;
 			var day 	= parseInt(split[1]);
 			var year 	= parseInt(split[2]) + 2000;
+			var hours = 0, minutes = 0;
 
-			split 		= timeStr.split(":");
-			var hours	= parseInt(split[0]);
-			split 		= split[1].split(" ");
-			var minutes = parseInt(split[0]);
-			var am_pm 	= split[1];
-
+			if (timeStr) {
+				split 		= timeStr.split(":");
+				hours	= parseInt(split[0]);
+				split 		= split[1].split(" ");
+				minutes = parseInt(split[0]);
+				var am_pm 	= split[1];
+			}
+			
 			// check hours so noon != 24
 			if(am_pm == "PM" && hours != 12) hours = (hours + 12);
 			if(am_pm == "AM" && hours == 12) hours = 0;
+
+			var date = new Date(year, month, day, hours, minutes);
+			return date.getTime();
+		},
+		isOverdue:function(dateStr, timeStr) {
+			// check that a string and date are in the past
+			// NOT Y3K friendly :(
+			if(!dateStr || !timeStr) return false;
+
+			var check = new Date(utils.getTimeMil(dateStr, timeStr));
 			var now = new Date();
 
-			var check = new Date(year, month, day, hours, minutes);
-
-			console.log(check.toDateString(), check.toLocaleTimeString());
-			console.log(now.toDateString(), now.toLocaleTimeString());
+			//console.log(check.toDateString(), check.toLocaleTimeString());
+			//console.log(now.toDateString(), now.toLocaleTimeString());
 
 			return check < now;
 		}

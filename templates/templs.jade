@@ -3,7 +3,7 @@
   script#reminder-template(type="template")
     <% if (!hide) { %>
     .row-fluid
-      div(class!="span9 <% if(completed) print('strike'); %>")
+      div(class!="span9 <% if(completed) print('strike'); if (is_overdue) print(' overdue'); %>")
         .courseLabel <%= coursename + " " + type %>
         h4.listTitle <%= title %>
         .dateLabel <%= start_time %> <%= date %>

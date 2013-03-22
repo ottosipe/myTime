@@ -63,7 +63,8 @@ $(function() {
 			note: "",
 			hide: false,
 			add_to_cal: false,
-			is_overdue: false
+			is_overdue: false,
+			time_mills: 0
 		},
 		toggle: function() {
 			this.save({
@@ -71,8 +72,21 @@ $(function() {
 			});
 		},
 		initialize: function() {
-			console.log(this.date, this.end_time)
-			this.is_overdue = utils.isInPast(this.date, this.end_time)
+			this.listenTo(this, "change:date", this.checkOverdue);
+			this.listenTo(this, "change:date", this.setTimeMil);
+
+			this.checkOverdue();
+			this.setTimeMil();
+		},
+		checkOverdue: function() {
+			
+			var time = this.get("start_time");
+			if (this.get("end_time")) time = this.get("end_time");
+			this.set("is_overdue", utils.isOverdue(this.get("date"), time) );
+		},
+		setTimeMil: function() {
+			var mills = utils.getTimeMil(this.get("date"), this.get("start_time"));
+			this.set("time_mills", mills);
 		}
 	});
 
@@ -122,6 +136,9 @@ $(function() {
 			this.each(function(reminder){
 				reminder.set("hide", false);
 			});
+		},
+		comparator: function(reminder) {
+		  return reminder.get("time_mills");
 		}
 	});
 
