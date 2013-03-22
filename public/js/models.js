@@ -63,11 +63,16 @@ $(function() {
 			note: "",
 			hide: false,
 			add_to_cal: false,
+			is_overdue: false
 		},
 		toggle: function() {
 			this.save({
 				completed: !this.get('completed')
 			});
+		},
+		initialize: function() {
+			console.log(this.date, this.end_time)
+			this.is_overdue = utils.isInPast(this.date, this.end_time)
 		}
 	});
 

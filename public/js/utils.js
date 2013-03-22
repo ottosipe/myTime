@@ -95,6 +95,34 @@ $(function() {
 				class_title = titleString.substring(0, dash - 1);
 			}
 			return class_title;
+		},
+		isInPast:function(dateStr, timeStr) {
+			// check that a string and date are in the past
+			// NOT Y3K friendly :(
+			if(!dateStr || !timeStr) return false;
+			console.log(dateStr, timeStr);
+			var split 	= dateStr.split("/");
+			var month 	= parseInt(split[0]) - 1;
+			var day 	= parseInt(split[1]);
+			var year 	= parseInt(split[2]) + 2000;
+
+			split 		= timeStr.split(":");
+			var hours	= parseInt(split[0]);
+			split 		= split[1].split(" ");
+			var minutes = parseInt(split[0]);
+			var am_pm 	= split[1];
+
+			// check hours so noon != 24
+			if(am_pm == "PM" && hours != 12) hours = (hours + 12);
+			if(am_pm == "AM" && hours == 12) hours = 0;
+			var now = new Date();
+
+			var check = new Date(year, month, day, hours, minutes);
+
+			console.log(check.toDateString(), check.toLocaleTimeString());
+			console.log(now.toDateString(), now.toLocaleTimeString());
+
+			return check < now;
 		}
 	}; 
 });
