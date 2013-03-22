@@ -89,6 +89,7 @@ $(function() {
 			return days;
 		},
 		getReminderTitle:function(titleString) {
+			console.log(titleString)
 			var class_title = "";
 			var dash = titleString.indexOf("-");
 			if (dash > 1) {

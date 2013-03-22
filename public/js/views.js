@@ -375,8 +375,11 @@ $(function() {
 			"click .showNote": "showNote",
 			"click .showStartTime": "showStartTime",
 			"click .showEndTime": "showEndTime",
+			"click [name='addCal']": "showAllTimes",
 			"click .add": "submit"
 		},
+		add_to_cal:false,
+		el: $("#addReminder"),
 		showNote: function() {
 			$(".note", this.el).show();
 			$(".showNote", this.el).hide();
@@ -402,7 +405,18 @@ $(function() {
                 minuteStep: 5
 			});
 		},
-		el: $("#addReminder"),
+		showAllTimes: function() {
+			this.showStartTime();
+			this.showEndTime();
+
+			// toggle functionality here too
+			console.log("toggling")
+			if (this.add_to_cal) {
+				this.add_to_cal = false;
+			} else {
+				this.add_to_cal = true;
+			}
+		},
 		initialize: function() {
 			$("[name='date']", this.el).val(todayFormat);
 			$(".date", this.el).datepicker({
@@ -422,7 +436,7 @@ $(function() {
 				return;
 			}
 
-			if ($("[name='calAdd']", this.el).checked) {
+			if (this.add_to_cal) {
 				var valid_form = true;
 				if ($("[name='start_time']", this.el).val() == "") {
 					$("[name='start_time']", this.el).addClass("error")
@@ -449,7 +463,8 @@ $(function() {
 			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
 			
 
-			var class_title = window.utils.getReminderTitle($("[name='course']", this.el).html());
+			var class_title = window.utils.getReminderTitle(
+				$("[name='course']", this.el).find(":selected").text());
 
 			// switch to working model owned by view *****
 			// add a change function like in add/edit course
@@ -463,8 +478,10 @@ $(function() {
 				end_time: end_time,
 				course: parseInt($("[name='course']", this.el).val()),
 				note: $("[name='note']", this.el).val(),
-				add_to_cal: $("[name='calAdd']", this.el).checked
+				add_to_cal: this.add_to_cal
 			});
+
+			console.log(this.add_to_cal);
 
 			window.location.hash="#";
 			this.model.create(newReminder);
@@ -479,6 +496,7 @@ $(function() {
 			"change input,textarea,select": "edit"
 		},
 		el: $("#editReminder"),
+		checked : false,
 		initialize: function() {
 
 			// set tag active
@@ -492,7 +510,15 @@ $(function() {
 			});
 
 			for(var i in this.model.attributes) {
-				$("[name='"+i+"']", this.el).val(this.model.get(i));
+				if (i == "add_to_cal") {
+					console.log(this.model.get("eventid"))
+					if (this.model.get("eventid") != "") {
+						this.checked = true;
+						$("[name='addCal']", this.el).attr('checked', 'checked');
+					}
+				} else {
+					$("[name='"+i+"']", this.el).val(this.model.get(i));
+				}
 			}
 
 			$(".date", this.el).datepicker({
@@ -528,9 +554,19 @@ $(function() {
 			$(".showNote", this.el).hide();
 		},
 		edit: function(e) {
+			console.log("blur")
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
-			if(name) {
+			if(name == "addCal") {
+				if (this.checked) {
+					console.log("set to false")
+					this.checked = false;
+					this.model.set("add_to_cal", false);
+				} else {
+					this.checked = true;
+					this.model.set("add_to_cal", true);
+				}
+			} else if (name) {
 				this.model.set(name, value);
 			}
 		},
@@ -541,7 +577,7 @@ $(function() {
 				return;
 			}
 
-			if ($("[name='calAdd']", this.el).checked) {
+			if (this.model.get("add_to_cal")) {
 				var valid_form = true;
 				if ($("[name='start_time']", this.el).val() == "") {
 					$("[name='start_time']", this.el).addClass("error")
@@ -560,8 +596,8 @@ $(function() {
 				}
 			}
 
-			var class_title = window.utils.getReminderTitle($("[name='course']", this.el).html());
-
+			var class_title = window.utils.getReminderTitle(
+				$("[name='course']", this.el).find(":selected").text());
 			this.model.set("class_title", class_title);
 
 			var start_time = $("[name='start_time']", this.el).val();
@@ -570,8 +606,8 @@ $(function() {
 			var end_time = $("[name='end_time']", this.el).val();
 			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
 
-
 			this.model.set("type", $("[name='type']", this.el).val());
+
 			this.undelegateEvents();
 			this.model.save();
 			window.location.hash = "";

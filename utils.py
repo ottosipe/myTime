@@ -145,9 +145,9 @@ def createReminderEvent(info):
   if end_time[-2:] == "PM" and endHour != 12 :
     endHour += 12
 
-  startTime = datetime.datetime(int(date[6:]), int(date[0:2]), int(date[3:5]),
+  startTime = datetime.datetime(int("20" + date[6:]), int(date[0:2]), int(date[3:5]),
       startHour, int(start_time[(start_colon_index + 1):(start_colon_index + 3)]), 0)
-  endTime = classStartTime.replace(hour=endHour, minute=int(endTime[(end_colon_index + 1):(end_colon_index + 3)]))
+  endTime = startTime.replace(hour=endHour, minute=int(end_time[(end_colon_index + 1):(end_colon_index + 3)]))
 
   logging.warning(startTime)
   logging.warning(endTime)
@@ -156,11 +156,11 @@ def createReminderEvent(info):
   event = {
     'summary': info["class_title"] + ": " + info["title"],
     'start': {
-      'dateTime': startTime.isoformat() + '.000-05:00',
+      'dateTime': startTime.isoformat(),
       'timeZone': 'America/New_York'
     },
     'end': {
-      'dateTime' : endTime.isoformat() + '.000-05:00',
+      'dateTime' : endTime.isoformat(),
       'timeZone': 'America/New_York'
     }
   }
