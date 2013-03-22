@@ -233,7 +233,7 @@ class EditReminder(webapp2.RequestHandler):
     if User:
       student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
       reminder = db.GqlQuery("SELECT * FROM Reminder WHERE ANCESTOR IS :1 AND id = :2",
-        models.student_key(User), idArg).get()
+        models.student_key(User), int(idArg)).get()
 
       if reminder == None :
         self.response.out.write("failed to find single reminder to delete")
