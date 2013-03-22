@@ -6,7 +6,6 @@ $(function() {
 	var month = today.getMonth() + 1;
 	if (month < 10) month = "0" + month;
 	todayFormat = month + "/" + today.getDate() + "/" + (today.getFullYear() - 2000);
-	console.log(todayFormat)
 	today = new Date(today.getTime() - (24 * 60 * 60 * 1000));
 	var todayStr = today;
 
@@ -413,7 +412,6 @@ $(function() {
 			this.showEndTime();
 
 			// toggle functionality here too
-			console.log("toggling")
 			if (this.add_to_cal) {
 				this.add_to_cal = false;
 			} else {
@@ -484,8 +482,6 @@ $(function() {
 				add_to_cal: this.add_to_cal
 			});
 
-			console.log(this.add_to_cal);
-
 			window.location.hash="#";
 			this.model.create(newReminder);
 
@@ -514,7 +510,7 @@ $(function() {
 
 			for(var i in this.model.attributes) {
 				if (i == "add_to_cal") {
-					console.log(this.model.get("eventid"))
+
 					if (this.model.get("eventid") != "") {
 						this.checked = true;
 						$("[name='addCal']", this.el).attr('checked', 'checked');
@@ -557,12 +553,11 @@ $(function() {
 			$(".showNote", this.el).hide();
 		},
 		edit: function(e) {
-			console.log("blur")
 			var name = $(e.currentTarget).attr("name");
 			var value = $(e.currentTarget).val();
 			if(name == "addCal") {
 				if (this.checked) {
-					console.log("set to false")
+
 					this.checked = false;
 					this.model.set("add_to_cal", false);
 				} else {
