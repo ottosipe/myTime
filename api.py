@@ -190,7 +190,7 @@ class Reminders(webapp2.RequestHandler):
       newReminder.end_time = postData['end_time']
       newReminder.course = postData['course']
       newReminder.note = postData['note']
-      newReminder.id = int(time.time())
+      newReminder.id = int(time.time()) # do we need to rand here too?
       newReminder.eventid = ""
       newReminder.eventseq = -1
 
@@ -208,7 +208,7 @@ class Reminders(webapp2.RequestHandler):
       newReminder.put()
       logging.warning("added reminder to db")
 
-      self.response.out.write(json.dumps(newReminder.to_dict()))
+      self.response.out.write(json.dumps(models.serialize(newReminder)))
     else :
       self.response.out.write("['auth':'fail']")
   
@@ -220,7 +220,7 @@ class Reminders(webapp2.RequestHandler):
       output = []
       for x in reminders :
         #if(self.request.get('showAll') == "true" or x.completed == False):
-          output.append(x.to_dict());
+          output.append(models.serialize(x))
 
       self.response.out.write(json.dumps(output))
     else: 
@@ -302,18 +302,16 @@ class EditReminder(webapp2.RequestHandler):
           logging.warning(json.dumps(response))
           reminder.eventseq = response["sequence"]
 
-        reminder.put()
-
       else :
         if reminder.eventid != "" :
-          # reminder was on calendar before, delete it
+          # reminder was on calendar before, delete it from calendar
           request = service.events().delete(calendarId=student.calID, eventId=reminder.eventid)
           response = request.execute(http=decorator.http())
           logging.warning(response)
-          reminder.delete()
-        else :
-          # reminder was not on cal before, not adding it
-          reminder.put()
+          reminder.eventid = ""
+          reminder.eventseq = -1
+
+      reminder.put()
 
       self.response.out.write("completed reminders")
     else: 
@@ -328,7 +326,7 @@ class Announcements(webapp2.RequestHandler):
 
       output = []
       for x in announcements :
-        output.append(x.to_dict())
+        output.append(models.serialize(x))
 
       self.response.out.write(json.dumps(output))
   def post(self):
