@@ -29,7 +29,7 @@ $(function() {
 					this.set("site_link", "http://"+link);
 				}
 			}
-			
+
 			return true;
 		},
 		initialize: function() {
@@ -111,7 +111,15 @@ $(function() {
 
 	window.CourseCollection = Backbone.Collection.extend({
 	    model: Course,
-	    url: "/courses"
+	    url: "/courses",
+	    comparator: function(course) {
+	    	return course.get("type");
+	    },
+	    sortBy: function () {
+			var models = _.sortBy(this.models, this.comparator);
+			models.reverse();
+			return models;
+		}
 	});
 
 	window.ReminderCollection = Backbone.Collection.extend({
