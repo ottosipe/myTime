@@ -3,7 +3,10 @@ $(function() {
 	/// item views /// 
 
 	var today = new Date();
-	todayFormat = today.getMonth() + 1 + "/" + today.getDate() + "/" + (today.getFullYear() - 2000);
+	var month = today.getMonth() + 1;
+	if (month < 10) month = "0" + month;
+	todayFormat = month + "/" + today.getDate() + "/" + (today.getFullYear() - 2000);
+	console.log(todayFormat)
 	today = new Date(today.getTime() - (24 * 60 * 60 * 1000));
 	var todayStr = today;
 
