@@ -195,6 +195,7 @@ class Reminders(webapp2.RequestHandler):
       newReminder.eventseq = -1
 
       if postData['add_to_cal'] == True :
+        newReminder.add_to_cal = True
         event = utils.createReminderEvent(postData)
         logging.warning(event)
         request = service.events().insert(calendarId=student.calID, body=event)
@@ -204,6 +205,8 @@ class Reminders(webapp2.RequestHandler):
           logging.warning(json.dumps(response))
           newReminder.eventid = response["id"]
           newReminder.eventseq = response["sequence"]
+      else :
+        newReminder.add_to_cal = False
 
       newReminder.put()
       logging.warning("added reminder to db")
@@ -286,7 +289,7 @@ class EditReminder(webapp2.RequestHandler):
         event = utils.createReminderEvent(info)
         logging.warning(event)
 
-        if reminder.eventid == "" :
+        if reminder.add_to_cal == False :
           # reminder was NOT on calendar before, add it
           request = service.events().insert(calendarId=student.calID, body=event)
           response = request.execute(http=decorator.http())
@@ -302,14 +305,18 @@ class EditReminder(webapp2.RequestHandler):
           logging.warning(json.dumps(response))
           reminder.eventseq = response["sequence"]
 
+        reminder.add_to_cal = True;
+
       else :
-        if reminder.eventid != "" :
+        if reminder.add_to_cal == True :
           # reminder was on calendar before, delete it from calendar
           request = service.events().delete(calendarId=student.calID, eventId=reminder.eventid)
           response = request.execute(http=decorator.http())
           logging.warning(response)
           reminder.eventid = ""
           reminder.eventseq = -1
+
+        reminder.add_to_cal = False;
 
       reminder.put()
 
@@ -321,8 +328,6 @@ class EditReminder(webapp2.RequestHandler):
 class Announcements(webapp2.RequestHandler):
   def get(self):
       announcements = db.GqlQuery("SELECT * FROM Announcement")
-
-      logging.warning(announcements)
 
       output = []
       for x in announcements :

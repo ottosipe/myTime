@@ -14,24 +14,24 @@ def createClassEvent(info):
       info = info.to_dict()
 
     # change time format i.e. 9:00 AM -> 2011-06-03T09:00:00.000-05:00
-    startDate = info["start"]
-    endDate = info["end"]
+    startDateArr = info["start"].split("/")
+    endDateArr = info["end"].split("/")
 
-    startTime = info["start_time"]
-    endTime = info["end_time"]
+    startTimeArr = info["start_time"].split(":")
+    endTimeArr = info["end_time"].split(":")
 
-    startHour = int(startTime[0:2])
-    if (startTime[-2:] == "PM" and startHour != 12):
+    startHour = int(startTimeArr[0])
+    if (startTimeArr[1][-2:] == "PM" and startHour != 12):
       startHour += 12
 
-    endHour = int(endTime[0:2])
-    if (endTime[-2:] == "PM" and endHour != 12):
+    endHour = int(endTimeArr[0])
+    if (endTimeArr[1][-2:] == "PM" and endHour != 12):
       endHour += 12
 
-    classStartTime = datetime.datetime(int(startDate[6:]), int(startDate[0:2]), int(startDate[3:5]),
-      startHour, int(startTime[3:5]), 0)
-    classEndTime = classStartTime.replace(hour=endHour, minute=int(endTime[3:5]))
-    classEndDate = datetime.datetime(int(endDate[6:]), int(endDate[0:2]), int(endDate[3:5]))
+    classStartTime = datetime.datetime(int(startDateArr[2]), int(startDateArr[0]), int(startDateArr[1]),
+      startHour, int(startTimeArr[1][0:2]), 0)
+    classEndTime = classStartTime.replace(hour=endHour, minute=int(endTimeArr[1][0:2]))
+    classEndDate = datetime.datetime(int(endDateArr[2]), int(endDateArr[0]), int(endDateArr[1]))
 
     # determine day of the week of start date; Mon = 0 ... Sun = 6
     dayOfWeek = classStartTime.weekday()
@@ -133,21 +133,23 @@ def createReminderEvent(info):
   start_time = info["start_time"]
   end_time = info["end_time"]
 
-  start_colon_index = start_time.find(":")
-  startHour = int(start_time[0:start_colon_index])
+  start_time_arr = start_time.split(":")
+  end_time_arr = end_time.split(":")
+
+  startHour = int(start_time_arr[0])
 
   if start_time[-2:] == "PM" and startHour != 12 :
     startHour += 12
 
-  end_colon_index = end_time.find(":")
-  endHour = int(end_time[0:end_colon_index])
+  endHour = int(end_time_arr[0])
 
   if end_time[-2:] == "PM" and endHour != 12 :
     endHour += 12
 
-  startTime = datetime.datetime(int("20" + date[6:]), int(date[0:2]), int(date[3:5]),
-      startHour, int(start_time[(start_colon_index + 1):(start_colon_index + 3)]), 0)
-  endTime = startTime.replace(hour=endHour, minute=int(end_time[(end_colon_index + 1):(end_colon_index + 3)]))
+  dateArray = date.split("/")
+  startTime = datetime.datetime(int("20" + dateArray[2]), int(dateArray[0]), int(dateArray[1]),
+      startHour, int(start_time_arr[1][0:2]), 0)
+  endTime = startTime.replace(hour=endHour, minute=int(end_time_arr[1][0:2]))
 
   logging.warning(startTime)
   logging.warning(endTime)
@@ -175,26 +177,4 @@ def createCal():
       'timeZone': 'America/New_York'
     }
 
-    return calendar
-
-    # determine semester
-    semester = ""
-    today = datetime.date.today()
-    month = today.month
-    if month == 11 or month == 12 or month == 1 or month == 2 or month == 3:
-      semester = "W"
-    elif month >= 6 and month <= 10:
-      semester = "F"
-    elif month == 4 or month == 5:
-      semester = "SP"
-    else:
-      # will never trigger right now
-      semester = "SU"
-    semester += (str(today.year))[2:] # 01/23/2012 -> <W,F,SP,SU>12
-
-    # create the courses calendar
-    calendar = {
-      'summary': 'Courses ' + semester,
-      'timeZone': 'America/New_York'
-    }
     return calendar
