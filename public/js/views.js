@@ -552,15 +552,14 @@ $(function() {
 			});
 
 			for(var i in this.model.attributes) {
-				if (i == "add_to_cal") {
+				$("[name='"+i+"']", this.el).val(this.model.get(i));
+			}
 
-					if (this.model.get("eventid") != "") {
-						this.checked = true;
-						$("[name='addCal']", this.el).attr('checked', 'checked');
-					}
-				} else {
-					$("[name='"+i+"']", this.el).val(this.model.get(i));
-				}
+			// explicit set for add_to_cal option
+			if (this.model.get("add_to_cal") == true) {
+				console.log("this is on your google calendar!");
+				this.checked = true;
+				$("[name='addCal']", this.el).attr('checked', 'checked');
 			}
 
 			$(".date", this.el).datepicker({
@@ -600,12 +599,9 @@ $(function() {
 			var value = $(e.currentTarget).val();
 			if(name == "addCal") {
 				if (this.checked) {
-
 					this.checked = false;
-					this.model.set("add_to_cal", false);
 				} else {
 					this.checked = true;
-					this.model.set("add_to_cal", true);
 				}
 			} else if (name) {
 				this.model.set(name, value);
@@ -623,7 +619,7 @@ $(function() {
 				return;
 			}
 
-			if (this.model.get("add_to_cal")) {
+			if (this.checked) {
 				var valid_form = true;
 				if ($("[name='start_time']", this.el).val() == "") {
 					$("[name='start_time']", this.el).addClass("error")
@@ -641,6 +637,8 @@ $(function() {
 					return;
 				}
 			}
+
+			this.model.set("add_to_cal", this.checked);
 
 			var class_title = window.utils.getReminderTitle(
 				$("[name='course']", this.el).find(":selected").text());

@@ -42,6 +42,7 @@ class Reminder(db.Model):
   completed = db.BooleanProperty()
   eventid = db.StringProperty()
   eventseq = db.IntegerProperty()
+  add_to_cal = db.BooleanProperty()
 
 class Student(db.Model):
   user = db.UserProperty()
