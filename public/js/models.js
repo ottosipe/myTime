@@ -70,6 +70,7 @@ $(function() {
 			this.save({
 				completed: !this.get('completed')
 			});
+			this.collection.sort();
 		},
 		initialize: function() {
 			this.listenTo(this, "change:date", this.checkOverdue);
@@ -151,18 +152,17 @@ $(function() {
 			0 Date 
 	        1 Course
 	        2 Type
-	        3 Completed
 	        */
+
+	        console.log(this.sortKey);
 
 			switch(this.sortKey) {
 			case 0:
-				return reminder.get("time_mills");
+				return [reminder.get("completed"), reminder.get("time_mills")];
 			case 1:
-				return reminder.get("class_title");
+				return [reminder.get("completed"), reminder.get("class_title")];
 			case 2:
-				return reminder.get("type");
-			case 3:
-				return reminder.get("completed");
+				return [reminder.get("completed"), reminder.get("type")];
 			default:
 				console.log("something is wrong with sort!")	
 			}

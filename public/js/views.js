@@ -78,7 +78,7 @@ $(function() {
 			return this;
 		},
 		complete: function() {
-			this.model.toggle()
+			this.model.toggle();
 		}
 	});
 
@@ -378,7 +378,8 @@ $(function() {
 			"click .showStartTime": "showStartTime",
 			"click .showEndTime": "showEndTime",
 			"click [name='addCal']": "showAllTimes",
-			"click .add": "submit"
+			"click .add": "submit",
+			"click .reset": "reset"
 		},
 		add_to_cal:false,
 		el: $("#addReminder"),
@@ -396,16 +397,28 @@ $(function() {
                 showInputs: false,
                 minuteStep: 5
 			});
+			// in case timepicker is already init.
+			if(!$("[name='start_time']", this.el).val()) {
+				$("[name='start_time']", this.el).timepicker("setTime", "12:00 PM");
+			}
 		},
 		showEndTime: function() {
 			$(".endTime", this.el).show();
 			$(".showEndTime", this.el).hide();
 			$("[name='end_time']", this.el).timepicker({
+				// get time from above
 				defaultTime:$("[name='start_time']", this.el).val(),
 				template: false,
                 showInputs: false,
                 minuteStep: 5
 			});
+			$("[name='end_time']").timepicker().on('changeTime.timepicker', function(e) {
+				console.log(e.time.value);
+			});
+			// in case timepicker is already init.
+			if(!$("[name='end_time']", this.el).val()) {
+				$("[name='end_time']", this.el).timepicker("setTime",$("[name='start_time']", this.el).val());
+			}
 		},
 		showAllTimes: function() {
 			this.showStartTime();
@@ -417,6 +430,7 @@ $(function() {
 			} else {
 				this.add_to_cal = true;
 			}
+			console.log(this.add_to_cal)
 		},
 		initialize: function() {
 			$("[name='date']", this.el).val(todayFormat);
@@ -434,6 +448,11 @@ $(function() {
 			e.preventDefault();
 			if(!$("[name='title']", this.el).val()) {
 				$("[name='title']", this.el).addClass("error")
+				return;
+			}
+
+			if(!$("[name='date']", this.el).val()) {
+				$("[name='date']", this.el).addClass("error")
 				return;
 			}
 
@@ -484,8 +503,32 @@ $(function() {
 
 			window.location.hash="#";
 			this.model.create(newReminder);
+			this.reset(false);
 
 		},
+		reset: function(trigger) {
+
+			//reset the form
+			if(!trigger) {
+				$(".reset", this.el).trigger("click");
+			}
+			$(".reminderTag a:first-child", this.el).trigger("click");
+			this.add_to_cal = false;
+
+			$(".note", this.el).hide();
+			$(".showNote", this.el).show();
+
+			$(".startTime", this.el).hide().val("");
+			$(".endTime", this.el).hide().val("");
+			$(".showStartTime", this.el).show();
+			$(".showEndTime", this.el).hide();
+
+			// put the date back
+			console.log(todayFormat);
+			$("[name='date']", this.el).val(todayFormat);
+
+			$(".error").removeClass("error");
+		}
 	});
 
 	window.editReminderModal = GenericModalView.extend({
@@ -572,6 +615,11 @@ $(function() {
 			e.preventDefault();
 			if(!$("[name='title']", this.el).val()) {
 				$("[name='title']", this.el).addClass("error")
+				return;
+			}
+
+			if(!$("[name='date']", this.el).val()) {
+				$("[name='date']", this.el).addClass("error")
 				return;
 			}
 
@@ -671,6 +719,8 @@ $(function() {
 				$("#editAccount [type='submit']").button('reset');
 
 			});
+
+			window.location.hash = "";
 		}
 	});
 

@@ -100,8 +100,8 @@ $(function() {
 			//console.log(dateStr, timeStr);
 
 			if(!dateStr) return -1;
-			// set default time, middle of day
-			//if(!timeStr) timeStr = "12:00 PM";
+			// set default time, end of the day
+			if(!timeStr) timeStr = "11:59 PM";
 
 			var split 	= dateStr.split("/");
 			var month 	= parseInt(split[0]) - 1;
