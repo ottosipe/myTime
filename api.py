@@ -184,6 +184,7 @@ class Reminders(webapp2.RequestHandler):
 
       newReminder.type = postData['type']
       newReminder.title = postData['title']
+      newReminder.course_str = postData['course_str']
       newReminder.completed = False
       newReminder.date =  postData['date']
       newReminder.start_time = postData['start_time']
@@ -277,6 +278,7 @@ class EditReminder(webapp2.RequestHandler):
       reminder.course = 0
       if (info['course']):
         reminder.course = int(info['course'])
+      reminder.course_str = info['course_str']
       reminder.type = info['type']
       reminder.title = info['title']
       reminder.completed = info['completed']
