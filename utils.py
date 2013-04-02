@@ -156,7 +156,7 @@ def createReminderEvent(info):
 
   # create the calendar event
   summary = ""
-  if info["course_str"] != ""
+  if info["course_str"] != "":
     summary += info["course_str"] + ": "
   event = {
     'summary': summary + info["title"],
