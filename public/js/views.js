@@ -78,7 +78,15 @@ $(function() {
 			return this;
 		},
 		complete: function() {
-			this.model.toggle();
+			var isLast = this.model.collection.indexOf(this.model) == this.model.collection.length -1;
+			if(!this.model.get("completed") && !isLast) {
+				var that = this;
+				this.$el.slideUp("fast", function() {
+					that.model.toggle();
+				});
+			} else {
+				this.model.toggle();
+			}
 		}
 	});
 
@@ -644,7 +652,7 @@ $(function() {
 				$("[name='course']", this.el).find(":selected").text());
 			this.model.set("course_str", course_str);
 			console.log(course_str)
-			
+
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
 
