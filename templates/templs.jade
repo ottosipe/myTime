@@ -4,9 +4,12 @@
     <% if (!hide) { %>
     .row-fluid
       div(class!="span9 <% if(completed) print('strike'); if (is_overdue) print(' overdue'); %>")
-        .courseLabel <%= class_title + " " + type %>
+        .courseLabel <%= course_str + " " + type %>
         h4.listTitle <%= title %>
         .dateLabel <%= start_time %> <%= date %>
+          <% if (add_to_cal) { %>
+          .i.icon-calendar
+          <% } %>
         .noteLabel <%= note %>
       .span3
         span.pull-right

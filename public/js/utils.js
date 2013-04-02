@@ -88,13 +88,13 @@ $(function() {
 
 			return days;
 		},
-		getReminderTitle:function(titleString) {
-			var class_title = "";
+		getCourseStr:function(titleString) {
+			var course_str = "";
 			var dash = titleString.indexOf("-");
 			if (dash > 1) {
-				class_title = titleString.substring(0, dash - 1);
+				course_str = titleString.substring(0, dash - 1);
 			}
-			return class_title;
+			return course_str;
 		},
 		getTimeMil: function(dateStr, timeStr) {
 			//console.log(dateStr, timeStr);

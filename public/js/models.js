@@ -54,7 +54,7 @@ $(function() {
 			id: null,
 			type: "",
 			title: "",
-			class_title: "",
+			course_str: "",
 			completed: false,
 			date: "", // switch to timestamp
 			start_time: "",
@@ -154,13 +154,11 @@ $(function() {
 	        2 Type
 	        */
 
-	        console.log(this.sortKey);
-
 			switch(this.sortKey) {
 			case 0:
 				return [reminder.get("completed"), reminder.get("time_mills")];
 			case 1:
-				return [reminder.get("completed"), reminder.get("class_title")];
+				return [reminder.get("completed"), reminder.get("course_str")];
 			case 2:
 				return [reminder.get("completed"), reminder.get("type")];
 			default:

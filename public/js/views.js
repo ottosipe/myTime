@@ -63,9 +63,9 @@ $(function() {
 	    	// may need to also query courseId!!!
 	    	if (query.length > 0) {
 		    	var course = query[0].attributes;
-		    	obj.class_title = course.code + " " + course.number;
+		    	obj.course_str = course.code + " " + course.number;
 		    } else {
-		    	obj.class_title = ""
+		    	obj.course_str = "";
 		    }
 
 		    var pos = this.model.collection.indexOf(this.model);
@@ -483,7 +483,7 @@ $(function() {
 			if(end_time && end_time[0] == "0") end_time = end_time.substr(1);
 			
 
-			var class_title = window.utils.getReminderTitle(
+			var course_str = window.utils.getCourseStr(
 				$("[name='course']", this.el).find(":selected").text());
 
 			// switch to working model owned by view *****
@@ -491,7 +491,7 @@ $(function() {
 			var newReminder = new Reminder( {
 				type: $("[name='type']", this.el).val(),
 				title: $("[name='title']", this.el).val(),
-				class_title: class_title,
+				course_str: course_str,
 				completed: false,
 				date: $("[name='date']", this.el).val(), // change to utc
 				start_time: start_time,
@@ -640,10 +640,11 @@ $(function() {
 
 			this.model.set("add_to_cal", this.checked);
 
-			var class_title = window.utils.getReminderTitle(
+			var course_str = window.utils.getCourseStr(
 				$("[name='course']", this.el).find(":selected").text());
-			this.model.set("class_title", class_title);
-
+			this.model.set("course_str", course_str);
+			console.log(course_str)
+			
 			var start_time = $("[name='start_time']", this.el).val();
 			if(start_time && start_time[0] == "0") start_time = start_time.substr(1);
 
