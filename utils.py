@@ -155,8 +155,11 @@ def createReminderEvent(info):
   logging.warning(endTime)
 
   # create the calendar event
+  summary = ""
+  if info["course_str"] != ""
+    summary += info["course_str"] + ": "
   event = {
-    'summary': info["class_title"] + ": " + info["title"],
+    'summary': summary + info["title"],
     'start': {
       'dateTime': startTime.isoformat(),
       'timeZone': 'America/New_York'

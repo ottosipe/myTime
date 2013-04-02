@@ -35,6 +35,7 @@ class Reminder(db.Model):
   type = db.StringProperty()
   title = db.StringProperty()
   course = db.IntegerProperty()
+  course_str = db.StringProperty()
   date = db.StringProperty() #eventually a unix timestamp
   start_time = db.StringProperty()
   end_time = db.StringProperty()
