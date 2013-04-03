@@ -58,6 +58,7 @@ $(function() {
 	    template: _.template( $('#reminder-template').html() ),
 	    render: function() {
 
+	    	// read from courseList to get name for class!
 	    	var obj = this.model.attributes;
 	    	var query = window.courseList.where({id:this.model.attributes.course});
 	    	// may need to also query courseId!!!
