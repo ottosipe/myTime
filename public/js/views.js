@@ -114,11 +114,7 @@ $(function() {
 			// todo: why is this rendering twice? ***
 
 			this.alert(); // show alert if empty
-			if(this.viewType == CourseView) {
-				console.log("rendering");
-				console.log(this.model.models);
-				console.log(this.model.models.length);
-			}
+			
 			$(".list", this.el).empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
 	            var view = new this.viewType({model: this.model.models[i]});
@@ -311,9 +307,6 @@ $(function() {
 				sect.checker(); // fix and check simple errors
 				that.model.create(sect);
 			}) 
-
-			console.log("reset");
-
 			$(".reset", this.el).trigger("click");
 			$(".back", this.el).trigger("click");
 			this.data.initialize(); // update data

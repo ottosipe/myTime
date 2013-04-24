@@ -68,9 +68,6 @@ $(function() {
                 this.editModalView.open(mod);
                 //var modalView = new editCourseModal({model: mod});
                 $("#editCourse").modal();
-                /*.on('hidden', function () {
-                    modalView.off();
-                });*/
             } else {
                 window.location.hash = "";
             }
@@ -88,9 +85,6 @@ $(function() {
                 this.editRemindView.open(mod);
                 //var remindView = new editReminderModal({model: mod});
                 $("#editReminder").modal();
-                /*.on('hidden', function () {
-                    remindView.off();
-                });*/
             } else {
               window.location.hash = "";   
             }
