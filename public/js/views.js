@@ -18,13 +18,17 @@ $(function() {
 			this.listenTo(this.model, 'destroy', this.remove);
 		},
 		render: function() {
-			var pos = this.model.collection.indexOf(this.model);
-			var obj = this.model.attributes;
-			// check if we're the last object in the list
-			obj.is_last = pos == this.model.collection.models.length - 1;
-
-			var row = this.template(obj);
-			this.$el.html(row);
+			// possible to not be in a collection, dont render
+			if(this.model.collection) {
+				var pos = this.model.collection.indexOf(this.model);
+				var obj = this.model.attributes;
+				// check if we're the last object in the list
+				obj.is_last = pos == this.model.collection.models.length - 1;
+				var row = this.template(obj);
+				this.$el.html(row);
+			} else {
+				console.log("collection not defined");
+			}
 			return this;
 		},
 		delete: function(e) {
@@ -93,7 +97,7 @@ $(function() {
 
 	window.AnnounceView = GenericView.extend({
 	    template: _.template( $('#announce-template').html() )
-	})
+	});
 
 
 	/// list views ///
@@ -107,11 +111,21 @@ $(function() {
 		},
 		viewType: null,
 		render: function() {
+			// todo: why is this rendering twice? ***
+
 			this.alert(); // show alert if empty
+			if(this.viewType == CourseView) {
+				console.log("rendering");
+				console.log(this.model.models);
+				console.log(this.model.models.length);
+			}
 			$(".list", this.el).empty();
 	        for (var i = 0; i < this.model.models.length; i++) {
-	            var viewType = new this.viewType({model: this.model.models[i]});
-	            $(".list", this.el).append( viewType.render().el );
+	            var view = new this.viewType({model: this.model.models[i]});
+	            // is this a bug?? collection not defined?
+	            view.model.collection = this.model;
+
+	            $(".list", this.el).append( view.render().el );
 	            
 	            //if(i+1 != this.model.models.length) $(".list", this.el).append("<hr>")
 	        }
@@ -128,7 +142,7 @@ $(function() {
 
 	window.CourseListView = GenericListView.extend({
 		el: $("#courseList"),
-		viewType: CourseView,
+		viewType: CourseView
 	});
 
 	window.ReminderListView = GenericListView.extend({
@@ -298,9 +312,11 @@ $(function() {
 				that.model.create(sect);
 			}) 
 
-			$(".sectSelector", this.el).empty();
+			console.log("reset");
+
 			$(".reset", this.el).trigger("click");
 			$(".back", this.el).trigger("click");
+			this.data.initialize(); // update data
 			window.location.hash = "";
 
 		},
@@ -328,7 +344,9 @@ $(function() {
 			"change input": "edit"
 		},
 		el: $("#editCourse"),
-		initialize: function() {
+		open: function(model_in) {
+
+			this.model = model_in;
 
 			$(".modalHeader", this.el).html("Edit Course -- " + this.model.get("code")+" "+this.model.get("number"));
 
@@ -548,10 +566,10 @@ $(function() {
 		},
 		el: $("#editReminder"),
 		checked : false,
-		initialize: function() {
+		open: function(model_in) {
+			this.model = model_in;
 
 			// set tag active
-
 			var type = this.model.get("type");
 			$(".reminderTag a").removeClass("active")
 			$(".reminderTag a", this.el).each(function( index ) {
@@ -816,7 +834,7 @@ $(function() {
 						var html = that.apiSectTemp(subSet[i].toJSON());
 						$(".sectSelector select:last").append(html);
 					}
-			})
+			});
 			this.fetch_info();
 			$(".sectSelector").removeAttr("disabled");
 		},

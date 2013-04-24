@@ -41,6 +41,10 @@ $(function() {
                     new AnnounceListView({model: announceList});
                 }
             });
+
+
+            this.editModalView = new editCourseModal();
+            this.editRemindView = new editReminderModal();
         },
         home: function() {
             $(".modal").modal("hide");
@@ -61,8 +65,12 @@ $(function() {
             if(idArg == null) return;
             if(window.courseList.length) {
                 var mod = window.courseList.where({id: parseInt(idArg)})[0];
-                new editCourseModal({model: mod});
+                this.editModalView.open(mod);
+                //var modalView = new editCourseModal({model: mod});
                 $("#editCourse").modal();
+                /*.on('hidden', function () {
+                    modalView.off();
+                });*/
             } else {
                 window.location.hash = "";
             }
@@ -77,8 +85,12 @@ $(function() {
             if (idArg == null) return;
             if(window.remindList) {
                 var mod = window.remindList.where({id: parseInt(idArg)})[0];
-                new editReminderModal({model: mod});
+                this.editRemindView.open(mod);
+                //var remindView = new editReminderModal({model: mod});
                 $("#editReminder").modal();
+                /*.on('hidden', function () {
+                    remindView.off();
+                });*/
             } else {
               window.location.hash = "";   
             }
