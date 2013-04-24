@@ -14,8 +14,8 @@ app = webapp2.WSGIApplication([
     # oauth callback
     (oauth_decorator.decorator.callback_path, oauth_decorator.decorator.callback_handler()),
 
+    #views
     ('/', views.MainPage),
-    #('/admin', views.AdminPage),
     
     # class apis
     ('/codes', api.Code),

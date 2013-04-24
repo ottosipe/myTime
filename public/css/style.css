@@ -12,6 +12,39 @@ body {
     height: 100%;
 }
 
+/* splash screen */
+.splash_title {
+    padding-top: 30px;
+    line-height: 70px;
+}
+.splash_title img {
+    margin-top: -20px;
+}
+
+.splash_lsa_logo {
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.get_started {
+    margin: 30px 0;
+}
+
+.bullet {
+    font-size: 20px;
+    font-weight: bold;
+    vertical-align: middle;
+    text-align: left;
+    padding-top: 25px;
+}
+
+.item {
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+/* all */
+
 .left {
     text-align: left;
 }

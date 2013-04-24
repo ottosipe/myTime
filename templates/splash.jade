@@ -1,0 +1,59 @@
+{% autoescape off %}
+
+!!! 5
+html
+  head
+    meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+    meta(name="viewport", content="width=device-width, user-scalable=no initial-scale=1.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+      
+    title LSA myTime
+    //- only include the bootstrap we need eventually ***
+    link(rel='stylesheet', type='text/css', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css')
+    link(rel='stylesheet', type='text/css', href='//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css')
+    link(rel='stylesheet', type='text/css', href='css/style.css')
+    
+    include analytics
+  body
+    div(style='height: 100%;')
+      .upperBodyColor
+      .container-fluid.main
+        
+        .content
+          .center
+
+            h1.splash_title 
+                span.hidden-phone Welcome to 
+                img(src="img/mytime.png")
+
+            hr
+            h3 Get more organized and study harder at Michigan!
+
+            a.btn.btn-large.btn-success.get_started(href="#{login_link}") Log In
+            .row-fluid.item
+                .span2.offset2
+                    img(src="img/sync.png")
+                .span8.bullet Sync courses and reminders with your Google
+            .row-fluid.item
+                .span2.offset2
+                    img(src="img/plan.png")
+                .span8.bullet Build a better study plan, and stick to it
+
+            .row-fluid.item
+                .span2.offset2
+                    img(src="img/alerts.png")
+                .span8.bullet Track your assignments, exams, and todos
+
+
+            .splash_lsa_logo
+                img(src="img/lsa_simple.png")
+
+
+
+      .container-fluid.row-fluid.copyright.hidden-phone(style='text-align: center;')
+          .span4 College of Literature, Science, and the Arts
+          .span4 435 S. State Street, Ann Arbor, MI 48109
+          .span4 © 2012 Regents of the University of Michigan
+
+
+{% endautoescape %}
