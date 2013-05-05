@@ -128,6 +128,7 @@ $(function() {
 	    initialize: function() {
 	    	// trigger recount on add
 	    	this.listenTo(this, "add", this.countActive);
+	    	this.listenTo(this, "remove", this.countActive);
 	    },
 	   	countActive: function() {
 	   		var list = this.where({ completed: false });

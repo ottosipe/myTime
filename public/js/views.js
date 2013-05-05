@@ -43,10 +43,12 @@ $(function() {
 		},
 		template: _.template( $('#course-template').html() ),
 		showReminders:function(e) {
+			var isActive = $(e.currentTarget).hasClass("active");
 			$(".reminds").removeClass("active");
-			if($(e.currentTarget).hasClass("active")) {
+			if(isActive) {
 				remindList.showAll();
 				$(".viewAll").hide();
+				e.stopPropagation();
 			} else {
 				remindList.courseFilter(this.model.get('id'));
 				$(".viewAll").show();
@@ -75,7 +77,7 @@ $(function() {
 
 		    var pos = this.model.collection.indexOf(this.model);
 			// check if we're the last object in the list
-			obj.is_last = pos == this.model.collection.models.length - 1;
+			obj.is_last = pos == this.model.collection.maxShow - 1;
 			if(pos >= this.model.collection.maxShow) return null;
 
 			var row = this.template(obj);
@@ -106,7 +108,6 @@ $(function() {
 			this.render();
 			this.listenTo(this.model, "add", this.render);
 			this.listenTo(this.model, "remove", this.render);
-
 			this.listenTo(this.model, "sort", this.render);
 
 		},
@@ -178,6 +179,13 @@ $(function() {
 			var key = $(e.currentTarget).attr("data-key");
 			remindList.sortKey = parseInt(key);
 			remindList.sort();
+		},
+		alert: function() {
+			if(!this.model.models.length || !this.model.maxShow) {
+				$(".alert", this.el).show();
+			} else {
+				$(".alert", this.el).hide();
+			}
 		}
 	});
 
