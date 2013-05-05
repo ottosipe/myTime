@@ -84,4 +84,60 @@
       | <% if(days) print(" - "+days+ " - " +start_time );%>
 
 
+  script#reminder-template-demo(type="template")
+    .entry
+      .row-fluid
+          .span9(data-intro="Details, Due Date, and Course", data-position="bottom")
+            .courseLabel
+              | MYTIME 101 Project
+            h4.listTitle
+              | Example Assignment
+            .dateLabel
+              | 4:00 PM 05/05/13
+            .noteLabel
+          .span3
+            span.pull-right
+              .btn-group(data-intro="Complete or Edit", data-position="bottom")
+                button.btn.complete
+                  i.icon-ok
+                button.btn.dropdown-toggle(data-toggle='dropdown')
+                  span.caret
+                ul.dropdown-menu.pull-right
+                  li
+                    a.edit(href='#editReminder/12345') Edit Details
+                  li
+                    a.delete(href='#') Delete
+
+  script#course-template-demo(type="template")
+    .entry
+      .entryTitle(data-id='1234')
+          h4.courseTitle
+            | MYTIME 101
+          | Intro to MyTime (LEC)
+        .tags(data-intro="Days and Time", data-position="left")
+          span.badge MO,WE 10:30 AM
+        .row-fluid
+          .span7(data-intro="Course Title, Info, and Location", data-position="bottom")
+            | Professor MyTime
+            br
+            | 1800 CHEM
+          .span5
+            .pull-right.editBtns
+              .btn-group(data-intro="E-mail, Course Page, and Edit", data-position="bottom")
+                a.btn(role='button', href='mailto:mytime@umich.com')
+                  i.icon-envelope
+                a.btn(role='button', href='http://www.google.com', target='_blank')
+                  i.icon-globe
+                a.btn.dropdown-toggle(data-toggle='dropdown')
+                  i.icon-pencil
+                  span.caret
+                ul.dropdown-menu.pull-right
+                  li
+                    a(href='#editCourse/1234') Edit Details
+                  li
+                    a.delete(href='#') Delete
+              button.btn.reminds(data-toggle='button', data-intro="Isolate Course Reminders", data-position="bottom")
+                i.icon-bell
+
+
 {% endautoescape %}

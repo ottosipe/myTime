@@ -16,32 +16,31 @@ $(function() {
     	initialize: function () {
             new MainView();
 
+            window.haltRender = false;
+
             window.courseList = new CourseCollection();
             courseList.fetch({
                 success: function(){
-                    new CourseListView({model: courseList});
+                    this.courseView = new CourseListView({model: courseList});
                     new addCourseModal({model: courseList});
                     new courseSelectView({model: courseList});
+                }
+            });
 
-                    window.remindList = new ReminderCollection();
-                    remindList.fetch({
-                        success: function(){
-                            new ReminderListView({model: remindList});
-                            new addReminderModal({model: remindList});
-                            // declare edit view here ***??
-                        }
-                    });
-
+            window.remindList = new ReminderCollection();
+            remindList.fetch({
+                success: function(){
+                    this.reminderView = new ReminderListView({model: remindList});
+                    new addReminderModal({model: remindList});
                 }
             });
 
             window.announceList = new AnnouncementCollection();
             announceList.fetch({
                 success: function(){
-                    new AnnounceListView({model: announceList});
+                    this.announceView = new AnnounceListView({model: announceList});
                 }
             });
-
 
             this.editModalView = new editCourseModal();
             this.editRemindView = new editReminderModal();
@@ -91,9 +90,32 @@ $(function() {
         },
 
         help: function() {
+
+            window.haltRender = true;
+            // show example reminder and course here
+            var template = _.template( $('#course-template-demo').html() )
+            $("#courseList .list").html(template());
+
+            template = _.template( $('#reminder-template-demo').html() )
+            $("#reminderList .list").html(template());
+
+            function chardinhelper(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                //$('body').chardinJs('stop');
+            }
+
             $('body').chardinJs('start');
+            $('body').click(chardinhelper);
+
             $('body').on("chardinJs:stop", function() {
                 window.location.hash = "";
+                 window.haltRender = false;
+                // rerender all the data
+                courseView.render();
+                reminderView.render();
+                announceView.render();
+                $('body').unbind('click', chardinhelper);
             });
         },
 

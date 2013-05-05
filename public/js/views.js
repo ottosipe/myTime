@@ -66,14 +66,6 @@ $(function() {
 
 	    	// read from courseList to get name for class!
 	    	var obj = this.model.attributes;
-	    	var query = window.courseList.where({id:this.model.attributes.course});
-	    	// may need to also query courseId!!!
-	    	if (query.length > 0) {
-		    	var course = query[0].attributes;
-		    	obj.course_str = course.code + " " + course.number;
-		    } else {
-		    	obj.course_str = "";
-		    }
 
 		    var pos = this.model.collection.indexOf(this.model);
 			// check if we're the last object in the list
@@ -113,7 +105,9 @@ $(function() {
 		},
 		viewType: null,
 		render: function() {
-			// todo: why is this rendering twice? ***
+			
+			// if the help screen is up, abort
+			if(window.haltRender) return;
 
 			this.alert(); // show alert if empty
 			$(".list", this.el).empty();

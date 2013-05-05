@@ -1,11 +1,11 @@
 {% autoescape off %}
 
 .well.well-small.box#reminderList
-  h4.boxTitle.well.reminderHead(data-intro="test", data-position="bottom") 
+  h4.boxTitle.well.reminderHead
     i.icon.icon-bell
     |  Tasks and Reminders
 
-    .btn-group.pull-right.addBtn
+    .btn-group.pull-right.addBtn(data-intro="Add and Sort Reminders", data-position="left") 
       a.btn.btn-small.btn-success(href="#addReminder")
         i.icon-plus.icon-white
       a.btn.btn-small.dropdown-toggle(data-toggle='dropdown')
