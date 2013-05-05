@@ -15,6 +15,7 @@ html
     link(rel='stylesheet', type='text/css', href='css/bootstrap-timepicker.min.css')
     link(rel='stylesheet', type='text/css', href='//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.0.2/css/bootstrap-datepicker.min.css')
     link(rel='stylesheet', type='text/css', href='css/style.css')
+    link(rel='stylesheet', type='text/css', href='css/chardinjs.css')
     
     include analytics
   body
@@ -25,7 +26,7 @@ html
         .content
           .row-fluid.header
             .span4.logo: a(href="#"): img(src='img/logo.png')
-            .navbar.span8
+            .navbar.span8(data-intro="test", data-position="left")
               .navbar-inner
                 .container#mainNav
                   button.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
@@ -77,6 +78,7 @@ html
     script(src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js", type="text/javascript")
     script(src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.0.2/js/bootstrap-datepicker.min.js", type="text/javascript")
     script(src="js/libs/bootstrap-timepicker.min.js", type="text/javascript")
+    script(src="js/libs/chardinjs.min.js", type="text/javascript")
 
     // templates here
     include templs

@@ -76,7 +76,7 @@ $(function() {
 		    var pos = this.model.collection.indexOf(this.model);
 			// check if we're the last object in the list
 			obj.is_last = pos == this.model.collection.models.length - 1;
-
+			if(pos >= this.model.collection.maxShow) return null;
 
 			var row = this.template(obj);
 			this.$el.html(row);
@@ -108,22 +108,31 @@ $(function() {
 			this.listenTo(this.model, "remove", this.render);
 
 			this.listenTo(this.model, "sort", this.render);
+
 		},
 		viewType: null,
 		render: function() {
 			// todo: why is this rendering twice? ***
 
 			this.alert(); // show alert if empty
-			
 			$(".list", this.el).empty();
-	        for (var i = 0; i < this.model.models.length; i++) {
+		
+			var showNum = this.model.models.length;
+	        for (var i = 0; i < showNum; i++) {
 	            var view = new this.viewType({model: this.model.models[i]});
 	            // is this a bug?? collection not defined?
 	            view.model.collection = this.model;
 
-	            $(".list", this.el).append( view.render().el );
-	            
-	            //if(i+1 != this.model.models.length) $(".list", this.el).append("<hr>")
+	            var subview = view.render();
+	            // null if the subview shouldnt be rendered
+	            if(subview) {
+	            	$(".list", this.el).append( subview.el );
+	            }
+	        }
+	        var diff = this.model.models.length - this.model.maxShow;
+	        if(this.showMore && diff > 0) {
+	        	$(".showMore", this.el).show();
+	        	$(".showMore .msg", this.el).html("Show " + diff + " More");
 	        }
 			return this;
 		},
@@ -144,10 +153,21 @@ $(function() {
 	window.ReminderListView = GenericListView.extend({
 		events: {
 			"click .viewAll": "all",
-			"click .sort": "sort"
+			"click .sort": "sort",
+			"click .showMore": "showMore"
 		},
 		el: $("#reminderList"),
 		viewType: ReminderView,
+		showMore: function() {
+			if(this.model.maxShow != this.model.length) {
+				this.model.maxShow = this.model.length;
+				this.render();
+				$(".showMore .msg", this.el).html("Show Less");
+			} else {
+				this.model.countActive();
+				this.render();
+			}
+		},
 		all: function() {
 			// force all to show and remove btn classes
 			remindList.showAll();

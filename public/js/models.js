@@ -29,7 +29,6 @@ $(function() {
 					this.set("site_link", "http://"+link);
 				}
 			}
-
 			return true;
 		},
 		initialize: function() {
@@ -107,7 +106,6 @@ $(function() {
 		}
 	});
 
-
 	/// collections ///
 
 	window.CourseCollection = Backbone.Collection.extend({
@@ -127,6 +125,14 @@ $(function() {
 		
 	    model: Reminder,
 	    url: "/reminders",
+	    initialize: function() {
+	    	// trigger recount on add
+	    	this.listenTo(this, "add", this.countActive);
+	    },
+	   	countActive: function() {
+	   		var list = this.where({ completed: false });
+	    	this.maxShow = Math.min(7,list.length);
+	    },
 	    completed: function() {
 			return this.filter(function( reminder ) {
 				return reminder.get('completed');
@@ -141,6 +147,7 @@ $(function() {
 				}
 			});
 		},
+		maxShow: 0, // maximum we want to show
 		showAll: function() {
 			this.each(function(reminder){
 				reminder.set("hide", false);

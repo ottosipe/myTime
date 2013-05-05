@@ -1,7 +1,9 @@
 {% autoescape off %}
 
 .well.well-small.box#reminderList
-  h4.boxTitle.well.reminderHead Tasks and Reminders
+  h4.boxTitle.well.reminderHead(data-intro="test", data-position="bottom") 
+    i.icon.icon-bell
+    |  Tasks and Reminders
 
     .btn-group.pull-right.addBtn
       a.btn.btn-small.btn-success(href="#addReminder")
@@ -14,12 +16,19 @@
         li: a.sort(data-key="1") Course
         li: a.sort(data-key="2") Type
 
-     
   .alert.alert-warning.hide
     | Look at your syllabus! Add upcoming exams, projects, and homeworks.
 
-  .list loading
-  a.btn.btn-small.addBtn.btn-warning.pull-right.viewAll.hide
-    i.icon-eye-open.icon-white
-    |  View All
+  .list 
+    .center ...loading
+
+  .reminderBtns
+    a.btn.btn-small.addBtn.btn-warning.pull-right.viewAll.hide
+      i.icon-eye-open.icon-white
+      |  View All
+    a.btn.btn-small.addBtn.btn-warning.pull-right.showMore.hide
+      i.icon-eye-open.icon-white
+      | 
+      span.msg Show More
+    .showMore
  {% endautoescape %}

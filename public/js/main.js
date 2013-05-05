@@ -9,7 +9,7 @@ $(function() {
     		"editCourse/:id"	: "editCourse",
     		"addReminder"		: "addReminder",
     		"editReminder/:id"	: "editReminder",
-            "welcome"           : "welcome",
+            "help"              : "help",
     		"feedback"			: "feedback",
             "admin"             : "admin"
     	},
@@ -90,8 +90,11 @@ $(function() {
             }
         },
 
-        welcome: function() {
-            $("#welcome").modal()
+        help: function() {
+            $('body').chardinJs('start');
+            $('body').on("chardinJs:stop", function() {
+                window.location.hash = "";
+            });
         },
 
         feedback: function() {

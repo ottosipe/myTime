@@ -1,7 +1,9 @@
 {% autoescape off %}
 
 .well.well-small.box#courseList
-  h4.boxTitle.well Courses
+  h4.boxTitle.well(data-intro="test", data-position="bottom") 
+    i.icon.icon-book
+    |  Courses
     a.btn.btn-small.addBtn.btn-success.pull-right(href="#addCourse")
       i.icon-plus.icon-white
    
@@ -11,6 +13,7 @@
     //a.btn.btn-warning.btn-mini(href="#", role='button', disabled="disabled") Import Schedule
     a.btn.btn-success.btn-mini(href="#addCourse") Add Your First Course  
     
-  .list loading
+  .list
+    .center ...loading
 
 {% endautoescape %}

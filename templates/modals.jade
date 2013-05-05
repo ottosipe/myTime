@@ -1,23 +1,5 @@
 {% autoescape off %}
-
-form#welcome.modal.hide
-    .modal-header
-        button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-        h3 Welcome, #{name}
-
-      .modal-body
-        //-h3 myTime can help you stay organized!
-        h4 Get the grades you want, with myTime!
-        ul
-          li Sync your classes with Google calendar.
-          li Track important assignments, tests, and classes.
-          li Reflect on how you are doing during the semester.
-          li Help make sure your priorities are on target. 
-    .modal-footer
-      //- add data-dismiss='modal',  href="#importClasses"
-      //a.btn.btn-warning(href="#", role='button', disabled="disabled", data-toggle='modal') Import Schedule 
-      a.btn.btn-success(href="#addCourse", data-dismiss="modal") Get Started 
-        
+   
 // account edit modal
 form#editAccount.modal.hide.form-horizontal
     .modal-header
@@ -47,7 +29,7 @@ form#editAccount.modal.hide.form-horizontal
       a.pull-left.btn.btn-danger(href='#{logoutUrl}')
         i.icon-ban-circle
         |   Log Out
-      a.pull-left.btn(href="#welcome", data-dismiss="modal") Back to Setup
+      a.pull-left.btn(href="#help", data-dismiss="modal") Help
       button.btn(data-dismiss='modal') Cancel
       button.btn.btn-success(type='submit') Save Changes
 

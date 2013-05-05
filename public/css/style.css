@@ -30,6 +30,12 @@ body {
     margin: 30px 0;
 }
 
+.splash_info_box {
+    width: 540px;
+    margin: 10px auto;
+    padding-left: 40px;
+}
+
 .bullet {
     font-size: 20px;
     font-weight: bold;
@@ -119,8 +125,8 @@ hr {
     padding:10px;
 }
 
-.box {
-
+.box .icon{
+    margin-top: 4px;
 }
 
 .boxTitle {
@@ -232,6 +238,7 @@ input.error  {
 
 #reminderList {
     background-color: #e2eff5;
+    margin-bottom: 55px;
 }
 
 .reminderTag {
@@ -241,6 +248,11 @@ input.error  {
 .reminderInputs {
     margin-top:10px;
     text-align: center;
+}
+
+.reminderBtns {
+    margin-top: 30px;
+    margin-bottom: -25px;
 }
 
 .highlight {

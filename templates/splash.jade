@@ -20,33 +20,34 @@ html
       .container-fluid.main
         
         .content
-          .center
+            .center
+                h1.splash_title 
+                    span.hidden-phone Welcome to 
+                    img(src="img/mytime.png")
 
-            h1.splash_title 
-                span.hidden-phone Welcome to 
-                img(src="img/mytime.png")
+                hr
+                h3 Get more organized and study harder at Michigan!
 
-            hr
-            h3 Get more organized and study harder at Michigan!
+                a.btn.btn-large.btn-success.get_started(href="#{login_link}") Log In
+                
+                .well.splash_info_box.hidden-phone
+                    .row-fluid.item
+                        .span2
+                            img(src="img/sync.png")
+                        .span10.bullet Sync courses and reminders with Google
+                    .row-fluid.item
+                        .span2
+                            img(src="img/plan.png")
+                        .span10.bullet Build a better study plan, and stick to it
 
-            a.btn.btn-large.btn-success.get_started(href="#{login_link}") Log In
-            .row-fluid.item
-                .span2.offset2
-                    img(src="img/sync.png")
-                .span8.bullet Sync courses and reminders with Google
-            .row-fluid.item
-                .span2.offset2
-                    img(src="img/plan.png")
-                .span8.bullet Build a better study plan, and stick to it
-
-            .row-fluid.item
-                .span2.offset2
-                    img(src="img/alerts.png")
-                .span8.bullet Track your assignments, exams, and todos
+                    .row-fluid.item
+                        .span2
+                            img(src="img/alerts.png")
+                        .span10.bullet Track your assignments, exams, and todos
 
 
-            .splash_lsa_logo
-                img(src="img/lsa_simple.png")
+                .splash_lsa_logo
+                    img(src="img/lsa_simple.png")
 
 
 
