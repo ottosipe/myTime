@@ -540,7 +540,8 @@ $(function() {
 				end_time: end_time,
 				course: parseInt($("[name='course']", this.el).val()),
 				note: $("[name='note']", this.el).val(),
-				add_to_cal: this.add_to_cal
+				add_to_cal: this.add_to_cal,
+				alert_time: parseInt($(".alertTime", this.el).val())
 			});
 
 			window.location.hash="#";

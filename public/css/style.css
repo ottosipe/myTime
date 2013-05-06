@@ -250,6 +250,10 @@ input.error  {
     text-align: center;
 }
 
+input[type="checkbox"] {
+    margin-top:0px;
+}
+
 .reminderBtns {
     margin-top: 30px;
     margin-bottom: -25px;
@@ -257,6 +261,7 @@ input.error  {
 
 .alertTime {
     width: 110px;
+    margin-top: 8px;
 }
 
 .highlight {
