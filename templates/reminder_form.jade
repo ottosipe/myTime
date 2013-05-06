@@ -21,7 +21,6 @@ input.typeTag(type='hidden', name="type")
     a.btn.btn-small(value="Goal") Goal
     a.btn.btn-small(value="To Do") ToDo
 
-
 .row-fluid
   .span8
     .row-fluid
@@ -30,6 +29,8 @@ input.typeTag(type='hidden', name="type")
           input.width100.reminderTitle(type='text', name="title", placeholder="Title")
           .left
             a.showNote Add Note
+
+        
       .span6
         .control-group
           select.courseSelector(name="course")
@@ -57,8 +58,20 @@ input.typeTag(type='hidden', name="type")
       
       a.showStartTime Add Time
       a.showEndTime.hide Add End Time
-input(type="checkbox", name="addCal") 
-|  Add to your Google Calendar
 
-    
+.control-group
+  input(type="checkbox", name="addCal") 
+  |  Add to Google Calendar, 
+  | with alert 
+  select.alertTime(name="alert_time")
+    option(value="10") 10 minutes  
+    option(value="30") 30 minutes
+    option(value="60") 1 hour
+    option(value="180") 3 hours
+    option(value="1440") 1 day
+    option(value="4320") 3 days
+    option(value="10080") 1 week
+    option(value="0") -- No Alert --
+  |  before.
+
 {% endautoescape %}

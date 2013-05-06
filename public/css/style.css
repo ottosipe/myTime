@@ -255,6 +255,10 @@ input.error  {
     margin-bottom: -25px;
 }
 
+.alertTime {
+    width: 110px;
+}
+
 .highlight {
     color: red;
 }
