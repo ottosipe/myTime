@@ -155,6 +155,18 @@ def createReminderEvent(info):
   logging.warning(endTime)
 
   # create the calendar event
+  reminder = {}
+  if info["alert_min"] != 0:
+    reminder = {
+      'useDefault': False,
+      'overrides': [
+        {
+          'method': 'email',
+          'minutes': int(info["alert_min"])
+        }
+      ]
+    }
+
   summary = ""
   if info["course_str"] != "":
     summary += info["course_str"] + ": "
@@ -167,7 +179,8 @@ def createReminderEvent(info):
     'end': {
       'dateTime' : endTime.isoformat(),
       'timeZone': 'America/New_York'
-    }
+    },
+    'reminders': reminder
   }
 
   return event

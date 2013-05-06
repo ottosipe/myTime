@@ -29,6 +29,7 @@ class Course(db.Model):
   eventseq = db.IntegerProperty()
   prof_email = db.StringProperty()
   site_link = db.StringProperty()
+  semester_id = db.StringProperty()
 
 class Reminder(db.Model):
   id = db.IntegerProperty()
@@ -44,6 +45,9 @@ class Reminder(db.Model):
   eventid = db.StringProperty()
   eventseq = db.IntegerProperty()
   add_to_cal = db.BooleanProperty()
+  deleted = db.BooleanProperty()
+  semester_id = db.StringProperty()
+  alert_min = db.IntegerProperty()
 
 class Student(db.Model):
   user = db.UserProperty()
