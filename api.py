@@ -76,6 +76,7 @@ class Courses(webapp2.RequestHandler):
       newCourse.site_link = info["site_link"]
       newCourse.eventid = response["id"]
       newCourse.eventseq = response["sequence"]
+      newCourse.semester_id = "SP13" # should not be hardcoded in the future
       
       newCourse.put()
       # respond with changes so backbone knows the id
@@ -177,6 +178,12 @@ class Reminders(webapp2.RequestHandler):
     if User:
       student = db.GqlQuery("SELECT * FROM Student WHERE user = :1", User).get()
 
+      #logging.warning("going to get credentials")
+      #credentials = decorator.credentials
+      #logging.warning("going to refresh credentials")
+      #credentials.refresh(http=decorator.http())
+      #logging.warning("refreshed credentials")
+
       postData = json.loads(self.request.body)
       logging.warning(postData)
      
@@ -194,6 +201,9 @@ class Reminders(webapp2.RequestHandler):
       newReminder.id = int(time.time()) # do we need to rand here too?
       newReminder.eventid = ""
       newReminder.eventseq = -1
+      newReminder.alert_min = postData['alert_min']
+      newReminder.deleted = False
+      newReminder.semester_id = "SP13" # eventually not hardcoded
 
       if postData['add_to_cal'] == True :
         newReminder.add_to_cal = True
@@ -286,6 +296,8 @@ class EditReminder(webapp2.RequestHandler):
       reminder.note = info['note']
       reminder.start_time = info['start_time']
       reminder.end_time = info['end_time']
+      if (info['alert_min']):
+        reminder.alert_min = int(info['alert_min'])
 
       if info['add_to_cal'] == True :
         event = utils.createReminderEvent(info)

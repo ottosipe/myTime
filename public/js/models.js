@@ -63,7 +63,8 @@ $(function() {
 			hide: false,
 			add_to_cal: false,
 			is_overdue: false,
-			time_mills: 0
+			time_mills: 0,
+			alert_min: 0
 		},
 		toggle: function() {
 			this.save({
