@@ -42,8 +42,6 @@ $(function() {
                 }
             });
 
-            this.editModalView = new editCourseModal();
-            this.editRemindView = new editReminderModal();
         },
         home: function() {
             $(".modal").modal("hide");
@@ -64,6 +62,7 @@ $(function() {
             if(idArg == null) return;
             if(window.courseList.length) {
                 var mod = window.courseList.where({id: parseInt(idArg)})[0];
+                this.editModalView = new editCourseModal();
                 this.editModalView.open(mod);
                 //var modalView = new editCourseModal({model: mod});
                 $("#editCourse").modal();
@@ -81,6 +80,7 @@ $(function() {
             if (idArg == null) return;
             if(window.remindList) {
                 var mod = window.remindList.where({id: parseInt(idArg)})[0];
+                this.editRemindView = new editReminderModal();
                 this.editRemindView.open(mod);
                 //var remindView = new editReminderModal({model: mod});
                 $("#editReminder").modal();
