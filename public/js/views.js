@@ -541,7 +541,7 @@ $(function() {
 				course: parseInt($("[name='course']", this.el).val()),
 				note: $("[name='note']", this.el).val(),
 				add_to_cal: this.add_to_cal,
-				alert_min: $(".alertTime", this.el).val()
+				alert_min: parseInt($(".alertTime", this.el).val())
 			});
 
 			window.location.hash="#";

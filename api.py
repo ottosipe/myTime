@@ -201,7 +201,7 @@ class Reminders(webapp2.RequestHandler):
       newReminder.id = int(time.time()) # do we need to rand here too?
       newReminder.eventid = ""
       newReminder.eventseq = -1
-      newReminder.alert_min = postData['alert_min']
+      newReminder.alert_min = int(postData['alert_min'])
       newReminder.deleted = False
       newReminder.semester_id = "SP13" # eventually not hardcoded
 
